@@ -285,6 +285,62 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
   color:var(--red);line-height:1;
   text-shadow:0 0 40px rgba(231,76,60,.4);
 }
+
+/* ── MONEY DRAIN COUNTER ─────────────────────────────────────────────────── */
+.drain-wrap{
+  background:linear-gradient(135deg,#1a0505,#2d0a0a);
+  border:2px solid rgba(231,76,60,.5);border-radius:24px;
+  padding:40px 32px;margin:0 auto 60px;max-width:800px;
+  text-align:center;position:relative;overflow:hidden;
+  display:none;
+  box-shadow:0 0 80px rgba(231,76,60,.2),inset 0 0 60px rgba(231,76,60,.05);
+}
+.drain-wrap.show{display:block}
+.drain-wrap::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#E74C3C,#FF6B6B,#E74C3C,transparent);
+}
+.drain-wrap::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#E74C3C,#FF6B6B,#E74C3C,transparent);
+}
+.drain-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;
+  color:rgba(255,100,100,.7);text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.drain-pulse{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#FF4444;animation:pulse 1s infinite;flex-shrink:0;
+}
+.drain-story{
+  font-size:clamp(14px,2vw,17px);color:rgba(255,180,180,.9);
+  margin-bottom:24px;line-height:1.7;font-weight:300;
+}
+.drain-story strong{color:#fff;font-weight:600;}
+.drain-amount{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,15vw,150px);
+  color:#FF4444;line-height:1;
+  text-shadow:0 0 60px rgba(255,68,68,.8),0 0 120px rgba(255,68,68,.3);
+  letter-spacing:-2px;
+}
+.drain-patients{
+  display:flex;justify-content:center;gap:24px;margin:24px 0;flex-wrap:wrap;
+}
+.drain-stat{
+  background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.2);
+  border-radius:12px;padding:12px 24px;
+}
+.drain-stat-num{
+  font-family:'Bebas Neue',sans-serif;font-size:40px;
+  color:#FF6B6B;line-height:1;
+}
+.drain-stat-lbl{font-size:11px;color:rgba(255,150,150,.6);margin-top:4px;letter-spacing:1px;text-transform:uppercase;}
+.drain-bottom{
+  font-size:12px;color:rgba(255,120,120,.4);margin-top:20px;
+  font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -311,6 +367,34 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
     Ver cómo funciona ARIA ↓
   </a>
 </section>
+
+<!-- ══ MONEY DRAIN ════════════════════════════════════════════════════════════ -->
+<div style="padding:0 24px">
+  <div class="drain-wrap" id="drainWrap">
+    <div class="drain-eyebrow"><span class="drain-pulse"></span>EN TIEMPO REAL · AHORA MISMO · SU CLÍNICA</div>
+    <div class="drain-story" id="drainStory">
+      Mientras usted lee esto, <strong>3 pacientes están buscando un cirujano bariátrico.</strong><br>
+      Sin respuesta inmediata, en los próximos 10 minutos eligen a otro.<br>
+      Esto es lo que salió por la puerta hoy sin que nadie lo detuviera:
+    </div>
+    <div class="drain-amount" id="drainAmount">$0</div>
+    <div class="drain-patients">
+      <div class="drain-stat">
+        <div class="drain-stat-num" id="drainPatients">0</div>
+        <div class="drain-stat-lbl">Pacientes con su competencia</div>
+      </div>
+      <div class="drain-stat">
+        <div class="drain-stat-num">0</div>
+        <div class="drain-stat-lbl">Seguimientos sin hacer</div>
+      </div>
+      <div class="drain-stat">
+        <div class="drain-stat-num">24/7</div>
+        <div class="drain-stat-lbl">Lo que ARIA trabaja por usted</div>
+      </div>
+    </div>
+    <div class="drain-bottom">Mínimo $50,000 MXN por procedimiento · Semana Santa 2026 · Solo en su especialidad</div>
+  </div>
+</div>
 
 <style>
 @keyframes bounce2{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
@@ -505,7 +589,7 @@ const specs = {
   bariatra: {
     emoji:'🏥', name:'Centro Bariátrico', ticket:70000, lost:8,
     rate:'68%', respTime:'52s',
-    lostDesc:'leads sin respuesta en Semana Santa · $__LOST__ perdidos en pacientes que se fueron',
+    lostDesc:'leads sin respuesta en Semana Santa · __LOST__ perdidos en pacientes que se fueron',
     conv:[
       {out:true,  txt:'Hola! Vi su anuncio en Facebook sobre la manga gástrica 🙏 Me puede dar información?', delay:500},
       {out:false, txt:'¡Hola! 👋 Soy ARIA, asistente de Centro Bariátrico.\n\nGracias por escribirnos. La manga gástrica es uno de nuestros procedimientos más solicitados — ayuda a perder entre el 60-70% del exceso de peso de forma permanente.\n\n¿Me puedes decir un poco más sobre lo que buscas? ¿Es para ti o para alguien cercano?', delay:1800},
@@ -521,7 +605,7 @@ const specs = {
   estetica: {
     emoji:'✨', name:'Clínica Estética', ticket:12000, lost:14,
     rate:'61%', respTime:'38s',
-    lostDesc:'leads sin respuesta en Semana Santa · $__LOST__ que no entraron',
+    lostDesc:'leads sin respuesta en Semana Santa · __LOST__ que no entraron',
     conv:[
       {out:true,  txt:'Buenas noches! Vi su publicación de medicina estética, ¿cuánto cuesta botox?', delay:500},
       {out:false, txt:'¡Buenas noches! ✨ Soy ARIA, asistente de Clínica Estética.\n\nEl botox facial va desde $3,500 hasta $7,000 MXN según las zonas a tratar. Incluye consulta con el médico, aplicación y seguimiento.\n\n¿Qué área te interesa trabajar? ¿Frente, entrecejo, patas de gallo...?', delay:1600},
@@ -537,7 +621,7 @@ const specs = {
   dental: {
     emoji:'🦷', name:'Clínica Dental', ticket:35000, lost:11,
     rate:'59%', respTime:'41s',
-    lostDesc:'leads sin respuesta en Semana Santa · $__LOST__ en implantes y tratamientos perdidos',
+    lostDesc:'leads sin respuesta en Semana Santa · __LOST__ en implantes y tratamientos perdidos',
     conv:[
       {out:true,  txt:'Hola, me interesa información sobre implantes dentales. ¿Cuánto cuestan?', delay:500},
       {out:false, txt:'¡Hola! 👋 Soy ARIA, asistente de Clínica Dental.\n\nLos implantes dentales van desde $18,000 hasta $35,000 MXN por implante, dependiendo de la marca y el caso clínico. Incluye consulta, tomografía, implante y corona definitiva.\n\n¿Es para un diente o varios? ¿Tienes idea de cuántos necesitas?', delay:1700},
@@ -576,6 +660,9 @@ function setSpec(spec, btn, fromDemo=false) {
   updateCounter();
   updateDemoInfo();
   if(!animRunning) runConversation();
+  // Drain counter — todas las especialidades clínicas
+  if(['bariatra','estetica','dental'].includes(spec)) startDrain();
+  else hideDrain();
 }
 
 function updateCounter(){
@@ -731,7 +818,53 @@ window.addEventListener('load',()=>{
   updateCounter();
   updateDemoInfo();
   runConversation();
+  if(['bariatra','estetica','dental'].includes(currentSpec)) startDrain();
 });
+
+// ══ MONEY DRAIN COUNTER ═══════════════════════════════════════════════════════
+const DRAIN_CONFIG = {
+  bariatra: { perMin: 104, start: 50000, patients: 3, ticket: 50000 },
+  estetica: { perMin: 87,  start: 42000, patients: 3, ticket: 25000 },
+  dental:   { perMin: 69,  start: 33000, patients: 3, ticket: 20000 }
+};
+let drainStart = null;
+let drainTimer = null;
+
+function startDrain(){
+  const wrap = document.getElementById('drainWrap');
+  wrap.classList.add('show');
+  drainStart = Date.now();
+  if(drainTimer) clearInterval(drainTimer);
+  drainTimer = setInterval(updateDrain, 1000);
+  updateDrain();
+}
+
+function updateDrain(){
+  if(!drainStart) return;
+  const cfg = DRAIN_CONFIG[currentSpec] || DRAIN_CONFIG.bariatra;
+  const minElapsed = (Date.now() - drainStart) / 60000;
+  const lost = Math.floor(cfg.start + (minElapsed * cfg.perMin));
+  // 1 extra patient every 5 minutes on top of base 3
+  const patients = cfg.patients + Math.floor(minElapsed / 5);
+  document.getElementById('drainAmount').textContent = '$' + lost.toLocaleString('es-MX');
+  const pEl = document.getElementById('drainPatients');
+  if(pEl) pEl.textContent = patients;
+  // Update story text per spec
+  const stories = {
+    bariatra: 'Mientras usted lee esto, <strong>3 pacientes están buscando un cirujano bariátrico.</strong><br>Sin respuesta en los próximos 10 minutos y eligen a otro.<br>Esto es lo que salió por la puerta hoy sin que nadie lo detuviera:',
+    estetica: 'Mientras usted lee esto, <strong>5 personas están buscando botox, rellenos o tratamientos estéticos.</strong><br>La que contesta primero se queda con el paciente.<br>Esto es lo que perdió su clínica hoy por no estar disponible:',
+    dental: 'Mientras usted lee esto, <strong>5 pacientes están buscando implantes o tratamiento dental.</strong><br>Sin respuesta inmediata deciden por WhatsApp en minutos.<br>Esto es lo que salió de su clínica hoy sin reservar cita:'
+  };
+  const storyEl = document.getElementById('drainStory');
+  if(storyEl && stories[currentSpec]) storyEl.innerHTML = stories[currentSpec];
+}
+
+function hideDrain(){
+  const wrap = document.getElementById('drainWrap');
+  wrap.classList.remove('show');
+  if(drainTimer){ clearInterval(drainTimer); drainTimer = null; }
+  drainStart = null;
+}
 
 const observer = new IntersectionObserver((entries)=>{
   if(entries[0].isIntersecting && !animRunning) runConversation();
