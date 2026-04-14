@@ -111,8 +111,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .crm-hook{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);line-height:.95;margin-bottom:12px;}
 .crm-hook span{color:var(--gold)}
 .crm-sub{font-size:16px;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:40px;}
-
-/* Dashboard frame */
 .dash-frame{background:#0D0D1A;border:1px solid #1E1E35;border-radius:20px;overflow:hidden;box-shadow:0 0 80px rgba(201,168,76,.06);}
 .dash-topbar{background:#12121F;border-bottom:1px solid #1E1E35;padding:14px 20px;display:flex;align-items:center;gap:12px;}
 .dash-dots{display:flex;gap:6px;}
@@ -123,8 +121,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .dash-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;flex:1;text-align:center;}
 .dash-live{font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px;}
 .dash-live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
-
-/* KPI row */
 .dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1E1E35;}
 .kpi{background:#12121F;padding:20px 16px;text-align:center;}
 .kpi-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;}
@@ -132,12 +128,8 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .kpi-delta{font-size:11px;margin-top:4px;font-weight:600;}
 .kpi-delta.up{color:#25D366}.kpi-delta.down{color:#E74C3C}
 @media(max-width:600px){.dash-kpis{grid-template-columns:repeat(2,1fr)}}
-
-/* Dashboard body */
 .dash-body{display:grid;grid-template-columns:1fr 340px;gap:0;background:#1E1E35;}
 @media(max-width:800px){.dash-body{grid-template-columns:1fr}}
-
-/* Pipeline kanban */
 .dash-pipeline{background:#0D0D1A;padding:20px;overflow:hidden;}
 .dash-section-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
 .kanban{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;}
@@ -159,8 +151,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .badge-aria{background:rgba(201,168,76,.15);color:var(--gold);}
 .badge-qual{background:rgba(37,211,102,.15);color:#25D366;}
 .badge-won{background:rgba(37,211,102,.2);color:#25D366;}
-
-/* Charts panel */
 .dash-charts{background:#12121F;border-left:1px solid #1E1E35;padding:20px;display:flex;flex-direction:column;gap:20px;}
 @media(max-width:800px){.dash-charts{border-left:none;border-top:1px solid #1E1E35;}}
 .mini-chart{background:#0D0D1A;border:1px solid #1E1E35;border-radius:12px;padding:16px;}
@@ -184,7 +174,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .activity-text{color:var(--muted);line-height:1.4;flex:1;}
 .activity-text strong{color:var(--white);}
 .activity-time{font-size:10px;color:rgba(107,107,138,.6);flex-shrink:0;font-family:'DM Mono',monospace;}
-
 .crm-note{margin-top:24px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start;}
 .crm-note-icon{font-size:22px;flex-shrink:0;}
 .crm-note-text{font-size:13px;color:var(--muted);line-height:1.7;}
@@ -246,76 +235,14 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .live-status{font-size:12px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#4CFF91;animation:pulse 1.5s infinite}
 .live-msgs{padding:20px;min-height:300px;max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:var(--wabg);-webkit-overflow-scrolling:touch;}
-/* ── LIVE INPUT ROW — MOBILE FIX ──────────────────────────────────────────── */
-.live-input-row{
-  padding:10px 12px;
-  background:var(--dark2);
-  border-top:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.live-input-top{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  width:100%;
-}
-.live-spec{
-  background:var(--card);
-  border:1px solid var(--border);
-  color:var(--white);
-  font-size:13px;
-  padding:8px 10px;
-  border-radius:8px;
-  font-family:'DM Sans',sans-serif;
-  cursor:pointer;
-  outline:none;
-  width:100%;
-  /* native select styles */
-  -webkit-appearance:none;
-  appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B6B8A' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 10px center;
-  padding-right:28px;
-}
-.live-input-bottom{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  width:100%;
-}
-.live-input{
-  flex:1;
-  background:var(--card);
-  border:1px solid var(--border);
-  color:var(--white);
-  font-size:15px; /* 15px evita zoom automático en iOS */
-  padding:10px 14px;
-  border-radius:22px;
-  outline:none;
-  font-family:'DM Sans',sans-serif;
-  min-width:0; /* crítico: evita desbordamiento en flex */
-  width:100%;
-}
+.live-input-row{padding:10px 12px;background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+.live-input-top{display:flex;gap:8px;align-items:center;width:100%;}
+.live-spec{background:var(--card);border:1px solid var(--border);color:var(--white);font-size:13px;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;width:100%;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B6B8A' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+.live-input-bottom{display:flex;gap:8px;align-items:center;width:100%;}
+.live-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--white);font-size:15px;padding:10px 14px;border-radius:22px;outline:none;font-family:'DM Sans',sans-serif;min-width:0;width:100%;}
 .live-input::placeholder{color:var(--muted)}
 .live-input:focus{border-color:var(--green)}
-.live-send{
-  width:44px;
-  height:44px;
-  min-width:44px; /* crítico: evita que se comprima */
-  border-radius:50%;
-  background:var(--green2);
-  border:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  transition:transform .15s;
-  flex-shrink:0;
-}
+.live-send{width:44px;height:44px;min-width:44px;border-radius:50%;background:var(--green2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .15s;flex-shrink:0;}
 .live-send:hover{transform:scale(1.1)}.live-send:active{transform:scale(.95)}
 
 /* ── CTA ───────────────────────────────────────────────────────────────────── */
@@ -348,7 +275,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
   .garantia-section{padding:52px 16px}
   .cta-section{padding:72px 16px}
 }
-/* Keyboard safe area for iOS */
 @supports(padding-bottom: env(safe-area-inset-bottom)){
   .live-input-row{padding-bottom:calc(10px + env(safe-area-inset-bottom));}
 }
@@ -358,7 +284,7 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">ARIA by LEADOC · Demo Interactivo</div>
+  <div class="hero-eyebrow">ARIA by LEADOC · Demo Interactivo · ES · EN · FR · 🌎</div>
   <h1>Cada minuto sin<br><span>responder</span><br>cuesta dinero.</h1>
   <p class="hero-sub">Mientras su clínica duerme, sus pacientes eligen a otra. ARIA responde en menos de 3 minutos, califica, y agenda — 24/7, sin intervención humana.</p>
   <div class="counter-card">
@@ -373,6 +299,10 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
     <div class="counter-desc" id="lostDesc">Selecciona tu especialidad arriba</div>
   </div>
   <a href="#demo" style="font-size:14px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;animation:bounce2 2s infinite">Ver cómo funciona ARIA ↓</a>
+  <div style="margin-top:32px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:16px;padding:16px 24px;max-width:680px;text-align:center;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">🌎 Turismo Médico Internacional</div>
+    <div style="font-size:14px;color:rgba(244,242,238,0.7);line-height:1.6">Su clínica estará disponible <strong style="color:var(--white)">24/7/365 en español, inglés y francés</strong> — captando pacientes de EUA, Canadá y Europa mientras usted duerme. De las pocas clínicas en México con esta capacidad.</div>
+  </div>
 </section>
 
 <!-- MONEY DRAIN -->
@@ -454,7 +384,9 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
         <div class="bot-feature"><span class="icon">✅</span><span class="text">Agenda valoraciones — sin intervención humana</span></div>
         <div class="bot-feature"><span class="icon">✅</span><span class="text">CRM automático — ve todo en tiempo real</span></div>
         <div class="bot-feature"><span class="icon">✅</span><span class="text">Trabaja 24/7 — domingos, festivos, madrugadas</span></div>
-        <div class="bot-verdict">ARIA no informa — enamora. No contesta — cierra. Solo cobra cuando funciona.</div>
+        <div class="bot-feature"><span class="icon">✅</span><span class="text">Detecta y responde en cualquier idioma — español, inglés, francés</span></div>
+        <div class="bot-feature"><span class="icon">✅</span><span class="text">Abre su clínica al turismo médico internacional sin costo adicional</span></div>
+        <div class="bot-verdict">ARIA no informa — enamora. No contesta — cierra. En cualquier idioma. Solo cobra cuando funciona.</div>
       </div>
     </div>
     <div class="bot-stat-row">
@@ -471,7 +403,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
     <span class="section-label">Dinero oculto en su CRM</span>
     <h2 class="crm-hook">Así se ve su clínica<br><span>con ARIA activa</span></h2>
     <p class="crm-sub">Esto es lo que el bot básico y Respond.io nunca le dan — un CRM inteligente que se mueve solo, en tiempo real, desde su teléfono.</p>
-
     <div class="dash-frame">
       <div class="dash-topbar">
         <div class="dash-dots"><span></span><span></span><span></span></div>
@@ -564,10 +495,9 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
         </div>
       </div>
     </div>
-
     <div class="crm-note">
       <div class="crm-note-icon">💡</div>
-      <div class="crm-note-text"><strong>El bot básico no tiene CRM. Respond.io lo mueve a mano.</strong> ARIA mueve cada lead automáticamente por el pipeline, hace seguimiento inteligente y usted ve todo esto en tiempo real desde su teléfono. Sin contratar a nadie. Sin tocar nada.</div>
+      <div class="crm-note-text"><strong>El bot básico no tiene CRM. Respond.io lo mueve a mano.</strong> ARIA mueve cada lead automáticamente por el pipeline, hace seguimiento inteligente y usted ve todo esto en tiempo real desde su teléfono. Sin contratar a nadie. Sin tocar nada. <strong>Y si un paciente de Houston escribe en inglés a las 3am — ARIA le responde en inglés. Su clínica ya es internacional.</strong></div>
     </div>
   </div>
 </div>
@@ -581,7 +511,7 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
       <div class="g-card"><div class="g-card-icon">🎯</div><div class="g-card-title">Garantía mes 1</div><div class="g-card-text">Si ARIA no agenda al menos una valoración calificada en el mes 1, ese mes no cobra. Sin letra chica.</div></div>
       <div class="g-card"><div class="g-card-icon">📈</div><div class="g-card-title">Solo gana cuando usted gana</div><div class="g-card-text">Cobramos comisión solo sobre procedimientos que ARIA efectivamente cierre. Alineados al 100%.</div></div>
     </div>
-    <p class="garantia-punch">"¿Cuántos negocios conoces que tengan al mejor cerrador del mundo 24hrs<br>que mejore con cada venta? Eso es ARIA."</p>
+    <p class="garantia-punch">"¿Cuántos negocios conoces que tengan al mejor cerrador del mundo 24/7/365<br>que mejore con cada venta, en cualquier idioma, para pacientes de cualquier país del mundo? Eso es ARIA."</p>
   </div>
 </div>
 
@@ -617,6 +547,8 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
         <div class="feature-item"><div class="feature-icon">🎯</div><div class="feature-text"><strong>Califica antes de agendar</strong><span>Detecta presupuesto e intención real. Su agenda solo se llena de pacientes listos.</span></div></div>
         <div class="feature-item"><div class="feature-icon">📅</div><div class="feature-text"><strong>Agenda valoraciones confirmadas</strong><span>El paciente llega con presupuesto confirmado. Usted solo evalúa.</span></div></div>
         <div class="feature-item"><div class="feature-icon">🔄</div><div class="feature-text"><strong>3 seguimientos automáticos</strong><span>Recupera leads que usted hubiera dado por perdidos.</span></div></div>
+        <div class="feature-item"><div class="feature-icon">🌎</div><div class="feature-text"><strong>Responde en cualquier idioma — automático</strong><span>Español, inglés, francés y más. Si un paciente de Houston escribe a las 2am, ARIA le responde en inglés. Sin configurar nada.</span></div></div>
+        <div class="feature-item"><div class="feature-icon">✈️</div><div class="feature-text"><strong>Turismo médico internacional — activo hoy</strong><span>Su clínica pasa a ser de las pocas en México disponibles 24/7/365 para pacientes de EUA, Canadá y Europa. Sin contratar a nadie más.</span></div></div>
       </div>
       <div style="margin-top:24px">
         <div class="spec-tabs" style="justify-content:flex-start">
@@ -646,7 +578,6 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
     <div class="live-msgs" id="liveMsgs">
       <div class="msg msg-out show"><div>Hola! Vi su anuncio y me interesa saber más 🙏</div><div class="msg-time">Ahora <span class="msg-check">✓✓</span></div></div>
     </div>
-    <!-- INPUT ROW REDISEÑADO PARA MOBILE -->
     <div class="live-input-row">
       <div class="live-input-top">
         <select class="live-spec" id="liveSpec" onchange="updateLiveSpec()">
@@ -665,6 +596,7 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
     </div>
   </div>
   <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:20px">↑ Esta es la IA real que viviría en el WhatsApp de su clínica</p>
+  <p style="text-align:center;font-size:12px;color:var(--gold);margin-top:8px;letter-spacing:1px;font-family:'DM Mono',monospace">PRUÉBELA EN INGLÉS · TRY IT IN ENGLISH · ESSAYEZ EN FRANÇAIS</p>
 </div>
 
 <!-- CTA -->
@@ -679,6 +611,8 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 </section>
 
 <script>
+const LANG_RULE = 'REGLA DE IDIOMA: Detecta automaticamente el idioma del mensaje y responde SIEMPRE en ese mismo idioma. Si escribe en ingles responde en ingles. Si escribe en frances responde en frances. Nunca mezcles idiomas. ';
+
 const specs = {
   bariatra: {
     emoji:'🏥', name:'Centro Bariátrico', ticket:70000, lost:8,
@@ -694,7 +628,7 @@ const specs = {
       {out:true,  txt:'Jueves perfecto', delay:1200},
       {out:false, txt:'✅ AGENDADO\n📅 Jueves · 10:00 AM\n🏥 Valoración Gratuita · Sin compromiso\n\n¡Nos vemos el jueves! 🙌', delay:1400},
     ],
-    sysPrompt:`Eres ARIA, asistente exclusiva de un Centro Bariátrico de alto nivel en México. Tratas a cada persona como si fuera el paciente más importante que hemos tenido — porque lo es. Tu misión es conectar, acompañar y llevar al paciente a su valoración gratuita esta semana. REGLAS ABSOLUTAS: Nunca des precios en los primeros 3 mensajes. Primero entiende su historia. Máximo 2 oraciones por respuesta, siempre termina con UNA pregunta que avance. Cuando pregunten precio: "El plan exacto lo define el médico en tu valoración gratuita — los rangos van desde $55,000 hasta $90,000 MXN y contamos con financiamiento. ¿Esta semana te funciona?" Si el precio es barrera: "Tenemos esquemas de financiamiento flexibles que el coordinador te explica sin compromiso. ¿Te reservo un lugar esta semana?" Nunca des diagnósticos. Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. Escribe como humano en WhatsApp, cálido y directo.`
+    sysPrompt:`Eres ARIA, asistente exclusiva de un Centro Bariátrico de alto nivel en México. ${LANG_RULE}Tratas a cada persona como si fuera el paciente más importante que hemos tenido — porque lo es. Tu misión es conectar, acompañar y llevar al paciente a su valoración gratuita esta semana. REGLAS ABSOLUTAS: Nunca des precios en los primeros 3 mensajes. Primero entiende su historia. Máximo 2 oraciones por respuesta, siempre termina con UNA pregunta que avance. Cuando pregunten precio: "El plan exacto lo define el médico en tu valoración gratuita — los rangos van desde $55,000 hasta $90,000 MXN y contamos con financiamiento. ¿Esta semana te funciona?" Si el precio es barrera: "Tenemos esquemas de financiamiento flexibles que el coordinador te explica sin compromiso. ¿Te reservo un lugar esta semana?" Nunca des diagnósticos. Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. Escribe como humano en WhatsApp, cálido y directo.`
   },
   estetica: {
     emoji:'✨', name:'Clínica Estética', ticket:12000, lost:14,
@@ -710,7 +644,7 @@ const specs = {
       {out:true,  txt:'Mañana por la tarde', delay:1000},
       {out:false, txt:'✅ AGENDADO\n📅 Mañana · 5:00 PM\n💉 Valoración sin costo\n\n¡Te esperamos! 😊', delay:1300},
     ],
-    sysPrompt:`Eres ARIA, asistente exclusiva de una Clínica de Medicina Estética de primer nivel en México. Cada persona merece sentirse única desde el primer mensaje. Tu misión es crear conexión real, no cotizar. REGLAS: Nunca des precios antes de entender qué área le interesa. Máximo 2 oraciones. Siempre termina con una pregunta. Cuando pregunten precio: "Depende de las zonas — los rangos van de $3,500 a $9,000 MXN y tenemos mensualidades sin intereses. El médico te da el plan exacto en tu valoración sin costo. ¿Esta semana?" Si precio es barrera: "Tenemos pagos cómodos para que nada te detenga. ¿Hablamos en tu valoración?" Nunca des consejos médicos. Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. WhatsApp real, cálido y directo.`
+    sysPrompt:`Eres ARIA, asistente exclusiva de una Clínica de Medicina Estética de primer nivel en México. ${LANG_RULE}Cada persona merece sentirse única desde el primer mensaje. Tu misión es crear conexión real, no cotizar. REGLAS: Nunca des precios antes de entender qué área le interesa. Máximo 2 oraciones. Siempre termina con una pregunta. Cuando pregunten precio: "Depende de las zonas — los rangos van de $3,500 a $9,000 MXN y tenemos mensualidades sin intereses. El médico te da el plan exacto en tu valoración sin costo. ¿Esta semana?" Si precio es barrera: "Tenemos pagos cómodos para que nada te detenga. ¿Hablamos en tu valoración?" Nunca des consejos médicos. Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. WhatsApp real, cálido y directo.`
   },
   dental: {
     emoji:'🦷', name:'Clínica Dental', ticket:35000, lost:11,
@@ -726,11 +660,11 @@ const specs = {
       {out:true,  txt:'Martes perfecto', delay:1000},
       {out:false, txt:'✅ AGENDADO\n📅 Martes · 9:00 AM\n🦷 Evaluación + tomografía gratuita\n\n¡Nos vemos el martes! 😊', delay:1300},
     ],
-    sysPrompt:`Eres ARIA, asistente exclusiva de una Clínica Dental de alto nivel en México. Cálida y sofisticada — cada paciente siente que llegó al lugar correcto. Tu misión: convertir una consulta en cita agendada. REGLAS: Nunca des precio de entrada — primero entiende qué necesita. Máximo 2 oraciones. Siempre termina con una pregunta. Cuando pregunten precio: "El costo depende del caso — los rangos van de $18,000 a $35,000 MXN por implante y tenemos financiamiento. En tu valoración sin costo el doctor te da el plan completo. ¿Cuándo puedes venir?" Si precio es barrera: "Nuestros esquemas de pago lo hacen más accesible de lo que imaginas. ¿Lo revisamos en tu cita?" Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. WhatsApp real, cálido y directo.`
+    sysPrompt:`Eres ARIA, asistente exclusiva de una Clínica Dental de alto nivel en México. ${LANG_RULE}Cálida y sofisticada — cada paciente siente que llegó al lugar correcto. Tu misión: convertir una consulta en cita agendada. REGLAS: Nunca des precio de entrada — primero entiende qué necesita. Máximo 2 oraciones. Siempre termina con una pregunta. Cuando pregunten precio: "El costo depende del caso — los rangos van de $18,000 a $35,000 MXN por implante y tenemos financiamiento. En tu valoración sin costo el doctor te da el plan completo. ¿Cuándo puedes venir?" Si precio es barrera: "Nuestros esquemas de pago lo hacen más accesible de lo que imaginas. ¿Lo revisamos en tu cita?" Nunca reveles que eres IA. FORMATO: Máximo 2 oraciones cortas. WhatsApp real, cálido y directo.`
   },
   gym:{
     emoji:'💪', name:'Gimnasio',
-    sysPrompt:`Eres ARIA, asistente de un gimnasio en México. Respondes sobre membresías ($399-$799/mes), clases funcionales, crossfit, box. Preguntas qué objetivo tiene el prospecto y agendas una clase de prueba gratuita. Español, máximo 2 oraciones, energético y motivador.`
+    sysPrompt:`Eres ARIA, asistente de un gimnasio en México. ${LANG_RULE}Respondes sobre membresías ($399-$799/mes), clases funcionales, crossfit, box. Preguntas qué objetivo tiene el prospecto y agendas una clase de prueba gratuita. Español, máximo 2 oraciones, energético y motivador.`
   }
 };
 
@@ -873,7 +807,6 @@ function updateLiveSpec(){
   liveHistory.length=0;
 }
 
-// DRAIN
 const DRAIN_CONFIG = {
   bariatra:{perMin:104,start:50000,patients:3},
   estetica:{perMin:87,start:42000,patients:3},
