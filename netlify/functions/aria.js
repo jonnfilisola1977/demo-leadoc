@@ -15,7 +15,7 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 120,
+        max_tokens: body.max_tokens || 120,
         system: body.system,
         messages: body.messages
       })
@@ -23,11 +23,10 @@ exports.handler = async function(event) {
 
     const data = await response.json();
 
-    // Si la API devuelve error, lo pasamos al frontend para debug
     if (!response.ok) {
       return {
         statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({
           content: [{ text: '¡Hola! Soy ARIA 👋 ¿En qué te puedo ayudar hoy?' }],
           _debug: data
