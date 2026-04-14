@@ -363,7 +363,7 @@ async function callAPI(prompt) {
   showLoading();
   lastResponse = '';
   try {
-    const res = await fetch('/.netlify/functions/aria', {
+    const res = await fetch('/.netlify/functions/closer-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
