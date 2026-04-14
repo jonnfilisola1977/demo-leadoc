@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEADOC — Closer Elite</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #7A5F2A;
+    --dark: #0A0A0A;
+    --dark-2: #111111;
+    --dark-3: #1A1A1A;
+    --dark-4: #222222;
+    --dark-5: #2A2A2A;
+    --text: #E8E8E8;
+    --text-dim: #999999;
+    --text-muted: #555555;
+    --red: #C0392B;
+    --green: #27AE60;
+    --border: #2A2A2A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201,168,76,0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  header { padding: 28px 0 22px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; }
+  .logo-mark { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: var(--gold); }
+  .logo-sub { font-size: 12px; font-weight: 500; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-left: 12px; }
+  .status-pill { display: flex; align-items: center; gap: 7px; background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.25); border-radius: 100px; padding: 5px 14px; font-size: 12px; font-weight: 500; color: var(--green); letter-spacing: 1px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .context-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+  .input-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+  .input-field { background: var(--dark-3); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color 0.2s; width: 100%; }
+  .input-field:focus { border-color: var(--gold-dim); }
+  .input-field::placeholder { color: var(--text-muted); }
+
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; display: block; }
+
+  .selector-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .sel-btn { flex: 1; padding: 10px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--dark-3); color: var(--text-dim); font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.2s; font-family: 'DM Sans', sans-serif; line-height: 1.3; }
+  .sel-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+  .sel-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.07); }
+
+  .tabs { display: flex; gap: 0; margin-bottom: 22px; border-bottom: 1px solid var(--border); }
+  .tab { padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text-dim); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'DM Sans', sans-serif; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .objections-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 18px; }
+  .obj-btn { background: var(--dark-3); border: 1px solid var(--border); border-radius: 8px; padding: 13px 16px; text-align: left; cursor: pointer; transition: all 0.18s; font-family: 'DM Sans', sans-serif; }
+  .obj-btn:hover { border-color: var(--gold-dim); background: var(--dark-4); }
+  .obj-btn.selected { border-color: var(--gold); background: rgba(201,168,76,0.09); }
+  .obj-code { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; margin-bottom: 4px; display: block; }
+  .obj-text { font-size: 14px; color: var(--text); line-height: 1.3; }
+
+  .generate-btn { width: 100%; padding: 15px; background: var(--gold); color: var(--dark); border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; margin-bottom: 22px; }
+  .generate-btn:hover { background: var(--gold-light); }
+  .generate-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .free-textarea { width: 100%; background: var(--dark-3); border: 1px solid var(--border); border-radius: 8px; padding: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; resize: vertical; min-height: 100px; line-height: 1.6; margin-bottom: 12px; transition: border-color 0.2s; }
+  .free-textarea:focus { border-color: var(--gold-dim); }
+  .free-textarea::placeholder { color: var(--text-muted); }
+
+  .response-area { background: var(--dark-2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .response-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--dark-3); }
+  .response-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+  .copy-btn { background: none; border: 1px solid var(--border); border-radius: 5px; padding: 5px 12px; color: var(--text-dim); font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .copy-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+  .response-body { padding: 18px; }
+  .response-message { font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 16px; white-space: pre-wrap; }
+  .response-why { border-top: 1px solid var(--border); padding-top: 14px; }
+  .response-why-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; display: block; }
+  .response-why-text { font-size: 13px; line-height: 1.6; color: var(--text-dim); font-style: italic; }
+
+  .loading-state { padding: 32px 16px; text-align: center; }
+  .loading-dots { display: flex; justify-content: center; gap: 7px; margin-bottom: 12px; }
+  .loading-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: bounce 1.2s infinite; }
+  .loading-dot:nth-child(2){animation-delay:0.2s}.loading-dot:nth-child(3){animation-delay:0.4s}
+  @keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+  .loading-text { font-size: 14px; color: var(--text-dim); font-style: italic; }
+
+  .empty-state { padding: 40px 16px; text-align: center; color: var(--text-muted); }
+  .empty-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+  .empty-text { font-size: 14px; line-height: 1.6; }
+
+  footer { padding: 20px 0 32px; text-align: center; border-top: 1px solid var(--border); margin-top: 36px; }
+  .footer-text { font-size: 12px; color: var(--text-muted); }
+  .footer-gold { color: var(--gold); font-style: italic; }
+
+  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--dark-5);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div>
+        <span class="logo-mark">LEADOC</span>
+        <span class="logo-sub">Closer Elite</span>
+      </div>
+      <div class="status-pill"><span class="status-dot"></span>ARIA ACTIVO</div>
+    </div>
+  </header>
+
+  <!-- CONTEXTO -->
+  <div class="context-bar">
+    <div class="input-group">
+      <label class="input-label">Doctor / Clínica</label>
+      <input class="input-field" id="doctorName" type="text" placeholder="Dr. García / Clínica Luna">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Especialidad</label>
+      <input class="input-field" id="especialidad" type="text" placeholder="Medicina estética, bariatría...">
+    </div>
+  </div>
+
+  <!-- QUIEN CONTESTA -->
+  <span class="section-label">¿Quién está contestando?</span>
+  <div class="selector-row" style="margin-bottom:20px">
+    <button class="sel-btn active" id="who-nose" onclick="setWho('nose')">No sé</button>
+    <button class="sel-btn" id="who-doctor" onclick="setWho('doctor')">El doctor</button>
+    <button class="sel-btn" id="who-recep" onclick="setWho('recep')">Recepcionista</button>
+    <button class="sel-btn" id="who-admin" onclick="setWho('admin')">Administrativo</button>
+  </div>
+
+  <!-- TIPO DE VENTA -->
+  <span class="section-label">Tipo de venta</span>
+  <div class="selector-row">
+    <button class="sel-btn active" id="paq-aria" onclick="setPaquete('aria')">Solo ARIA</button>
+    <button class="sel-btn" id="paq-total" onclick="setPaquete('total')">ARIA + Anuncios</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('lista')">Objeciones conocidas</button>
+    <button class="tab" onclick="switchTab('libre')">Texto libre del doctor</button>
+  </div>
+
+  <!-- PANEL LISTA -->
+  <div class="panel active" id="panel-lista">
+    <span class="section-label">¿Qué te dijo?</span>
+    <div class="objections-grid" id="objGrid"></div>
+    <button class="generate-btn" id="btnGenLista" onclick="generateLista()" disabled>Generar respuesta élite</button>
+  </div>
+
+  <!-- PANEL LIBRE -->
+  <div class="panel" id="panel-libre">
+    <span class="section-label">Pega exactamente lo que escribió</span>
+    <textarea class="free-textarea" id="freeText" placeholder="Ej: 'Ya tenemos sistema y la verdad ahorita no es el momento...'"></textarea>
+    <button class="generate-btn" onclick="generateLibre()">Generar respuesta élite</button>
+  </div>
+
+  <!-- RESPUESTA -->
+  <div class="response-area">
+    <div class="response-header">
+      <span class="response-label">Lista para enviar</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyResponse()">Copiar</button>
+    </div>
+    <div class="response-body" id="responseBody">
+      <div class="empty-state">
+        <span class="empty-icon">⚡</span>
+        <span class="empty-text">Selecciona una objeción o escribe lo que dijo<br>para generar tu respuesta de élite al instante.</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p class="footer-text"><span class="footer-gold">"LEADOC vende dinero, no software."</span></p>
+  </footer>
+</div>
+
+<script>
+let selectedObj = null;
+let paquete = 'aria';
+let quien = 'nose';
+let lastResponse = '';
+
+const objeciones = [
+  { code: 'INFO',     label: '"Mándame información"' },
+  { code: 'RECEP',    label: '"Ya tengo recepcionista"' },
+  { code: 'BOT',      label: '"Ya tengo sistema/bot"' },
+  { code: 'KOMMO',    label: '"Tengo Respond.io o Kommo"' },
+  { code: 'CARO',     label: '"Está caro"' },
+  { code: 'PIENSA',   label: '"Déjeme pensarlo"' },
+  { code: 'PRESUP',   label: '"No tengo presupuesto"' },
+  { code: 'FACTURA',  label: '"Pídeme factura"' },
+  { code: 'FUNCIONA', label: '"¿Cómo sé que funciona?"' },
+  { code: 'REFS',     label: '"¿Qué clínicas lo usan?"' },
+  { code: 'AUTO',     label: '"¿No lo notará el paciente?"' },
+  { code: 'ADS',      label: '"Ya pagué ads y no funcionó"', totalOnly: true },
+  { code: 'PRECIO',   label: '"¿Cuánto cuesta? / Setup + mensualidad"' },
+  { code: 'OBJPAGO',  label: '"Pagué setup y mensualidad, dices que es gratis"' },
+];
+
+function renderGrid() {
+  const grid = document.getElementById('objGrid');
+  grid.innerHTML = '';
+  objeciones.forEach(obj => {
+    if (obj.totalOnly && paquete !== 'total') return;
+    const btn = document.createElement('button');
+    btn.className = 'obj-btn' + (selectedObj === obj.code ? ' selected' : '');
+    btn.innerHTML = `<span class="obj-code">${obj.code}</span><span class="obj-text">${obj.label}</span>`;
+    btn.onclick = () => { selectedObj = obj.code; renderGrid(); document.getElementById('btnGenLista').disabled = false; };
+    grid.appendChild(btn);
+  });
+}
+
+function setPaquete(p) {
+  paquete = p;
+  document.getElementById('paq-aria').classList.toggle('active', p==='aria');
+  document.getElementById('paq-total').classList.toggle('active', p==='total');
+  if (selectedObj) {
+    const obj = objeciones.find(o => o.code === selectedObj);
+    if (obj && obj.totalOnly && p !== 'total') { selectedObj = null; document.getElementById('btnGenLista').disabled = true; }
+  }
+  renderGrid();
+}
+
+function setWho(w) {
+  quien = w;
+  ['nose','doctor','recep','admin'].forEach(id => {
+    const el = document.getElementById('who-'+id);
+    if (el) el.classList.toggle('active', id===w);
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',(i===0&&tab==='lista')||(i===1&&tab==='libre')));
+  document.getElementById('panel-lista').classList.toggle('active', tab==='lista');
+  document.getElementById('panel-libre').classList.toggle('active', tab==='libre');
+}
+
+function getContext() {
+  return {
+    name: document.getElementById('doctorName').value.trim() || 'Doctor',
+    esp:  document.getElementById('especialidad').value.trim() || 'su especialidad'
+  };
+}
+
+function whoLabel() {
+  const m = { nose: 'No sabemos quién contesta — puede ser el doctor, recepcionista u otra persona', doctor: 'El doctor directamente', recep: 'La recepcionista — el mensaje debe ser tan valioso que ella misma quiera pasarlo al doctor para quedar bien, sin exponerla', admin: 'Un administrativo o asistente — el mensaje debe llegar al tomador de decisión' };
+  return m[quien];
+}
+
+function buildSystem() {
+  return `Eres el asistente interno de Jonnatan Filisola, CEO de LEADOC TECHNOLOGIES.
+
+LEADOC despliega ARIA — sistema que responde, filtra, califica y agenda pacientes vía WhatsApp 24/7/365 sin intervención humana. NO genera tráfico, convierte leads que ya llegan.
+
+CONTEXTO FINANCIERO CLAVE:
+- Tener a alguien respondiendo fuera de horario cuesta al doctor +$10,000 MXN/mes entre horas extra, IMSS, aguinaldo, carga social, vacaciones, festivos
+- ARIA cuesta $3,000/mes — 24/7/365, sin descanso, sin faltas, sin carga social, sin mal humor
+- Paquete Total (ARIA + Anuncios): $12,000/mes primer mes, $15,000 mes 2+
+- Garantía mes 1: si ARIA no agenda ni una valoración calificada, ese mes es gratis
+- Primeros 20 clientes: precio fundador congelado para siempre
+
+DIFERENCIADORES PREMIUM DE ARIA — úsalos cuando el argumento lo permita:
+- ARIA atiende en múltiples idiomas: español, inglés, francés — abre la clínica al turismo médico internacional
+- La clínica del doctor se ve y opera al nivel de las mejores del mundo — transnacional, sin importar su ciudad
+- Pacientes de Estados Unidos, Canadá y Europa pueden encontrar la clínica, preguntar en su idioma y agendar solos a cualquier hora
+- La clínica deja de verse local y se convierte en referente internacional en su especialidad
+- Ninguna recepcionista en el mundo puede atender en 3 idiomas a las 3am — ARIA sí
+- Es lo que usan las clínicas premium que captan turismo médico de alto ticket
+
+FILOSOFÍA DE TONO — LO MÁS IMPORTANTE:
+Eres un closer de élite hablándole al mejor doctor de su especialidad. El mensaje tiene dos trabajos: primero hacerlo sentir que merece lo mejor, segundo hacerle ver que sin ARIA está dejando dinero real en la mesa ahora mismo. No describes — vendes. No informas — cierras. Cada palabra debe empujar al doctor a querer ARIA como si fuera suyo ya. Que sienta urgencia real, deseo real, que esto es exactamente lo que su clínica necesita para ser la número uno.
+
+TONO ÉLITE — FÓRMULA EXACTA:
+1. EGO: el doctor es el mejor en su especialidad — su clínica merece operar al más alto nivel
+2. DINERO PERDIDO HOY: cada noche, cada fin de semana, cada festivo hay pacientes buscándolo y perdiéndose — eso es dinero real que sale de su bolsillo ahora mismo
+3. DINERO QUE VA A GANAR: con ARIA esos pacientes se convierten en citas, en procedimientos cerrados, en ingresos nuevos que hoy no tiene
+4. DESEO IRRESISTIBLE: que al terminar de leer sienta "lo quiero ya, esto es exactamente lo que necesito"
+
+Habla de dinero concreto — procedimientos cerrados, pacientes nuevos, ingresos recuperados. No de funciones ni tecnología. El doctor quiere saber cuánto va a ganar y cuánto está perdiendo. Dáselo.
+
+PROHIBIDO ABSOLUTAMENTE:
+- NUNCA usar humor, sarcasmo, ironía ni emojis
+- NUNCA sonar como vendedor de puerta — sonar como el mejor asesor que ha tenido
+- NUNCA tratar al doctor como uno más — él es profesional de élite
+- NUNCA frases enredadas — una idea poderosa, clara, que golpee
+- NUNCA describir funciones técnicas — solo resultados, dinero, imagen, poder
+
+REGLAS ABSOLUTAS:
+- NUNCA mencionar IA, bot, inteligencia artificial, tecnología, GHL, software
+- Solo hablar de resultados: pacientes agendados, agenda llena, dinero, tiempo del doctor
+- Tono: cálido, con caché, que el doctor se sienta lo máximo — NUNCA frío ni vendedor
+- Mensaje CORTO — máximo 3-4 líneas WhatsApp. El doctor no lee párrafos
+- NUNCA atacar al equipo del doctor ni a nadie de su clínica
+- La pérdida es del mercado y del momento, nunca culpa de las personas
+- Abre SIEMPRE conectando con su mundo antes del argumento — ego primero, golpe después
+- Cuando cites un precio: termina ahí — silencio, sin agregar nada
+
+IMPORTANTE — QUIÉN CONTESTA:
+Si contesta recepcionista o administrativo: el mensaje debe ser tan bien escrito y valioso que ellos mismos quieran pasarlo al doctor para quedar bien, sin exponerlos.
+Si no sabemos quién contesta: elegante, que funcione para cualquiera — nunca spam.
+Si contesta el doctor directamente: conecta primero con su ego y trayectoria, luego el argumento.
+
+Responde SOLO en JSON válido sin markdown ni backticks.
+
+CRÍTICO — EL CAMPO "mensaje" ES:
+El texto exacto que Jonnatan escribe por WhatsApp AL DOCTOR respondiendo su objeción.
+NO es lo que ARIA dice. NO es lo que el doctor dice. Es lo que JONNATAN escribe como closer.
+Debe sonar como un mensaje de WhatsApp real — corto, claro, con respeto y caché.
+Máximo 3-4 líneas. Una sola idea poderosa. Sin ambigüedad.
+
+PROHIBIDO EN EL MENSAJE — REGLA DURA:
+- NUNCA hacer preguntas — ni una sola — cada pregunta es un tiro desperdiciado
+- NUNCA pedir información antes de dar el argumento
+- NUNCA terminar con "¿cuándo tiene un momento?" ni ninguna pregunta
+- El mensaje da el golpe y termina con una afirmación o una acción concreta
+
+EJEMPLOS DE TONO ÉLITE — dinero perdido + dinero a ganar + deseo:
+
+"Mándame información":
+"Dr. García, cada noche que su clínica no responde es un procedimiento de [especialidad] que se va con su competencia. ARIA los recibe, los califica y los agenda mientras usted duerme — en español, inglés o francés. Los pacientes que hoy pierde se convierten en ingresos reales. demo.leadoc.mx — véalo en 2 minutos."
+
+"Está caro":
+"Dr. García, cada fin de semana sin cobertura le cuesta más de lo que imagina — pacientes que buscaron [especialidad], no encontraron respuesta y agendaron con otro. ARIA cierra esos pacientes por $3,000 al mes. Un solo procedimiento lo paga. Y si en el primer mes no agenda ni una cita, ese mes es gratis. El riesgo es completamente nuestro."
+
+"Ya tengo recepcionista":
+"Dr. García, su equipo es excelente — pero los pacientes de [especialidad] buscan de noche, en fin de semana, en días festivos. Cada uno que no recibe respuesta en esos momentos es dinero que se va para siempre. ARIA recupera exactamente esos ingresos que hoy se están perdiendo sin que nadie lo note."
+
+"¿Cuánto cuesta? / Setup y mensualidad":
+"Dr. García, el setup es $3,000 una sola vez y la mensualidad $3,000. Un procedimiento de [especialidad] lo paga completo. Y si en el primer mes ARIA no le agenda ni una valoración calificada, ese mes es gratis. ¿Cuándo lo activamos?" — SILENCIO después del precio, no agregar nada más.
+
+"Está pagando setup y mensualidad":
+No defender el precio. Hacer que el doctor calcule con su propio ticket: "Dr. García, ¿cuánto cobra por [procedimiento]? [SILENCIO] Con uno solo que ARIA le cierre al mes ya pagó el año completo. Y ese mes que no cierre nada — es gratis. El riesgo es nuestro, no suyo."
+
+"Pagué setup y mensualidad, dices que es gratis — no entiendo":
+Validar, separar los dos conceptos, cerrar con el riesgo real en perspectiva. NUNCA saltar al precio del procedimiento aquí — es un non-sequitur que confunde.
+Ejemplo: "Dr. [nombre], con toda razón. El setup es único — se paga una vez y es suyo. La mensualidad es lo que cubre la garantía: si en el mes 1 ARIA no le agenda ni una valoración confirmada, ese mes se lo devolvemos. Su riesgo real es el setup — y con un solo paciente nuevo lo recupera."
+
+{"mensaje":"texto exacto que Jonnatan envía al doctor por WhatsApp, máximo 3-4 líneas, personalizado con su nombre y especialidad","por_que":"1 línea explicando la psicología del argumento"}`;
+}
+
+async function callAPI(prompt) {
+  showLoading();
+  lastResponse = '';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: buildSystem(),
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.map(b => b.text||'').join('') || '';
+    let parsed;
+    try {
+      let clean = raw.trim();
+      clean = clean.replace(/```json/g, '').replace(/```/g, '').trim();
+      const start = clean.indexOf('{');
+      const end = clean.lastIndexOf('}');
+      if (start !== -1 && end !== -1) clean = clean.slice(start, end + 1);
+      parsed = JSON.parse(clean);
+    } catch { parsed = { mensaje: raw.replace(/```/g,'').trim(), por_que: '' }; }
+    lastResponse = parsed.mensaje || '';
+    showResponse(parsed.mensaje||'', parsed.por_que||'');
+  } catch(e) { showError(); }
+}
+
+function generateLista() {
+  if (!selectedObj) return;
+  const { name, esp } = getContext();
+  const obj = objeciones.find(o => o.code === selectedObj);
+  callAPI(`Doctor/clínica: "${name}" — Especialidad: ${esp}
+Quién contesta: ${whoLabel()}
+Tipo de venta: ${paquete==='total'?'Paquete ARIA + Anuncios':'Solo ARIA'}
+Objeción recibida: ${obj.label}
+
+Genera respuesta élite. Máximo 3 líneas. Personalizada para este prospecto.`);
+}
+
+function generateLibre() {
+  const texto = document.getElementById('freeText').value.trim();
+  if (!texto) return;
+  const { name, esp } = getContext();
+  callAPI(`Doctor/clínica: "${name}" — Especialidad: ${esp}
+Quién contesta: ${whoLabel()}
+Tipo de venta: ${paquete==='total'?'Paquete ARIA + Anuncios':'Solo ARIA'}
+Mensaje exacto recibido: "${texto}"
+
+Analiza la objeción real y genera respuesta élite. Máximo 3 líneas. Personalizada.`);
+}
+
+function showLoading() {
+  document.getElementById('responseBody').innerHTML = `<div class="loading-state"><div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div><p class="loading-text">Generando respuesta élite...</p></div>`;
+}
+
+function showResponse(mensaje, porQue) {
+  document.getElementById('responseBody').innerHTML = `
+    <div class="response-message">${esc(mensaje)}</div>
+    ${porQue?`<div class="response-why"><span class="response-why-label">Por qué funciona</span><p class="response-why-text">${esc(porQue)}</p></div>`:''}`;
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = 'Copiar';
+  btn.classList.remove('copied');
+}
+
+function showError() {
+  document.getElementById('responseBody').innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span><span class="empty-text">Error al generar. Intenta de nuevo.</span></div>`;
+}
+
+function copyResponse() {
+  if (!lastResponse) return;
+  navigator.clipboard.writeText(lastResponse).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copiar'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function esc(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+renderGrid();
+</script>
+</body>
+</html>
