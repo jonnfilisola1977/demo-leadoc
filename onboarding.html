@@ -7,725 +7,691 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --gold: #C9A84C;
-  --gold-light: #E8C87A;
-  --gold-pale: #F5EDD6;
-  --dark: #0A0A0A;
-  --dark-2: #141414;
-  --dark-3: #1E1E1E;
-  --dark-4: #2A2A2A;
-  --text: #F0EDE8;
-  --text-muted: #8A8580;
-  --text-dim: #5A5550;
-  --border: rgba(201,168,76,0.15);
-  --border-hover: rgba(201,168,76,0.35);
-  --success: #4A9B6F;
-  --danger: #C05050;
-  --radius: 10px;
+:root{
+  --gold:#C9A84C;--gold-l:#E8C87A;--dark:#0A0A0A;--dark2:#141414;
+  --dark3:#1E1E1E;--dark4:#2A2A2A;--text:#F0EDE8;--muted:#9A9590;
+  --dim:#6A6560;--brd:rgba(201,168,76,0.18);--brdh:rgba(201,168,76,0.4);
+  --ok:#4A9B6F;--err:#C05050;--r:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.6}
-.page{max-width:680px;margin:0 auto;padding:2rem 1.5rem 4rem}
-
-/* HEADER */
-.header{text-align:center;padding:2.5rem 0 2rem;border-bottom:0.5px solid var(--border);margin-bottom:2rem}
-.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:1.5rem}
-.logo-mark{width:36px;height:36px;border:1.5px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.logo-mark svg{width:18px;height:18px;fill:var(--gold)}
-.logo-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;letter-spacing:0.12em;color:var(--gold)}
-h1{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:600;color:var(--text);margin-bottom:0.75rem;line-height:1.2}
-.subtitle{font-size:14px;color:var(--text-muted);max-width:440px;margin:0 auto}
-
-/* PROGRESS */
-.progress-wrap{margin-bottom:2rem}
-.progress-steps{display:flex;justify-content:space-between;margin-bottom:8px}
-.progress-step{font-size:11px;color:var(--text-dim);font-family:'Syne',sans-serif;letter-spacing:0.05em;text-transform:uppercase}
-.progress-step.active{color:var(--gold)}
-.progress-track{height:2px;background:var(--dark-4);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;transition:width 0.4s ease}
-
-/* VIEWS */
-.view{display:none}
-.view.active{display:block}
-
-/* SECTION */
-.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border)}
-
-/* BANNER */
-.info-banner{background:rgba(201,168,76,0.06);border:0.5px solid var(--border);border-left:2px solid var(--gold);border-radius:var(--radius);padding:12px 16px;font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6}
-.info-banner strong{color:var(--gold-light)}
-
-/* FIELDS */
-.field{margin-bottom:1.25rem}
-.label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:6px;flex-wrap:wrap}
-.badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em}
-.badge-req{background:rgba(192,80,80,0.15);color:#E07070;border:0.5px solid rgba(192,80,80,0.3)}
-.badge-opt{background:var(--dark-3);color:var(--text-dim);border:0.5px solid var(--dark-4)}
-.hint{font-size:11px;color:var(--text-dim);margin-top:5px;line-height:1.5}
-.hint-boost{font-size:11px;color:rgba(201,168,76,0.7);margin-top:5px;line-height:1.5}
-
-input[type=text],input[type=email],textarea,select{
-  width:100%;padding:11px 14px;font-size:14px;
-  background:var(--dark-2);color:var(--text);
-  border:0.5px solid var(--dark-4);border-radius:var(--radius);
-  font-family:'Inter',sans-serif;resize:vertical;
-  transition:border-color 0.2s;outline:none;
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.6;font-size:16px}
+.page{max-width:700px;margin:0 auto;padding:0 1.5rem 4rem}
+ 
+.hdr{text-align:center;padding:2rem 0 1.5rem;border-bottom:.5px solid var(--brd);margin-bottom:1.75rem}
+.logo-wrap{height:88px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.logo{height:88px;width:auto;max-width:260px;object-fit:contain}
+.logo-txt{font-family:'Syne',sans-serif;font-size:2rem;font-weight:600;color:var(--gold);letter-spacing:.12em}
+h1{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:600;color:var(--text);margin-bottom:.5rem}
+.sub{font-size:16px;color:var(--muted);max-width:460px;margin:0 auto;line-height:1.6}
+ 
+.tabs{display:flex;gap:4px;margin-bottom:1.75rem;background:var(--dark2);padding:4px;border-radius:10px;border:.5px solid var(--dark4)}
+.tab{flex:1;padding:11px;text-align:center;font-size:15px;font-weight:500;font-family:'Syne',sans-serif;border-radius:8px;cursor:pointer;color:var(--dim);border:none;background:transparent;transition:all .15s;letter-spacing:.03em}
+.tab.on{background:var(--dark3);color:var(--text);border:.5px solid var(--dark4)}
+ 
+.view{display:none}.view.on{display:block}
+.step{display:none}.step.on{display:block}
+ 
+.pgwrap{margin-bottom:1.5rem}
+.pgsteps{display:flex;justify-content:space-between;margin-bottom:7px}
+.pgs{font-size:12px;color:var(--dim);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.pgs.on{color:var(--gold)}
+.pgtrack{height:2px;background:var(--dark4);border-radius:2px;overflow:hidden}
+.pgfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:2px;transition:width .4s ease}
+ 
+.stitle{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;padding-bottom:.5rem;border-bottom:.5px solid var(--brd)}
+.banner{background:rgba(201,168,76,.06);border:.5px solid var(--brd);border-left:2.5px solid var(--gold);border-radius:var(--r);padding:13px 16px;font-size:15px;color:var(--muted);margin-bottom:1.25rem;line-height:1.65}
+.banner strong{color:var(--gold-l)}
+ 
+.field{margin-bottom:1.2rem}
+.lbl{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
+.req{font-size:11px;padding:2px 9px;border-radius:20px;background:rgba(192,80,80,.15);color:#E07070;border:.5px solid rgba(192,80,80,.3);font-weight:500}
+.opt{font-size:11px;padding:2px 9px;border-radius:20px;background:var(--dark3);color:var(--dim);border:.5px solid var(--dark4);font-weight:500}
+.hint{font-size:13px;color:var(--dim);margin-top:5px;line-height:1.5}
+.hintg{font-size:13px;color:rgba(201,168,76,.72);margin-top:5px;line-height:1.5}
+ 
+input,textarea,select{
+  width:100%;padding:12px 15px;font-size:16px;
+  background:var(--dark2);color:var(--text);
+  border:.5px solid var(--dark4);border-radius:var(--r);
+  font-family:'Inter',sans-serif;resize:vertical;outline:none;
+  transition:border-color .2s;
 }
-input:focus,textarea:focus,select:focus{border-color:rgba(201,168,76,0.5)}
-input.prefilled,textarea.prefilled{border-color:rgba(74,155,111,0.4);background:rgba(74,155,111,0.05)}
-input.error,textarea.error,select.error{border-color:rgba(192,80,80,0.5)}
-select option{background:var(--dark-2)}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:480px){.grid2{grid-template-columns:1fr}}
-
-/* OPTIONS */
-.options{display:flex;flex-direction:column;gap:7px;margin-top:4px}
-.opt{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--dark-2);border:0.5px solid var(--dark-4);border-radius:var(--radius);cursor:pointer;font-size:14px;color:var(--text-muted);transition:all 0.15s}
-.opt:hover{border-color:var(--border-hover);color:var(--text)}
-.opt.selected{border-color:var(--gold);color:var(--text);background:rgba(201,168,76,0.06)}
-.opt-key{width:22px;height:22px;border-radius:5px;border:0.5px solid var(--dark-4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;color:var(--text-dim);flex-shrink:0;transition:all 0.15s}
-.opt.selected .opt-key{background:var(--gold);color:var(--dark);border-color:var(--gold)}
-.options.err .opt{border-color:rgba(192,80,80,0.4)}
-
+input:focus,textarea:focus,select:focus{border-color:rgba(201,168,76,.45)}
+input.pf,textarea.pf{border-color:rgba(74,155,111,.4);background:rgba(74,155,111,.04)}
+input.er,textarea.er,select.er{border-color:rgba(192,80,80,.45)}
+select option{background:var(--dark2);font-size:15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.g2{grid-template-columns:1fr}}
+ 
+/* OPTIONS — single select */
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:5px}
+.ob{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--dark2);border:.5px solid var(--dark4);border-radius:var(--r);cursor:pointer;font-size:16px;color:var(--muted);transition:all .15s;user-select:none}
+.ob:hover{border-color:var(--brdh);color:var(--text)}
+.ob.on{border-color:var(--gold);color:var(--text);background:rgba(201,168,76,.05)}
+.ok{width:23px;height:23px;border-radius:4px;border:.5px solid var(--dark4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--dim);flex-shrink:0;font-family:'Syne',sans-serif;transition:all .15s}
+.ob.on .ok{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+ 
+/* OPTIONS — multi select */
+.opts-multi .ob.on{border-color:var(--gold);color:var(--text);background:rgba(201,168,76,.05)}
+.opts-multi .ob.on .ok{background:var(--gold);color:var(--dark);border-color:var(--gold);font-size:14px}
+.opts.er2 .ob{border-color:rgba(192,80,80,.4)}
+ 
 /* FILE DROP */
-.file-drop{border:1.5px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:var(--dark-2)}
-.file-drop:hover,.file-drop.drag{border-color:var(--gold);background:rgba(201,168,76,0.04)}
-.file-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:28px;margin-bottom:8px;color:var(--gold)}
-.drop-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
-.drop-sub{font-size:12px;color:var(--text-dim)}
-.file-list{margin-top:12px;display:flex;flex-direction:column;gap:6px}
-.file-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--dark-3);border-radius:7px;font-size:13px}
-.file-item-name{display:flex;align-items:center;gap:8px;color:var(--text-muted)}
-.file-item-icon{font-size:16px}
-.file-remove{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;transition:color 0.15s}
-.file-remove:hover{color:var(--danger)}
-.file-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(74,155,111,0.15);color:#6BC990;border:0.5px solid rgba(74,155,111,0.3)}
-
-/* EXTRACTED PREVIEW */
-.extracted-card{background:var(--dark-2);border:0.5px solid rgba(74,155,111,0.3);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
-.extracted-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.extracted-dot{width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0}
-.extracted-title{font-size:13px;font-weight:500;color:#6BC990}
-.extracted-sub{font-size:12px;color:var(--text-dim);margin-left:auto}
-.field-prefilled-note{font-size:11px;color:#6BC990;margin-top:4px}
-
-/* NAV BUTTONS */
-.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
-.btn-back{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:10px 20px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;transition:all 0.15s}
-.btn-back:hover{border-color:var(--border-hover);color:var(--text)}
-.btn-next{background:var(--gold);color:var(--dark);padding:10px 28px;border:none;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em;transition:all 0.15s}
-.btn-next:hover{background:var(--gold-light)}
-.btn-next:disabled{opacity:0.4;cursor:not-allowed}
-.btn-submit{background:var(--gold);color:var(--dark);width:100%;padding:13px;border:none;border-radius:var(--radius);cursor:pointer;font-size:15px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.06em;transition:all 0.15s;margin-top:1rem}
-.btn-submit:hover{background:var(--gold-light)}
-.btn-submit:disabled{opacity:0.4;cursor:not-allowed}
-
+.drop{border:1.5px dashed var(--brd);border-radius:var(--r);padding:2.25rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:var(--dark2)}
+.drop:hover,.drop.drag{border-color:var(--gold);background:rgba(201,168,76,.03)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dico{font-size:30px;margin-bottom:8px;color:var(--gold)}
+.dt{font-size:16px;font-weight:500;color:var(--text);margin-bottom:4px}
+.ds{font-size:14px;color:var(--dim)}
+.flist{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.fi{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;background:var(--dark3);border-radius:8px;font-size:14px}
+.fn{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.fr{background:none;border:none;color:var(--dim);cursor:pointer;font-size:17px;padding:2px 6px;border-radius:4px;transition:color .15s}
+.fr:hover{color:var(--err)}
+.fb{font-size:11px;padding:2px 8px;border-radius:9px;background:rgba(74,155,111,.12);color:#6BC990;border:.5px solid rgba(74,155,111,.25)}
+ 
+/* EXTRACTED */
+.extcard{background:var(--dark2);border:.5px solid rgba(74,155,111,.28);border-radius:var(--r);padding:1.1rem 1.4rem;margin-bottom:1.25rem}
+.exthdr{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.extdot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex-shrink:0}
+.exttit{font-size:15px;font-weight:500;color:#6BC990}
+.extsub{font-size:13px;color:var(--dim);margin-left:auto}
+.extbody{font-size:14px;color:var(--dim);line-height:1.55}
+ 
+/* BUTTONS */
+.navrow{display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:.5px solid var(--brd)}
+.bbk{background:transparent;border:.5px solid var(--dark4);color:var(--muted);padding:11px 22px;border-radius:var(--r);cursor:pointer;font-size:16px;font-family:'Inter',sans-serif;transition:all .15s}
+.bbk:hover{border-color:var(--brdh);color:var(--text)}
+.bnx{background:var(--gold);color:var(--dark);padding:11px 30px;border:none;border-radius:var(--r);cursor:pointer;font-size:16px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:.04em;transition:all .15s}
+.bnx:hover{background:var(--gold-l)}
+.bnx:disabled{opacity:.4;cursor:not-allowed}
+ 
 /* LOADING */
-.loading-wrap{display:flex;align-items:center;gap:12px;padding:1rem 0;color:var(--text-muted);font-size:14px}
-.spinner{width:18px;height:18px;border:2px solid var(--dark-4);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.ld{display:flex;align-items:center;gap:11px;padding:.75rem 0;color:var(--muted);font-size:15px}
+.sp{width:19px;height:19px;border:2px solid var(--dark4);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ERROR */
-.err-msg{font-size:12px;color:#E07070;margin-top:8px}
-
+.emsg{font-size:14px;color:#E07070;margin-top:8px}
+ 
 /* SUCCESS */
-.success-page{text-align:center;padding:3rem 0}
-.success-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.3)}50%{box-shadow:0 0 0 12px rgba(201,168,76,0)}}
-.success-check{font-size:28px;color:var(--gold)}
-.success-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:600;color:var(--text);margin-bottom:0.75rem}
-.success-sub{font-size:14px;color:var(--text-muted);line-height:1.7;max-width:380px;margin:0 auto}
-
+.suc{text-align:center;padding:3rem 0}
+.sucring{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.4rem;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.3)}50%{box-shadow:0 0 0 12px rgba(201,168,76,0)}}
+.suck{font-size:30px;color:var(--gold)}
+.suct{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:600;color:var(--text);margin-bottom:.7rem}
+.subs{font-size:16px;color:var(--muted);line-height:1.7;max-width:400px;margin:0 auto}
+ 
 /* PANEL */
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.panel-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:600}
-.btn-refresh{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:7px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all 0.15s}
-.btn-refresh:hover{border-color:var(--border-hover);color:var(--text)}
-.client-card{background:var(--dark-2);border:0.5px solid var(--dark-4);border-radius:12px;padding:1.25rem;margin-bottom:10px;transition:border-color 0.15s}
-.client-card:hover{border-color:var(--border)}
-.client-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
-.client-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:var(--text)}
-.client-meta{font-size:12px;color:var(--text-dim);margin-bottom:12px}
-.status-pill{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em;flex-shrink:0}
-.s-pending{background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3)}
-.s-ready{background:rgba(74,155,111,0.12);color:#6BC990;border:0.5px solid rgba(74,155,111,0.3)}
-.s-done{background:var(--dark-3);color:var(--text-dim);border:0.5px solid var(--dark-4)}
-.s-gen{background:rgba(100,130,200,0.12);color:#8AAAEE;border:0.5px solid rgba(100,130,200,0.3)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.btn-action{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.15s}
-.btn-action:hover{border-color:var(--border-hover);color:var(--text)}
-.btn-action.primary{border-color:rgba(201,168,76,0.4);color:var(--gold)}
-.btn-action.primary:hover{background:rgba(201,168,76,0.08)}
-.btn-action:disabled{opacity:0.4;cursor:not-allowed}
-.manual-box{background:var(--dark-3);border-radius:8px;padding:1rem;font-size:12px;line-height:1.8;color:var(--text-muted);white-space:pre-wrap;font-family:monospace;max-height:320px;overflow-y:auto;margin-top:10px;display:none;border:0.5px solid var(--dark-4)}
-.empty-state{text-align:center;padding:3rem;color:var(--text-dim);font-size:14px;line-height:1.7}
-
-/* NAV TABS */
-.tabs{display:flex;gap:4px;margin-bottom:2rem;background:var(--dark-2);padding:4px;border-radius:10px;border:0.5px solid var(--dark-4)}
-.tab{flex:1;padding:9px;text-align:center;font-size:13px;font-family:'Syne',sans-serif;font-weight:500;letter-spacing:0.04em;border-radius:8px;cursor:pointer;color:var(--text-dim);transition:all 0.15s;border:none;background:transparent}
-.tab:hover{color:var(--text-muted)}
-.tab.active{background:var(--dark-3);color:var(--text);border:0.5px solid var(--dark-4)}
+.phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+.ptit{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:600}
+.brf{background:transparent;border:.5px solid var(--dark4);color:var(--muted);padding:8px 15px;border-radius:var(--r);cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;transition:all .15s}
+.brf:hover{border-color:var(--brdh);color:var(--text)}
+.cc{background:var(--dark2);border:.5px solid var(--dark4);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:10px;transition:border-color .15s}
+.cc:hover{border-color:var(--brd)}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
+.cn{font-family:'Syne',sans-serif;font-size:17px;font-weight:600;color:var(--text)}
+.cm{font-size:13px;color:var(--dim);margin-bottom:11px}
+.pill{font-size:11px;padding:3px 11px;border-radius:20px;font-weight:500;letter-spacing:.04em;flex-shrink:0}
+.pp{background:rgba(201,168,76,.1);color:var(--gold);border:.5px solid rgba(201,168,76,.3)}
+.pr{background:rgba(74,155,111,.1);color:#6BC990;border:.5px solid rgba(74,155,111,.3)}
+.pd{background:var(--dark3);color:var(--dim);border:.5px solid var(--dark4)}
+.pg{background:rgba(100,130,200,.1);color:#8AAAEE;border:.5px solid rgba(100,130,200,.3)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.ba{background:transparent;border:.5px solid var(--dark4);color:var(--muted);padding:7px 13px;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+.ba:hover{border-color:var(--brdh);color:var(--text)}
+.bap{border-color:rgba(201,168,76,.38);color:var(--gold)}
+.bap:hover{background:rgba(201,168,76,.07)}
+.ba:disabled{opacity:.4;cursor:not-allowed}
+.mbox{background:var(--dark3);border-radius:8px;padding:1.1rem;font-size:13px;line-height:1.85;color:var(--muted);white-space:pre-wrap;font-family:monospace;max-height:320px;overflow-y:auto;margin-top:9px;display:none;border:.5px solid var(--dark4)}
+.empty{text-align:center;padding:3rem;color:var(--dim);font-size:16px;line-height:1.7}
 </style>
 </head>
 <body>
 <div class="page">
-
-  <div class="header">
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 18 18"><path d="M9 1L1 5v8l8 4 8-4V5L9 1zm0 2.2L15 6.5v5L9 14.8 3 11.5v-5L9 3.2z"/></svg>
-      </div>
-      <span class="logo-text">LEADOC</span>
-    </div>
-    <h1>Bienvenido a bordo</h1>
-    <p class="subtitle">Esta información nos permite configurar su asistente exactamente para su negocio. Son 10 minutos que marcarán la diferencia.</p>
+ 
+<div class="hdr">
+  <div class="logo-wrap">
+    <img class="logo" src="https://leadoc.io/img/leadoclogo.png" alt="LEADOC"
+      onerror="this.style.display='none';document.getElementById('ltxt').style.display='block'"/>
+    <span id="ltxt" style="display:none" class="logo-txt">LEADOC</span>
   </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('cliente',this)">Formulario</button>
-    <button class="tab" onclick="switchTab('panel',this)">Panel LEADOC</button>
-  </div>
-
-  <!-- ══════════ FORMULARIO ══════════ -->
-  <div id="tab-cliente" class="view active">
-
-    <div class="progress-wrap">
-      <div class="progress-steps">
-        <span class="progress-step active" id="ps-1">Archivos</span>
-        <span class="progress-step" id="ps-2">Confirmar</span>
-        <span class="progress-step" id="ps-3">Completar</span>
-        <span class="progress-step" id="ps-4">Listo</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" id="prog" style="width:25%"></div></div>
-    </div>
-
-    <!-- STEP 1: ARCHIVOS -->
-    <div id="step-1" class="view active">
-      <div class="info-banner">
-        <strong>Suba sus materiales y el sistema llenará el formulario automáticamente.</strong><br>
-        Cuantos más archivos suba, menos campos tendrá que llenar. La IA extrae toda la información posible.
-      </div>
-
-      <div class="section-title">Suba sus materiales</div>
-
-      <div class="field">
-        <label class="label">Menú de servicios, lista de precios, fotos de promociones <span class="badge badge-opt">Opcional</span></label>
-        <div class="file-drop" id="drop-zone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
-          <input type="file" id="file-input" multiple accept="image/*,.pdf,.xlsx,.xls,.docx,.doc" onchange="addFiles(this.files)"/>
-          <div class="drop-icon">⬆</div>
-          <div class="drop-title">Arrastra archivos aquí o haz clic para seleccionar</div>
-          <div class="drop-sub">Imágenes, PDF, Excel, Word — máx. 10MB por archivo</div>
-        </div>
-        <div class="file-list" id="file-list"></div>
-        <div class="hint-boost">Fotos de su menú de servicios, listas de precios, diplomas o documentos — la IA los leerá y llenará el formulario por usted.</div>
-      </div>
-
-      <div id="extract-loading" style="display:none" class="loading-wrap"><div class="spinner"></div>Analizando sus archivos con IA...</div>
-      <div id="extract-err" class="err-msg" style="display:none"></div>
-
-      <div class="nav-row">
-        <span></span>
-        <button class="btn-next" onclick="goStep2()">Siguiente →</button>
-      </div>
-    </div>
-
-    <!-- STEP 2: CONFIRMAR EXTRAÍDO -->
-    <div id="step-2" class="view">
-      <div id="extracted-summary"></div>
-
-      <div class="section-title">Su negocio</div>
-      <div class="grid2">
-        <div class="field">
-          <label class="label">Nombre de la clínica / negocio <span class="badge badge-req">Obligatorio</span></label>
-          <input type="text" id="f-nombre" placeholder="Ej. Clínica Estética Dra. García"/>
-        </div>
-        <div class="field">
-          <label class="label">Tipo de negocio <span class="badge badge-req">Obligatorio</span></label>
-          <select id="f-tipo">
-            <option value="">Selecciona...</option>
-            <option>Clínica de medicina estética</option>
-            <option>Clínica dental</option>
-            <option>Clínica de cirugía plástica</option>
-            <option>Clínica de bariatría</option>
-            <option>Clínica de dermatología</option>
-            <option>Clínica de fisioterapia</option>
-            <option>SPA / Cosmetología</option>
-            <option>Gimnasio de box</option>
-            <option>CrossFit / Funcional</option>
-            <option>Gimnasio general</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label class="label">Ciudad y colonia <span class="badge badge-req">Obligatorio</span></label>
-          <input type="text" id="f-ciudad" placeholder="Ej. Guadalajara, Col. Chapalita"/>
-        </div>
-        <div class="field">
-          <label class="label">Horarios de atención <span class="badge badge-req">Obligatorio</span></label>
-          <input type="text" id="f-horario" placeholder="Ej. Lun-Vie 9am-7pm, Sáb 9am-2pm"/>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Dirección completa <span class="badge badge-opt">Opcional</span></label>
-        <input type="text" id="f-direccion" placeholder="Ej. Av. López Mateos 1234, frente al Walmart"/>
-        <div class="hint-boost">Su asistente podrá dar indicaciones exactas a los pacientes.</div>
-      </div>
-
-      <div class="section-title" style="margin-top:1rem">Servicios y precios</div>
-      <div class="field">
-        <label class="label">Servicios que ofrecen <span class="badge badge-req">Obligatorio</span></label>
-        <textarea id="f-servicios" rows="4" placeholder="Ej:&#10;Botox facial&#10;Relleno de labios&#10;HIFU corporal&#10;Limpieza facial profunda"></textarea>
-      </div>
-      <div class="field">
-        <label class="label">Precios por procedimiento <span class="badge badge-req">Obligatorio</span></label>
-        <textarea id="f-precios" rows="4" placeholder="Ej:&#10;Botox facial — $3,500 MXN&#10;Relleno de labios — $4,000 MXN&#10;HIFU corporal — $6,000 MXN"></textarea>
-        <div class="hint-boost">Incluir precios mejora significativamente la calificación de leads.</div>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label class="label">Procedimientos más solicitados <span class="badge badge-req">Obligatorio</span></label>
-          <input type="text" id="f-top" placeholder="Ej. Botox, HIFU, Limpieza facial"/>
-        </div>
-        <div class="field">
-          <label class="label">Promociones activas <span class="badge badge-opt">Opcional</span></label>
-          <input type="text" id="f-promo" placeholder="Ej. Primera consulta gratis"/>
-          <div class="hint-boost">Una buena promo puede duplicar las citas.</div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Servicios que quieren impulsar más <span class="badge badge-opt">Opcional</span></label>
-        <textarea id="f-impulsar" rows="2" placeholder="Ej. Queremos aumentar cirugías corporales"></textarea>
-        <div class="hint-boost">Su asistente priorizará estos al presentar opciones.</div>
-      </div>
-      <div class="field">
-        <label class="label">¿Ofrecen financiamiento? <span class="badge badge-req">Obligatorio</span></label>
-        <div class="options" id="opts-fin">
-          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">A</span>Sí, financiamiento propio</div>
-          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">B</span>Sí, con financiera externa</div>
-          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">C</span>No ofrecemos financiamiento</div>
-        </div>
-      </div>
-
-      <div id="err-2" class="err-msg" style="display:none"></div>
-      <div class="nav-row">
-        <button class="btn-back" onclick="showStep(1)">← Anterior</button>
-        <button class="btn-next" onclick="goStep3()">Siguiente →</button>
-      </div>
-    </div>
-
-    <!-- STEP 3: COMPLETAR -->
-    <div id="step-3" class="view">
-      <div class="info-banner">
-        <strong>Último paso.</strong> Esta información es la que más impacta en los resultados. Cuantos más detalles nos dé, mejores respuestas dará su asistente.
-      </div>
-
-      <div class="section-title">Su ventaja competitiva</div>
-      <div class="field">
-        <label class="label">¿En qué se especializan y qué los diferencia? <span class="badge badge-req">Obligatorio</span></label>
-        <textarea id="f-diferencia" rows="3" placeholder="Ej: 15 años de experiencia, tecnología europea, resultados desde la primera sesión..."></textarea>
-      </div>
-      <div class="field">
-        <label class="label">Doctores, certificaciones o reconocimientos <span class="badge badge-req">Obligatorio</span></label>
-        <textarea id="f-certs" rows="2" placeholder="Ej: Dra. García, certificada por la Sociedad Mexicana de Cirugía Plástica..."></textarea>
-      </div>
-      <div class="field">
-        <label class="label">¿Atienden pacientes de otras ciudades o países? <span class="badge badge-req">Obligatorio</span></label>
-        <div class="options" id="opts-alcance">
-          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">A</span>Solo pacientes locales</div>
-          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">B</span>Pacientes de otros estados</div>
-          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">C</span>Pacientes Internacionales</div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Casos de éxito o testimonios <span class="badge badge-opt">Opcional</span></label>
-        <textarea id="f-testimonios" rows="2" placeholder="Ej: Paciente perdió 30kg en 6 meses, resultados visibles desde sesión 1..."></textarea>
-        <div class="hint-boost">Los testimonios reales son el argumento de venta más poderoso.</div>
-      </div>
-
-      <div class="section-title" style="margin-top:1rem">Configuración del asistente</div>
-      <div class="field">
-        <label class="label">¿Cómo debe dirigirse a los pacientes? <span class="badge badge-req">Obligatorio</span></label>
-        <div class="options" id="opts-tono">
-          <div class="opt" onclick="pick(this,'tono')"><span class="opt-key">A</span>De usted — formal y profesional</div>
-          <div class="opt" onclick="pick(this,'tono')"><span class="opt-key">B</span>De tú — cercano y amigable</div>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label class="label">Nombre para su asistente <span class="badge badge-opt">Opcional</span></label>
-          <input type="text" id="f-aria" placeholder="Dejar vacío = ARIA"/>
-          <div class="hint">Ej. Sofía, Valeria, ARIA...</div>
-        </div>
-        <div class="field">
-          <label class="label">Sistema de agenda actual <span class="badge badge-req">Obligatorio</span></label>
-          <div class="options" id="opts-agenda" style="gap:5px">
-            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">A</span>Doctoralia</div>
-            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">B</span>Google Calendar</div>
-            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">C</span>WhatsApp / teléfono manual</div>
-            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">D</span>Sistema propio / Otro</div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">¿Qué razones dan los pacientes para no agendar? <span class="badge badge-req">Obligatorio</span></label>
-        <textarea id="f-objeciones" rows="3" placeholder="Ej: El precio, miedo al procedimiento, distancia, quieren pensarlo..."></textarea>
-        <div class="hint-boost">Cuantas más objeciones nos dé, mejor preparado estará su asistente.</div>
-      </div>
-      <div class="field">
-        <label class="label">Información reservada para el doctor <span class="badge badge-opt">Opcional</span></label>
-        <textarea id="f-reservado" rows="2" placeholder="Ej: Precios exactos de cirugías, procedimientos de riesgo..."></textarea>
-        <div class="hint">Su asistente redirigirá estos temas directamente al doctor.</div>
-      </div>
-      <div class="field">
-        <label class="label">Algo más que su asistente deba saber <span class="badge badge-opt">Opcional</span></label>
-        <textarea id="f-extra" rows="3" placeholder="Ej: Solo atendemos con cita previa, tenemos estacionamiento, no atendemos embarazadas..."></textarea>
-        <div class="hint-boost">Cada detalle se traduce directamente en mejores respuestas para sus pacientes.</div>
-      </div>
-      <div class="field">
-        <label class="label">Su nombre y WhatsApp <span class="badge badge-opt">Opcional</span></label>
-        <div class="grid2">
-          <input type="text" id="f-cn" placeholder="Nombre de quien llena"/>
-          <input type="text" id="f-cwa" placeholder="WhatsApp con lada"/>
-        </div>
-        <div class="hint">Para contactarle si necesitamos confirmar algo antes de activar.</div>
-      </div>
-
-      <div id="err-3" class="err-msg" style="display:none"></div>
-      <div id="submit-loading" style="display:none" class="loading-wrap"><div class="spinner"></div>Guardando su información...</div>
-      <div id="submit-wrap">
-        <div class="nav-row">
-          <button class="btn-back" onclick="showStep(2)">← Anterior</button>
-          <button class="btn-next" onclick="submitForm()">Enviar ↗</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 4: SUCCESS -->
-    <div id="step-4" class="view">
-      <div class="success-page">
-        <div class="success-ring"><div class="success-check">✓</div></div>
-        <div class="success-title">¡Listo! Su información fue recibida.</div>
-        <p class="success-sub">El equipo de LEADOC configurará su asistente en las próximas horas.<br>Le contactaremos por WhatsApp para confirmar la activación.</p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ══════════ PANEL LEADOC ══════════ -->
-  <div id="tab-panel" class="view">
-    <div class="panel-header">
-      <div class="panel-title">Clientes en onboarding</div>
-      <button class="btn-refresh" onclick="loadPanel()">↻ Actualizar</button>
-    </div>
-    <div id="panel-content"><div class="loading-wrap"><div class="spinner"></div>Cargando...</div></div>
-  </div>
-
+  <h1>Bienvenido a bordo</h1>
+  <p class="sub">Esta información nos permite configurar su asistente exactamente para su negocio. <strong style="color:var(--gold-l)">Cuanta más información nos dé, mejores serán los resultados.</strong></p>
 </div>
-
+ 
+<div class="tabs">
+  <button class="tab on" onclick="swTab('cliente',this)">Formulario Cliente</button>
+  <button class="tab" onclick="swTab('panel',this)">Panel LEADOC</button>
+</div>
+ 
+<!-- ═══ FORMULARIO ═══ -->
+<div id="tv-cliente" class="view on">
+  <div class="pgwrap">
+    <div class="pgsteps">
+      <span class="pgs on" id="ps1">Archivos</span>
+      <span class="pgs" id="ps2">Negocio</span>
+      <span class="pgs" id="ps3">Servicios</span>
+      <span class="pgs" id="ps4">Configuración</span>
+      <span class="pgs" id="ps5">Listo</span>
+    </div>
+    <div class="pgtrack"><div class="pgfill" id="pgf" style="width:20%"></div></div>
+  </div>
+ 
+  <!-- PASO 1 — ARCHIVOS -->
+  <div class="step on" id="s1">
+    <div class="banner">
+      <strong>Suba sus materiales y llenamos el formulario automáticamente.</strong><br>
+      Fotos de su menú de servicios, listas de precios, diplomas, documentos de procedimientos — la IA los lee y completa todo por usted. Cuantos más suba, menos campos tendrá que llenar.
+    </div>
+    <div class="stitle">Suba sus materiales</div>
+    <div class="field">
+      <label class="lbl">Archivos del negocio <span class="opt">Opcional pero muy recomendado</span></label>
+      <div class="drop" id="dz" ondragover="dov(event)" ondragleave="dlv()" ondrop="ddr(event)">
+        <input type="file" id="finput" multiple accept="image/*,.pdf,.xlsx,.xls,.docx,.doc" onchange="addF(this.files)"/>
+        <div class="dico">⬆</div>
+        <div class="dt">Arrastra archivos aquí o toca para seleccionar</div>
+        <div class="ds">Imágenes · PDF · Excel · Word — máx 10MB por archivo</div>
+      </div>
+      <div class="flist" id="flist"></div>
+      <div class="hintg">Fotos de su menú, lista de precios, diplomas — la IA extrae todo y llena el formulario.</div>
+    </div>
+    <div id="ld1" style="display:none" class="ld"><div class="sp"></div>Analizando sus archivos con IA...</div>
+    <div id="e1" class="emsg" style="display:none"></div>
+    <div class="navrow"><span></span><button class="bnx" id="bn1" onclick="goS2()">Siguiente →</button></div>
+  </div>
+ 
+  <!-- PASO 2 — NEGOCIO -->
+  <div class="step" id="s2">
+    <div id="extsum"></div>
+    <div class="stitle">Su negocio</div>
+    <div class="field">
+      <label class="lbl">Nombre de la clínica / negocio <span class="req">Obligatorio</span></label>
+      <input type="text" id="fn" placeholder="Ej. Clínica Estética Dra. García"/>
+    </div>
+    <div class="g2">
+      <div class="field">
+        <label class="lbl">Tipo de negocio <span class="req">Obligatorio</span></label>
+        <select id="ft">
+          <option value="">Selecciona...</option>
+          <option>Clínica de medicina estética</option>
+          <option>Clínica dental</option>
+          <option>Clínica de cirugía plástica</option>
+          <option>Clínica de bariatría</option>
+          <option>Clínica de dermatología</option>
+          <option>Clínica de fisioterapia</option>
+          <option>SPA / Cosmetología</option>
+          <option>Gimnasio de box</option>
+          <option>CrossFit / Funcional</option>
+          <option>Gimnasio general</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl">Ciudad y colonia <span class="req">Obligatorio</span></label>
+        <input type="text" id="fc" placeholder="Ej. Guadalajara, Col. Chapalita"/>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Horarios de atención <span class="req">Obligatorio</span></label>
+      <input type="text" id="fh" placeholder="Ej. Lun-Vie 9am-7pm, Sáb 9am-2pm"/>
+    </div>
+    <div class="field">
+      <label class="lbl">Dirección completa y referencias <span class="opt">Opcional</span></label>
+      <input type="text" id="fd" placeholder="Ej. Av. López Mateos 1234, frente al Walmart"/>
+      <div class="hintg">Su asistente podrá dar indicaciones exactas a los pacientes.</div>
+    </div>
+    <div id="e2" class="emsg" style="display:none"></div>
+    <div class="navrow">
+      <button class="bbk" onclick="goS(1)">← Anterior</button>
+      <button class="bnx" onclick="goS3()">Siguiente →</button>
+    </div>
+  </div>
+ 
+  <!-- PASO 3 — SERVICIOS -->
+  <div class="step" id="s3">
+    <div class="banner"><strong>Cuanto más detalle nos dé sobre sus servicios y precios, mejor calificará su asistente a cada paciente antes de agendar.</strong></div>
+    <div class="stitle">Servicios y precios</div>
+    <div class="field">
+      <label class="lbl">Servicios que ofrecen <span class="req">Obligatorio</span></label>
+      <textarea id="fsv" rows="4" placeholder="Ej:&#10;Botox facial&#10;Relleno de labios&#10;HIFU corporal&#10;Limpieza facial profunda&#10;Rinomodelación sin cirugía"></textarea>
+    </div>
+    <div class="field">
+      <label class="lbl">Precios por procedimiento <span class="req">Obligatorio</span></label>
+      <textarea id="fpr" rows="5" placeholder="Ej:&#10;Botox facial — $3,500 MXN&#10;Relleno de labios — $4,000 MXN&#10;HIFU facial — $8,000 MXN&#10;HIFU corporal — $12,000 MXN"></textarea>
+      <div class="hintg">Incluir precios mejora significativamente la calificación de leads — ARIA puede filtrar por presupuesto desde el primer mensaje.</div>
+    </div>
+    <div class="g2">
+      <div class="field">
+        <label class="lbl">Procedimientos más solicitados <span class="req">Obligatorio</span></label>
+        <input type="text" id="ftop" placeholder="Ej. Botox, HIFU, Limpieza facial"/>
+      </div>
+      <div class="field">
+        <label class="lbl">Servicios que quieren impulsar <span class="opt">Opcional</span></label>
+        <input type="text" id="fimp" placeholder="Ej. Cirugías corporales, HIFU"/>
+        <div class="hintg">ARIA priorizará estos al presentar opciones.</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Promociones o paquetes activos <span class="opt">Opcional</span></label>
+      <textarea id="fpro" rows="2" placeholder="Ej: Primera consulta gratis, Paquete 3 sesiones HIFU con 15% descuento..."></textarea>
+      <div class="hintg">Una buena promoción puede duplicar las citas agendadas.</div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿Ofrecen financiamiento o crédito? <span class="req">Obligatorio</span></label>
+      <div class="opts" id="ofin">
+        <div class="ob" onclick="pick1(this,'fin')"><span class="ok">A</span>Sí, financiamiento propio</div>
+        <div class="ob" onclick="pick1(this,'fin')"><span class="ok">B</span>Sí, con financiera externa</div>
+        <div class="ob" onclick="pick1(this,'fin')"><span class="ok">C</span>No ofrecemos financiamiento</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿En qué se especializan y qué los diferencia de la competencia? <span class="req">Obligatorio</span></label>
+      <textarea id="fdif" rows="3" placeholder="Ej: 15 años de experiencia, tecnología europea de última generación, resultados visibles desde la primera sesión, atención personalizada..."></textarea>
+    </div>
+    <div class="field">
+      <label class="lbl">Doctores, certificaciones o reconocimientos importantes <span class="req">Obligatorio</span></label>
+      <textarea id="fcrt" rows="2" placeholder="Ej: Dra. García, certificada por la Sociedad Mexicana de Cirugía Plástica, 20 años de experiencia, miembro de la ISAPS..."></textarea>
+    </div>
+    <div class="field">
+      <label class="lbl">Casos de éxito o testimonios <span class="opt">Opcional</span></label>
+      <textarea id="ftes" rows="2" placeholder="Ej: Paciente recuperó movilidad total en 3 meses, resultado visible de rejuvenecimiento desde sesión 1..."></textarea>
+      <div class="hintg">Los testimonios reales son el argumento de venta más poderoso — inclúyalos aunque sean breves.</div>
+    </div>
+    <div id="e3" class="emsg" style="display:none"></div>
+    <div class="navrow">
+      <button class="bbk" onclick="goS(2)">← Anterior</button>
+      <button class="bnx" onclick="goS4()">Siguiente →</button>
+    </div>
+  </div>
+ 
+  <!-- PASO 4 — CONFIGURACIÓN -->
+  <div class="step" id="s4">
+    <div class="banner"><strong>Con esta información configuramos exactamente cómo se comunicará su asistente con cada paciente.</strong></div>
+    <div class="stitle">Configuración del asistente</div>
+    <div class="field">
+      <label class="lbl">¿Cómo debe dirigirse a los pacientes? <span class="req">Obligatorio</span></label>
+      <div class="opts" id="otono">
+        <div class="ob" onclick="pick1(this,'tono')"><span class="ok">A</span>De usted — formal y profesional</div>
+        <div class="ob" onclick="pick1(this,'tono')"><span class="ok">B</span>De tú — cercano y amigable</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿Qué nombre le darán a su asistente? <span class="opt">Opcional</span></label>
+      <input type="text" id="faria" placeholder="Dejar vacío = se llamará ARIA"/>
+      <div class="hint">Puede ser un nombre de recepcionista. Ej. Sofía, Valeria, Karen, ARIA...</div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿A qué pacientes atienden? <span class="req">Obligatorio</span> <span class="opt">Puede seleccionar varios</span></label>
+      <div class="opts opts-multi" id="oalc">
+        <div class="ob" onclick="pickM(this,'alc')"><span class="ok">A</span>Pacientes locales (misma ciudad)</div>
+        <div class="ob" onclick="pickM(this,'alc')"><span class="ok">B</span>Pacientes de otros estados</div>
+        <div class="ob" onclick="pickM(this,'alc')"><span class="ok">C</span>Pacientes internacionales / turismo médico</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿Qué razones dan los pacientes cuando no agendan o se echan para atrás? <span class="req">Obligatorio</span></label>
+      <textarea id="fobj" rows="3" placeholder="Ej: El precio les parece alto, miedo al procedimiento, distancia a la clínica, quieren pensarlo, desconfianza, tiempo de recuperación..."></textarea>
+      <div class="hintg">Cuantas más objeciones nos dé, mejor preparado estará su asistente para resolverlas y agendar de todas formas.</div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿Qué sistema usa actualmente para agendar citas? <span class="req">Obligatorio</span></label>
+      <div class="opts" id="oag">
+        <div class="ob" onclick="pick1(this,'ag')"><span class="ok">A</span>Doctoralia</div>
+        <div class="ob" onclick="pick1(this,'ag')"><span class="ok">B</span>Google Calendar</div>
+        <div class="ob" onclick="pick1(this,'ag')"><span class="ok">C</span>WhatsApp / teléfono manual</div>
+        <div class="ob" onclick="pick1(this,'ag')"><span class="ok">D</span>Sistema propio de la clínica / Otro</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">¿Hay información que prefiere reservar para el doctor? <span class="opt">Opcional</span></label>
+      <textarea id="fres" rows="2" placeholder="Ej: Precios exactos de cirugías, procedimientos de riesgo, casos delicados, diagnósticos específicos..."></textarea>
+      <div class="hint">Su asistente redirigirá estos temas directamente al doctor sin mencionarlos.</div>
+    </div>
+    <div id="e4" class="emsg" style="display:none"></div>
+    <div class="navrow">
+      <button class="bbk" onclick="goS(3)">← Anterior</button>
+      <button class="bnx" onclick="goS5()">Siguiente →</button>
+    </div>
+  </div>
+ 
+  <!-- PASO 5 — ÚLTIMO -->
+  <div class="step" id="s5">
+    <div class="banner"><strong>Último paso.</strong> Cada detalle adicional que nos comparta se traduce directamente en más citas agendadas para su clínica.</div>
+    <div class="stitle">Último paso</div>
+    <div class="field">
+      <label class="lbl">¿Algo más que su asistente deba saber para atender mejor a sus pacientes? <span class="opt">Opcional</span></label>
+      <textarea id="fext" rows="4" placeholder="Ej: Solo atendemos con cita previa, tenemos estacionamiento gratuito, no atendemos embarazadas, manejamos español e inglés, ofrecemos consulta en línea, número de WhatsApp: 55 1234 5678..."></textarea>
+      <div class="hintg">Este campo marca la diferencia — cualquier detalle operativo ayuda a su asistente a dar respuestas perfectas.</div>
+    </div>
+    <div class="field">
+      <label class="lbl">Su nombre y WhatsApp de contacto <span class="opt">Opcional</span></label>
+      <div class="g2">
+        <input type="text" id="fcn" placeholder="Nombre de quien llena este formulario"/>
+        <input type="text" id="fcw" placeholder="WhatsApp con lada — Ej. 5512345678"/>
+      </div>
+      <div class="hint">Para contactarle si necesitamos confirmar algo antes de activar su asistente.</div>
+    </div>
+    <div id="e5" class="emsg" style="display:none"></div>
+    <div id="sld" style="display:none" class="ld"><div class="sp"></div>Guardando su información...</div>
+    <div id="ssuc" style="display:none">
+      <div class="suc">
+        <div class="sucring"><span class="suck">✓</span></div>
+        <div class="suct">¡Listo! Su información fue recibida.</div>
+        <p class="subs">El equipo de LEADOC configurará su asistente en las próximas horas.<br>Le contactaremos por WhatsApp para confirmar la activación.</p>
+      </div>
+    </div>
+    <div id="swrap">
+      <div class="navrow">
+        <button class="bbk" onclick="goS(4)">← Anterior</button>
+        <button class="bnx" id="benv" onclick="enviar()">Enviar ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══ PANEL ═══ -->
+<div id="tv-panel" class="view">
+  <div class="phdr">
+    <div class="ptit">Clientes en onboarding</div>
+    <button class="brf" onclick="loadPanel()">↻ Actualizar</button>
+  </div>
+  <div id="pc"><div class="ld"><div class="sp"></div>Cargando...</div></div>
+</div>
+ 
+</div>
+ 
 <script>
 const API = '/.netlify/functions/onboarding';
-const S = {fin:'',alcance:'',tono:'',agenda:''};
-const uploadedFiles = [];
+const SEL = {fin:'', tono:'', ag:''};
+const SELM = {alc:[]};
+const files = [];
 let extracted = {};
-
-// ── TABS ──
-function switchTab(id, btn) {
-  document.querySelectorAll('.view[id^="tab-"]').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
+ 
+function swTab(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tv-'+id).classList.add('on');
+  btn.classList.add('on');
   if(id==='panel') loadPanel();
 }
-
-// ── STEPS ──
-function showStep(n) {
-  [1,2,3,4].forEach(i=>{
-    const el = document.getElementById('step-'+i);
-    if(el) el.classList.toggle('active', i===n);
-    const ps = document.getElementById('ps-'+i);
-    if(ps) ps.classList.toggle('active', i===n);
+ 
+function goS(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s'+n).classList.add('on');
+  [1,2,3,4,5].forEach(i=>{
+    const el=document.getElementById('ps'+i);
+    if(el) el.classList.toggle('on',i===n);
   });
-  document.getElementById('prog').style.width = (n/4*100)+'%';
+  document.getElementById('pgf').style.width=(n/5*100)+'%';
+  window.scrollTo(0,0);
 }
-
-// ── FILES ──
-function dragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag')}
-function dragLeave(){document.getElementById('drop-zone').classList.remove('drag')}
-function dropFiles(e){e.preventDefault();dragLeave();addFiles(e.dataTransfer.files)}
-
-function addFiles(files) {
-  for(const f of files){
-    if(f.size > 10*1024*1024){alert('Archivo demasiado grande (máx 10MB): '+f.name);continue}
-    if(!uploadedFiles.find(x=>x.name===f.name && x.size===f.size)) uploadedFiles.push(f);
+ 
+// Single select
+function pick1(el,g){
+  document.querySelectorAll('#o'+g+' .ob').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  SEL[g]=el.textContent.trim();
+  document.getElementById('o'+g)?.classList.remove('er2');
+}
+ 
+// Multi select
+function pickM(el,g){
+  el.classList.toggle('on');
+  const val=el.textContent.trim();
+  if(el.classList.contains('on')){
+    if(!SELM[g].includes(val)) SELM[g].push(val);
+  } else {
+    SELM[g]=SELM[g].filter(v=>v!==val);
+  }
+  document.getElementById('o'+g)?.classList.remove('er2');
+}
+ 
+function v(id){return document.getElementById(id)?.value?.trim()||'';}
+ 
+// FILES
+function dov(e){e.preventDefault();document.getElementById('dz').classList.add('drag')}
+function dlv(){document.getElementById('dz').classList.remove('drag')}
+function ddr(e){e.preventDefault();dlv();addF(e.dataTransfer.files)}
+function addF(fs){
+  for(const f of fs){
+    if(f.size>10*1024*1024){alert('Archivo muy grande (máx 10MB): '+f.name);continue;}
+    if(!files.find(x=>x.name===f.name&&x.size===f.size)) files.push(f);
   }
   renderFiles();
 }
-
-function renderFiles() {
-  const list = document.getElementById('file-list');
-  list.innerHTML = uploadedFiles.map((f,i)=>`
-    <div class="file-item">
-      <span class="file-item-name"><span class="file-item-icon">${fileIcon(f.type)}</span>${f.name}</span>
+function removeF(i){files.splice(i,1);renderFiles();}
+function renderFiles(){
+  document.getElementById('flist').innerHTML=files.map((f,i)=>`
+    <div class="fi">
+      <span class="fn">${ico(f.type)} ${esc(f.name)}</span>
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="file-badge">${(f.size/1024).toFixed(0)}KB</span>
-        <button class="file-remove" onclick="removeFile(${i})">×</button>
+        <span class="fb">${(f.size/1024).toFixed(0)}KB</span>
+        <button class="fr" onclick="removeF(${i})">×</button>
       </div>
     </div>`).join('');
 }
-
-function removeFile(i){uploadedFiles.splice(i,1);renderFiles()}
-
-function fileIcon(type){
-  if(type.startsWith('image/')) return '🖼';
-  if(type==='application/pdf') return '📄';
-  if(type.includes('sheet')||type.includes('excel')) return '📊';
-  if(type.includes('word')) return '📝';
+function ico(t){
+  if(t.startsWith('image/')) return '🖼';
+  if(t==='application/pdf') return '📄';
+  if(t.includes('sheet')||t.includes('excel')) return '📊';
+  if(t.includes('word')) return '📝';
   return '📁';
 }
-
-async function fileToBase64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result.split(',')[1]);
-    r.onerror=rej;
-    r.readAsDataURL(file);
-  });
+async function f2b64(f){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});
 }
-
-async function fileToText(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.onerror=rej;
-    r.readAsText(file);
-  });
+async function f2txt(f){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsText(f);});
 }
-
-// ── STEP 1 → 2 ──
-async function goStep2() {
-  const errEl = document.getElementById('extract-err');
+ 
+async function goS2(){
+  const errEl=document.getElementById('e1');
   errEl.style.display='none';
-
-  if(uploadedFiles.length === 0){
-    showStep(2);
-    return;
-  }
-
-  document.getElementById('extract-loading').style.display='flex';
-  document.querySelector('#step-1 .btn-next').disabled=true;
-
-  try {
-    const files = [];
-    for(const f of uploadedFiles){
-      const entry = {name:f.name, type:f.type};
-      if(f.type.startsWith('image/') || f.type==='application/pdf'){
-        entry.data = await fileToBase64(f);
-      } else {
-        try { entry.textContent = await fileToText(f); } catch(e){}
-      }
-      files.push(entry);
+  if(!files.length){goS(2);return;}
+  const btn=document.getElementById('bn1');
+  btn.disabled=true;
+  document.getElementById('ld1').style.display='flex';
+  try{
+    const fdata=[];
+    for(const f of files){
+      const e={name:f.name,type:f.type};
+      if(f.type.startsWith('image/')||f.type==='application/pdf') e.data=await f2b64(f);
+      else{try{e.textContent=await f2txt(f);}catch(_){}}
+      fdata.push(e);
     }
-
-    const res = await fetch(API, {
+    const res=await fetch(API,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({action:'extract', files})
+      body:JSON.stringify({action:'extract',files:fdata})
     });
-    const data = await res.json();
-    extracted = data.encontrado || {};
-    prefillForm(extracted);
-    renderExtractedSummary(data);
-  } catch(e){
-    errEl.textContent = 'No se pudieron analizar los archivos. Continue llenando el formulario manualmente.';
+    const d=await res.json();
+    extracted=d.encontrado||{};
+    prefill(extracted);
+    const found=Object.values(extracted).filter(Boolean).length;
+    if(found>0){
+      document.getElementById('extsum').innerHTML=`
+        <div class="extcard">
+          <div class="exthdr"><div class="extdot"></div><span class="exttit">Extrajimos información de sus archivos</span><span class="extsub">${found} campos encontrados</span></div>
+          <div class="extbody">${esc(d.resumen||'')} — Los campos en verde fueron llenados automáticamente. Revise y corrija si algo no es exacto antes de continuar.</div>
+        </div>`;
+    }
+  }catch(e){
+    errEl.textContent='No se pudieron analizar los archivos — continue llenando el formulario manualmente.';
     errEl.style.display='block';
   }
-
-  document.getElementById('extract-loading').style.display='none';
-  document.querySelector('#step-1 .btn-next').disabled=false;
-  showStep(2);
+  document.getElementById('ld1').style.display='none';
+  btn.disabled=false;
+  goS(2);
 }
-
-function prefillForm(d) {
-  const fields = {
-    'f-nombre':'nombre','f-ciudad':'ciudad','f-horario':'horario',
-    'f-servicios':'servicios','f-precios':'precios','f-promo':'promo',
-    'f-top':'top_servicios','f-diferencia':'diferencia','f-certs':'certs',
-    'f-extra':'extra'
-  };
-  for(const [id, key] of Object.entries(fields)){
-    const el = document.getElementById(id);
-    if(el && d[key]){ el.value=d[key]; el.classList.add('prefilled'); }
+ 
+function prefill(d){
+  const map={'fn':'nombre','fc':'ciudad','fh':'horario','fd':'direccion','fsv':'servicios','fpr':'precios','fpro':'promo','ftop':'top_servicios','fdif':'diferencia','fcrt':'certs','ftes':'testimonios','fext':'extra'};
+  for(const[id,k]of Object.entries(map)){
+    const el=document.getElementById(id);
+    if(el&&d[k]){el.value=d[k];el.classList.add('pf');}
   }
   if(d.tipo){
-    const sel = document.getElementById('f-tipo');
-    for(const opt of sel.options){ if(opt.value.toLowerCase().includes(d.tipo.toLowerCase())||d.tipo.toLowerCase().includes(opt.value.toLowerCase())){ sel.value=opt.value; break; } }
+    const sel=document.getElementById('ft');
+    for(const o of sel.options){
+      if(o.value&&(o.value.toLowerCase().includes((d.tipo||'').toLowerCase())||(d.tipo||'').toLowerCase().includes(o.value.toLowerCase()))){sel.value=o.value;break;}
+    }
   }
 }
-
-function renderExtractedSummary(data) {
-  const found = Object.values(data.encontrado||{}).filter(Boolean).length;
-  const total = Object.keys(data.encontrado||{}).length;
-  if(!found) return;
-  document.getElementById('extracted-summary').innerHTML = `
-    <div class="extracted-card">
-      <div class="extracted-header">
-        <div class="extracted-dot"></div>
-        <span class="extracted-title">Extrajimos información de sus archivos</span>
-        <span class="extracted-sub">${found}/${total} campos encontrados</span>
-      </div>
-      <div style="font-size:12px;color:var(--text-dim)">${data.resumen||''} — Los campos en verde fueron llenados automáticamente. Revise y corrija si algo no es exacto.</div>
-    </div>`;
+ 
+// VALIDATIONS
+function val2(){
+  const e=[];
+  const rq=(id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('er');e.push(msg);}else el?.classList.remove('er');};
+  rq('fn','Nombre del negocio');rq('ft','Tipo de negocio');rq('fc','Ciudad y colonia');rq('fh','Horarios de atención');
+  return e;
 }
-
-// ── STEP 2 → 3 ──
-function goStep3() {
-  const errs = [];
-  const req = (id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('error');errs.push(msg);}else el?.classList.remove('error');};
-  req('f-nombre','Nombre del negocio');
-  req('f-tipo','Tipo de negocio');
-  req('f-ciudad','Ciudad y colonia');
-  req('f-horario','Horarios de atención');
-  req('f-servicios','Servicios');
-  req('f-precios','Precios');
-  req('f-top','Procedimientos más solicitados');
-  if(!S.fin){document.getElementById('opts-fin').classList.add('err');errs.push('Opción de financiamiento');}
-  const errEl=document.getElementById('err-2');
-  if(errs.length){errEl.textContent='Campos requeridos: '+errs.join(', ')+'.';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  showStep(3);
+function val3(){
+  const e=[];
+  const rq=(id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('er');e.push(msg);}else el?.classList.remove('er');};
+  rq('fsv','Servicios');rq('fpr','Precios');rq('ftop','Procedimientos más solicitados');rq('fdif','Diferenciadores');rq('fcrt','Certificaciones del doctor');
+  if(!SEL.fin){document.getElementById('ofin').classList.add('er2');e.push('Opción de financiamiento');}
+  return e;
 }
-
-// ── SUBMIT ──
-async function submitForm() {
-  const errs=[];
-  const req=(id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('error');errs.push(msg);}else el?.classList.remove('error');};
-  req('f-diferencia','Diferenciadores');req('f-certs','Certificaciones');
-  req('f-objeciones','Objeciones');
-  if(!S.alcance){document.getElementById('opts-alcance').classList.add('err');errs.push('Alcance de pacientes');}
-  if(!S.tono){document.getElementById('opts-tono').classList.add('err');errs.push('Tono del asistente');}
-  if(!S.agenda){document.getElementById('opts-agenda').classList.add('err');errs.push('Sistema de agenda');}
-  const errEl=document.getElementById('err-3');
-  if(errs.length){errEl.textContent='Campos requeridos: '+errs.join(', ')+'.';errEl.style.display='block';return;}
-  errEl.style.display='none';
-
-  const btn=document.querySelector('#step-3 .btn-next');
-  btn.disabled=true;
-  document.getElementById('submit-loading').style.display='flex';
-  document.getElementById('submit-wrap').style.display='none';
-
-  const d = {
-    nombre:v('f-nombre'),tipo:v('f-tipo'),ciudad:v('f-ciudad'),horario:v('f-horario'),
-    direccion:v('f-direccion'),servicios:v('f-servicios'),precios:v('f-precios'),
-    promo:v('f-promo'),top_servicios:v('f-top'),impulsar:v('f-impulsar'),
-    financiamiento:S.fin,diferencia:v('f-diferencia'),certs:v('f-certs'),
-    alcance:S.alcance,testimonios:v('f-testimonios'),tono:S.tono,
-    aria_nombre:v('f-aria')||'ARIA',objeciones:v('f-objeciones'),
-    reservado:v('f-reservado'),agenda:S.agenda,extra:v('f-extra'),
-    contacto_nombre:v('f-cn'),contacto_wa:v('f-cwa'),
+function val4(){
+  const e=[];
+  const rq=(id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('er');e.push(msg);}else el?.classList.remove('er');};
+  rq('fobj','Objeciones comunes de los pacientes');
+  if(!SEL.tono){document.getElementById('otono').classList.add('er2');e.push('Tono del asistente');}
+  if(!SELM.alc.length){document.getElementById('oalc').classList.add('er2');e.push('Tipo de pacientes que atienden');}
+  if(!SEL.ag){document.getElementById('oag').classList.add('er2');e.push('Sistema de agenda');}
+  return e;
+}
+ 
+function goS3(){
+  const e=val2();const el=document.getElementById('e2');
+  if(e.length){el.textContent='Campos requeridos: '+e.join(', ')+'.';el.style.display='block';return;}
+  el.style.display='none';goS(3);
+}
+function goS4(){
+  const e=val3();const el=document.getElementById('e3');
+  if(e.length){el.textContent='Campos requeridos: '+e.join(', ')+'.';el.style.display='block';return;}
+  el.style.display='none';goS(4);
+}
+function goS5(){
+  const e=val4();const el=document.getElementById('e4');
+  if(e.length){el.textContent='Campos requeridos: '+e.join(', ')+'.';el.style.display='block';return;}
+  el.style.display='none';goS(5);
+}
+ 
+async function enviar(){
+  const btn=document.getElementById('benv');
+  const errEl=document.getElementById('e5');
+  errEl.style.display='none';btn.disabled=true;
+  document.getElementById('sld').style.display='flex';
+  document.getElementById('swrap').style.display='none';
+  const d={
+    nombre:v('fn'),tipo:v('ft'),ciudad:v('fc'),horario:v('fh'),direccion:v('fd'),
+    servicios:v('fsv'),precios:v('fpr'),promo:v('fpro'),top_servicios:v('ftop'),
+    impulsar:v('fimp'),financiamiento:SEL.fin,diferencia:v('fdif'),certs:v('fcrt'),
+    testimonios:v('ftes'),tono:SEL.tono,aria_nombre:v('faria')||'ARIA',
+    alcance:SELM.alc.join(', '),objeciones:v('fobj'),agenda:SEL.ag,
+    reservado:v('fres'),extra:v('fext'),
+    contacto_nombre:v('fcn'),contacto_wa:v('fcw'),
     fecha:new Date().toLocaleDateString('es-MX'),status:'pendiente',manual:''
   };
-
-  try {
-    const key='cli:'+d.nombre.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').substring(0,30)+':'+Date.now();
-    await window.storage.set(key, JSON.stringify(d));
-    document.getElementById('submit-loading').style.display='none';
-    showStep(4);
-  } catch(e) {
-    document.getElementById('submit-loading').style.display='none';
-    document.getElementById('submit-wrap').style.display='block';
-    errEl.textContent='Error al guardar: '+e.message;
-    errEl.style.display='block';
+  try{
+    const res=await fetch(API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'save',data:d})
+    });
+    const result=await res.json();
+    if(!result.ok) throw new Error(result.error||'Error al guardar');
+    document.getElementById('sld').style.display='none';
+    document.getElementById('ssuc').style.display='block';
+    goS(5);
+  }catch(e){
+    document.getElementById('sld').style.display='none';
+    document.getElementById('swrap').style.display='block';
+    errEl.textContent='Error: '+e.message;errEl.style.display='block';
     btn.disabled=false;
   }
 }
-
-// ── HELPERS ──
-function v(id){return document.getElementById(id)?.value?.trim()||'';}
-function pick(el, group) {
-  document.querySelectorAll('#opts-'+group+' .opt').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected'); S[group]=el.textContent.trim();
-  document.getElementById('opts-'+group).classList.remove('err');
-}
-
-// ── PANEL ──
-async function loadPanel() {
-  const cont=document.getElementById('panel-content');
-  cont.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Cargando clientes...</div>';
-  try {
-    const res=await window.storage.list('cli:');
-    const keys=res?.keys||[];
-    if(!keys.length){cont.innerHTML='<div class="empty-state">No hay clientes registrados aún.<br>Aparecerán aquí cuando completen el formulario.</div>';return;}
+ 
+// PANEL
+async function loadPanel(){
+  const c=document.getElementById('pc');
+  c.innerHTML='<div class="ld"><div class="sp"></div>Cargando clientes...</div>';
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list'})});
+    const {keys=[]}=await res.json();
+    if(!keys.length){c.innerHTML='<div class="empty">No hay clientes registrados aún.<br>Aparecerán aquí cuando completen el formulario.</div>';return;}
     let html='';
     for(const key of keys){
       try{
-        const r=await window.storage.get(key);
-        if(!r) continue;
-        const d=JSON.parse(r.value);
-        const sk=btoa(key).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
-        const bc=d.status==='listo'?'s-ready':d.status==='subido'?'s-done':d.status==='gen'?'s-gen':'s-pending';
+        const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
+        const d=await r.json();
+        const sk=key.replace(/[^a-zA-Z0-9]/g,'_').substring(0,25);
+        const bc=d.status==='listo'?'pr':d.status==='subido'?'pd':d.status==='gen'?'pg':'pp';
         const bl=d.status==='listo'?'Manual listo':d.status==='subido'?'Subido a GHL':d.status==='gen'?'Generando...':'Pendiente';
-        html+=`<div class="client-card" id="cc-${sk}">
-          <div class="client-top">
-            <div><div class="client-name">${esc(d.nombre)}</div><div class="client-meta">${esc(d.tipo)} · ${esc(d.ciudad)} · ${esc(d.fecha)}${d.contacto_wa?' · '+esc(d.contacto_wa):''}</div></div>
-            <span class="status-pill ${bc}" id="sp-${sk}">${bl}</span>
+        html+=`<div class="cc" id="cc${sk}">
+          <div class="ctop">
+            <div>
+              <div class="cn">${esc(d.nombre)}</div>
+              <div class="cm">${esc(d.tipo)} · ${esc(d.ciudad)} · ${esc(d.fecha)}${d.contacto_wa?' · '+esc(d.contacto_wa):''}</div>
+            </div>
+            <span class="pill ${bc}" id="sp${sk}">${bl}</span>
           </div>
-          <div class="actions" id="ac-${sk}">
-            ${(!d.manual)?`<button class="btn-action primary" onclick="genManual('${sk}','${key}')">Generar Manual ARIA</button>`:''}
-            ${d.manual?`<button class="btn-action" onclick="toggleManual('${sk}')">Ver manual</button><button class="btn-action" onclick="copyManual('${sk}')">Copiar para GHL</button>`:''}
-            ${d.status==='listo'?`<button class="btn-action" onclick="markDone('${sk}','${key}')">Marcar subido ✓</button>`:''}
+          <div class="acts" id="ac${sk}">
+            ${!d.manual?`<button class="ba bap" onclick="genM('${sk}','${key}')">Generar Manual ARIA</button>`:''}
+            ${d.manual?`<button class="ba" onclick="togM('${sk}')">Ver manual</button><button class="ba" onclick="cpM('${sk}')">Copiar para GHL</button>`:''}
+            ${d.status==='listo'?`<button class="ba" onclick="mkD('${sk}','${key}',${JSON.stringify(d).replace(/'/g,"&#39;")})">Marcar subido ✓</button>`:''}
           </div>
-          <div id="gl-${sk}" style="display:none" class="loading-wrap"><div class="spinner"></div>Generando Manual de Ventas con IA...</div>
-          <div id="ge-${sk}" class="err-msg" style="display:none"></div>
-          ${d.manual?`<div class="manual-box" id="mb-${sk}">${esc(d.manual)}</div>`:''}
+          <div id="gl${sk}" style="display:none" class="ld"><div class="sp"></div>Generando Manual de Ventas con IA...</div>
+          <div id="ge${sk}" class="emsg" style="display:none"></div>
+          ${d.manual?`<div class="mbox" id="mb${sk}">${esc(d.manual)}</div>`:''}
         </div>`;
-      }catch(e){}
+      }catch(_){}
     }
-    cont.innerHTML=html||'<div class="empty-state">Sin clientes aún.</div>';
-  }catch(e){cont.innerHTML='<div class="empty-state">Error: '+esc(e.message)+'</div>';}
+    c.innerHTML=html||'<div class="empty">Sin clientes aún.</div>';
+  }catch(e){c.innerHTML='<div class="empty">Error al cargar: '+esc(e.message)+'</div>';}
 }
-
-async function genManual(sk, key) {
-  document.getElementById('gl-'+sk).style.display='flex';
-  document.querySelector(`#ac-${sk} .btn-action`)&&(document.querySelector(`#ac-${sk} .btn-action`).disabled=true);
-  document.getElementById('sp-'+sk).textContent='Generando...';
-  document.getElementById('sp-'+sk).className='status-pill s-gen';
+ 
+async function genM(sk,key){
+  document.getElementById('gl'+sk).style.display='flex';
+  const btns=document.querySelectorAll(`#ac${sk} .ba`);btns.forEach(b=>b.disabled=true);
+  const sp=document.getElementById('sp'+sk);sp.textContent='Generando...';sp.className='pill pg';
   try{
-    const r=await window.storage.get(key);
-    const d=JSON.parse(r.value);
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',data:d})});
-    const result=await res.json();
-    if(!result.manual) throw new Error('Manual vacío');
-    d.manual=result.manual; d.status='listo';
-    await window.storage.set(key, JSON.stringify(d));
-    document.getElementById('gl-'+sk).style.display='none';
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
+    const d=await r.json();
+    const genRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',data:d})});
+    const {manual}=await genRes.json();
+    if(!manual) throw new Error('Manual vacío');
+    d.manual=manual;d.status='listo';
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
+    document.getElementById('gl'+sk).style.display='none';
     loadPanel();
   }catch(e){
-    document.getElementById('gl-'+sk).style.display='none';
-    document.getElementById('ge-'+sk).textContent='Error: '+e.message;
-    document.getElementById('ge-'+sk).style.display='block';
-    document.getElementById('sp-'+sk).textContent='Pendiente';
-    document.getElementById('sp-'+sk).className='status-pill s-pending';
+    document.getElementById('gl'+sk).style.display='none';
+    document.getElementById('ge'+sk).textContent='Error: '+e.message;
+    document.getElementById('ge'+sk).style.display='block';
+    sp.textContent='Pendiente';sp.className='pill pp';
+    btns.forEach(b=>b.disabled=false);
   }
 }
-
-function toggleManual(sk){const el=document.getElementById('mb-'+sk);if(el)el.style.display=el.style.display==='none'?'block':'none';}
-function copyManual(sk){
-  const el=document.getElementById('mb-'+sk);
-  if(!el)return;el.style.display='block';
+ 
+function togM(sk){const el=document.getElementById('mb'+sk);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+function cpM(sk){
+  const el=document.getElementById('mb'+sk);if(!el)return;el.style.display='block';
   navigator.clipboard.writeText(el.innerText).then(()=>{
-    const btns=document.querySelectorAll(`#ac-${sk} .btn-action`);
-    btns.forEach(b=>{if(b.textContent.includes('Copiar')){b.textContent='Copiado ✓';setTimeout(()=>b.textContent='Copiar para GHL',2000);}});
+    const btns=document.querySelectorAll(`#ac${sk} .ba`);
+    btns.forEach(b=>{if(b.textContent.includes('Copiar')){b.textContent='Copiado ✓';setTimeout(()=>b.textContent='Copiar para GHL',2500);}});
   });
 }
-async function markDone(sk,key){
-  try{const r=await window.storage.get(key);const d=JSON.parse(r.value);d.status='subido';await window.storage.set(key,JSON.stringify(d));loadPanel();}catch(e){}
+async function mkD(sk,key,d){
+  try{
+    d.status='subido';
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
+    loadPanel();
+  }catch(e){}
 }
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+ 
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
+ 
