@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LEADOC — Bienvenido a bordo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C87A;
+  --gold-pale: #F5EDD6;
+  --dark: #0A0A0A;
+  --dark-2: #141414;
+  --dark-3: #1E1E1E;
+  --dark-4: #2A2A2A;
+  --text: #F0EDE8;
+  --text-muted: #8A8580;
+  --text-dim: #5A5550;
+  --border: rgba(201,168,76,0.15);
+  --border-hover: rgba(201,168,76,0.35);
+  --success: #4A9B6F;
+  --danger: #C05050;
+  --radius: 10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.6}
+.page{max-width:680px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* HEADER */
+.header{text-align:center;padding:2.5rem 0 2rem;border-bottom:0.5px solid var(--border);margin-bottom:2rem}
+.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.logo-mark{width:36px;height:36px;border:1.5px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:18px;height:18px;fill:var(--gold)}
+.logo-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;letter-spacing:0.12em;color:var(--gold)}
+h1{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:600;color:var(--text);margin-bottom:0.75rem;line-height:1.2}
+.subtitle{font-size:14px;color:var(--text-muted);max-width:440px;margin:0 auto}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:2rem}
+.progress-steps{display:flex;justify-content:space-between;margin-bottom:8px}
+.progress-step{font-size:11px;color:var(--text-dim);font-family:'Syne',sans-serif;letter-spacing:0.05em;text-transform:uppercase}
+.progress-step.active{color:var(--gold)}
+.progress-track{height:2px;background:var(--dark-4);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;transition:width 0.4s ease}
+
+/* VIEWS */
+.view{display:none}
+.view.active{display:block}
+
+/* SECTION */
+.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border)}
+
+/* BANNER */
+.info-banner{background:rgba(201,168,76,0.06);border:0.5px solid var(--border);border-left:2px solid var(--gold);border-radius:var(--radius);padding:12px 16px;font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6}
+.info-banner strong{color:var(--gold-light)}
+
+/* FIELDS */
+.field{margin-bottom:1.25rem}
+.label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:6px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em}
+.badge-req{background:rgba(192,80,80,0.15);color:#E07070;border:0.5px solid rgba(192,80,80,0.3)}
+.badge-opt{background:var(--dark-3);color:var(--text-dim);border:0.5px solid var(--dark-4)}
+.hint{font-size:11px;color:var(--text-dim);margin-top:5px;line-height:1.5}
+.hint-boost{font-size:11px;color:rgba(201,168,76,0.7);margin-top:5px;line-height:1.5}
+
+input[type=text],input[type=email],textarea,select{
+  width:100%;padding:11px 14px;font-size:14px;
+  background:var(--dark-2);color:var(--text);
+  border:0.5px solid var(--dark-4);border-radius:var(--radius);
+  font-family:'Inter',sans-serif;resize:vertical;
+  transition:border-color 0.2s;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:rgba(201,168,76,0.5)}
+input.prefilled,textarea.prefilled{border-color:rgba(74,155,111,0.4);background:rgba(74,155,111,0.05)}
+input.error,textarea.error,select.error{border-color:rgba(192,80,80,0.5)}
+select option{background:var(--dark-2)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.opt{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--dark-2);border:0.5px solid var(--dark-4);border-radius:var(--radius);cursor:pointer;font-size:14px;color:var(--text-muted);transition:all 0.15s}
+.opt:hover{border-color:var(--border-hover);color:var(--text)}
+.opt.selected{border-color:var(--gold);color:var(--text);background:rgba(201,168,76,0.06)}
+.opt-key{width:22px;height:22px;border-radius:5px;border:0.5px solid var(--dark-4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;color:var(--text-dim);flex-shrink:0;transition:all 0.15s}
+.opt.selected .opt-key{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.options.err .opt{border-color:rgba(192,80,80,0.4)}
+
+/* FILE DROP */
+.file-drop{border:1.5px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:var(--dark-2)}
+.file-drop:hover,.file-drop.drag{border-color:var(--gold);background:rgba(201,168,76,0.04)}
+.file-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:28px;margin-bottom:8px;color:var(--gold)}
+.drop-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.drop-sub{font-size:12px;color:var(--text-dim)}
+.file-list{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.file-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--dark-3);border-radius:7px;font-size:13px}
+.file-item-name{display:flex;align-items:center;gap:8px;color:var(--text-muted)}
+.file-item-icon{font-size:16px}
+.file-remove{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;transition:color 0.15s}
+.file-remove:hover{color:var(--danger)}
+.file-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(74,155,111,0.15);color:#6BC990;border:0.5px solid rgba(74,155,111,0.3)}
+
+/* EXTRACTED PREVIEW */
+.extracted-card{background:var(--dark-2);border:0.5px solid rgba(74,155,111,0.3);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.extracted-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.extracted-dot{width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0}
+.extracted-title{font-size:13px;font-weight:500;color:#6BC990}
+.extracted-sub{font-size:12px;color:var(--text-dim);margin-left:auto}
+.field-prefilled-note{font-size:11px;color:#6BC990;margin-top:4px}
+
+/* NAV BUTTONS */
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
+.btn-back{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:10px 20px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;transition:all 0.15s}
+.btn-back:hover{border-color:var(--border-hover);color:var(--text)}
+.btn-next{background:var(--gold);color:var(--dark);padding:10px 28px;border:none;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em;transition:all 0.15s}
+.btn-next:hover{background:var(--gold-light)}
+.btn-next:disabled{opacity:0.4;cursor:not-allowed}
+.btn-submit{background:var(--gold);color:var(--dark);width:100%;padding:13px;border:none;border-radius:var(--radius);cursor:pointer;font-size:15px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.06em;transition:all 0.15s;margin-top:1rem}
+.btn-submit:hover{background:var(--gold-light)}
+.btn-submit:disabled{opacity:0.4;cursor:not-allowed}
+
+/* LOADING */
+.loading-wrap{display:flex;align-items:center;gap:12px;padding:1rem 0;color:var(--text-muted);font-size:14px}
+.spinner{width:18px;height:18px;border:2px solid var(--dark-4);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ERROR */
+.err-msg{font-size:12px;color:#E07070;margin-top:8px}
+
+/* SUCCESS */
+.success-page{text-align:center;padding:3rem 0}
+.success-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.3)}50%{box-shadow:0 0 0 12px rgba(201,168,76,0)}}
+.success-check{font-size:28px;color:var(--gold)}
+.success-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:600;color:var(--text);margin-bottom:0.75rem}
+.success-sub{font-size:14px;color:var(--text-muted);line-height:1.7;max-width:380px;margin:0 auto}
+
+/* PANEL */
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.panel-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:600}
+.btn-refresh{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:7px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all 0.15s}
+.btn-refresh:hover{border-color:var(--border-hover);color:var(--text)}
+.client-card{background:var(--dark-2);border:0.5px solid var(--dark-4);border-radius:12px;padding:1.25rem;margin-bottom:10px;transition:border-color 0.15s}
+.client-card:hover{border-color:var(--border)}
+.client-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
+.client-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:var(--text)}
+.client-meta{font-size:12px;color:var(--text-dim);margin-bottom:12px}
+.status-pill{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;font-family:'Syne',sans-serif;letter-spacing:0.04em;flex-shrink:0}
+.s-pending{background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3)}
+.s-ready{background:rgba(74,155,111,0.12);color:#6BC990;border:0.5px solid rgba(74,155,111,0.3)}
+.s-done{background:var(--dark-3);color:var(--text-dim);border:0.5px solid var(--dark-4)}
+.s-gen{background:rgba(100,130,200,0.12);color:#8AAAEE;border:0.5px solid rgba(100,130,200,0.3)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.btn-action{background:transparent;border:0.5px solid var(--dark-4);color:var(--text-muted);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.15s}
+.btn-action:hover{border-color:var(--border-hover);color:var(--text)}
+.btn-action.primary{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.btn-action.primary:hover{background:rgba(201,168,76,0.08)}
+.btn-action:disabled{opacity:0.4;cursor:not-allowed}
+.manual-box{background:var(--dark-3);border-radius:8px;padding:1rem;font-size:12px;line-height:1.8;color:var(--text-muted);white-space:pre-wrap;font-family:monospace;max-height:320px;overflow-y:auto;margin-top:10px;display:none;border:0.5px solid var(--dark-4)}
+.empty-state{text-align:center;padding:3rem;color:var(--text-dim);font-size:14px;line-height:1.7}
+
+/* NAV TABS */
+.tabs{display:flex;gap:4px;margin-bottom:2rem;background:var(--dark-2);padding:4px;border-radius:10px;border:0.5px solid var(--dark-4)}
+.tab{flex:1;padding:9px;text-align:center;font-size:13px;font-family:'Syne',sans-serif;font-weight:500;letter-spacing:0.04em;border-radius:8px;cursor:pointer;color:var(--text-dim);transition:all 0.15s;border:none;background:transparent}
+.tab:hover{color:var(--text-muted)}
+.tab.active{background:var(--dark-3);color:var(--text);border:0.5px solid var(--dark-4)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18"><path d="M9 1L1 5v8l8 4 8-4V5L9 1zm0 2.2L15 6.5v5L9 14.8 3 11.5v-5L9 3.2z"/></svg>
+      </div>
+      <span class="logo-text">LEADOC</span>
+    </div>
+    <h1>Bienvenido a bordo</h1>
+    <p class="subtitle">Esta información nos permite configurar su asistente exactamente para su negocio. Son 10 minutos que marcarán la diferencia.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('cliente',this)">Formulario</button>
+    <button class="tab" onclick="switchTab('panel',this)">Panel LEADOC</button>
+  </div>
+
+  <!-- ══════════ FORMULARIO ══════════ -->
+  <div id="tab-cliente" class="view active">
+
+    <div class="progress-wrap">
+      <div class="progress-steps">
+        <span class="progress-step active" id="ps-1">Archivos</span>
+        <span class="progress-step" id="ps-2">Confirmar</span>
+        <span class="progress-step" id="ps-3">Completar</span>
+        <span class="progress-step" id="ps-4">Listo</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog" style="width:25%"></div></div>
+    </div>
+
+    <!-- STEP 1: ARCHIVOS -->
+    <div id="step-1" class="view active">
+      <div class="info-banner">
+        <strong>Suba sus materiales y el sistema llenará el formulario automáticamente.</strong><br>
+        Cuantos más archivos suba, menos campos tendrá que llenar. La IA extrae toda la información posible.
+      </div>
+
+      <div class="section-title">Suba sus materiales</div>
+
+      <div class="field">
+        <label class="label">Menú de servicios, lista de precios, fotos de promociones <span class="badge badge-opt">Opcional</span></label>
+        <div class="file-drop" id="drop-zone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+          <input type="file" id="file-input" multiple accept="image/*,.pdf,.xlsx,.xls,.docx,.doc" onchange="addFiles(this.files)"/>
+          <div class="drop-icon">⬆</div>
+          <div class="drop-title">Arrastra archivos aquí o haz clic para seleccionar</div>
+          <div class="drop-sub">Imágenes, PDF, Excel, Word — máx. 10MB por archivo</div>
+        </div>
+        <div class="file-list" id="file-list"></div>
+        <div class="hint-boost">Fotos de su menú de servicios, listas de precios, diplomas o documentos — la IA los leerá y llenará el formulario por usted.</div>
+      </div>
+
+      <div id="extract-loading" style="display:none" class="loading-wrap"><div class="spinner"></div>Analizando sus archivos con IA...</div>
+      <div id="extract-err" class="err-msg" style="display:none"></div>
+
+      <div class="nav-row">
+        <span></span>
+        <button class="btn-next" onclick="goStep2()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: CONFIRMAR EXTRAÍDO -->
+    <div id="step-2" class="view">
+      <div id="extracted-summary"></div>
+
+      <div class="section-title">Su negocio</div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Nombre de la clínica / negocio <span class="badge badge-req">Obligatorio</span></label>
+          <input type="text" id="f-nombre" placeholder="Ej. Clínica Estética Dra. García"/>
+        </div>
+        <div class="field">
+          <label class="label">Tipo de negocio <span class="badge badge-req">Obligatorio</span></label>
+          <select id="f-tipo">
+            <option value="">Selecciona...</option>
+            <option>Clínica de medicina estética</option>
+            <option>Clínica dental</option>
+            <option>Clínica de cirugía plástica</option>
+            <option>Clínica de bariatría</option>
+            <option>Clínica de dermatología</option>
+            <option>Clínica de fisioterapia</option>
+            <option>SPA / Cosmetología</option>
+            <option>Gimnasio de box</option>
+            <option>CrossFit / Funcional</option>
+            <option>Gimnasio general</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Ciudad y colonia <span class="badge badge-req">Obligatorio</span></label>
+          <input type="text" id="f-ciudad" placeholder="Ej. Guadalajara, Col. Chapalita"/>
+        </div>
+        <div class="field">
+          <label class="label">Horarios de atención <span class="badge badge-req">Obligatorio</span></label>
+          <input type="text" id="f-horario" placeholder="Ej. Lun-Vie 9am-7pm, Sáb 9am-2pm"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Dirección completa <span class="badge badge-opt">Opcional</span></label>
+        <input type="text" id="f-direccion" placeholder="Ej. Av. López Mateos 1234, frente al Walmart"/>
+        <div class="hint-boost">Su asistente podrá dar indicaciones exactas a los pacientes.</div>
+      </div>
+
+      <div class="section-title" style="margin-top:1rem">Servicios y precios</div>
+      <div class="field">
+        <label class="label">Servicios que ofrecen <span class="badge badge-req">Obligatorio</span></label>
+        <textarea id="f-servicios" rows="4" placeholder="Ej:&#10;Botox facial&#10;Relleno de labios&#10;HIFU corporal&#10;Limpieza facial profunda"></textarea>
+      </div>
+      <div class="field">
+        <label class="label">Precios por procedimiento <span class="badge badge-req">Obligatorio</span></label>
+        <textarea id="f-precios" rows="4" placeholder="Ej:&#10;Botox facial — $3,500 MXN&#10;Relleno de labios — $4,000 MXN&#10;HIFU corporal — $6,000 MXN"></textarea>
+        <div class="hint-boost">Incluir precios mejora significativamente la calificación de leads.</div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Procedimientos más solicitados <span class="badge badge-req">Obligatorio</span></label>
+          <input type="text" id="f-top" placeholder="Ej. Botox, HIFU, Limpieza facial"/>
+        </div>
+        <div class="field">
+          <label class="label">Promociones activas <span class="badge badge-opt">Opcional</span></label>
+          <input type="text" id="f-promo" placeholder="Ej. Primera consulta gratis"/>
+          <div class="hint-boost">Una buena promo puede duplicar las citas.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Servicios que quieren impulsar más <span class="badge badge-opt">Opcional</span></label>
+        <textarea id="f-impulsar" rows="2" placeholder="Ej. Queremos aumentar cirugías corporales"></textarea>
+        <div class="hint-boost">Su asistente priorizará estos al presentar opciones.</div>
+      </div>
+      <div class="field">
+        <label class="label">¿Ofrecen financiamiento? <span class="badge badge-req">Obligatorio</span></label>
+        <div class="options" id="opts-fin">
+          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">A</span>Sí, financiamiento propio</div>
+          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">B</span>Sí, con financiera externa</div>
+          <div class="opt" onclick="pick(this,'fin')"><span class="opt-key">C</span>No ofrecemos financiamiento</div>
+        </div>
+      </div>
+
+      <div id="err-2" class="err-msg" style="display:none"></div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="showStep(1)">← Anterior</button>
+        <button class="btn-next" onclick="goStep3()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: COMPLETAR -->
+    <div id="step-3" class="view">
+      <div class="info-banner">
+        <strong>Último paso.</strong> Esta información es la que más impacta en los resultados. Cuantos más detalles nos dé, mejores respuestas dará su asistente.
+      </div>
+
+      <div class="section-title">Su ventaja competitiva</div>
+      <div class="field">
+        <label class="label">¿En qué se especializan y qué los diferencia? <span class="badge badge-req">Obligatorio</span></label>
+        <textarea id="f-diferencia" rows="3" placeholder="Ej: 15 años de experiencia, tecnología europea, resultados desde la primera sesión..."></textarea>
+      </div>
+      <div class="field">
+        <label class="label">Doctores, certificaciones o reconocimientos <span class="badge badge-req">Obligatorio</span></label>
+        <textarea id="f-certs" rows="2" placeholder="Ej: Dra. García, certificada por la Sociedad Mexicana de Cirugía Plástica..."></textarea>
+      </div>
+      <div class="field">
+        <label class="label">¿Atienden pacientes de otras ciudades o países? <span class="badge badge-req">Obligatorio</span></label>
+        <div class="options" id="opts-alcance">
+          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">A</span>Solo pacientes locales</div>
+          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">B</span>Pacientes de otros estados</div>
+          <div class="opt" onclick="pick(this,'alcance')"><span class="opt-key">C</span>Pacientes Internacionales</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Casos de éxito o testimonios <span class="badge badge-opt">Opcional</span></label>
+        <textarea id="f-testimonios" rows="2" placeholder="Ej: Paciente perdió 30kg en 6 meses, resultados visibles desde sesión 1..."></textarea>
+        <div class="hint-boost">Los testimonios reales son el argumento de venta más poderoso.</div>
+      </div>
+
+      <div class="section-title" style="margin-top:1rem">Configuración del asistente</div>
+      <div class="field">
+        <label class="label">¿Cómo debe dirigirse a los pacientes? <span class="badge badge-req">Obligatorio</span></label>
+        <div class="options" id="opts-tono">
+          <div class="opt" onclick="pick(this,'tono')"><span class="opt-key">A</span>De usted — formal y profesional</div>
+          <div class="opt" onclick="pick(this,'tono')"><span class="opt-key">B</span>De tú — cercano y amigable</div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Nombre para su asistente <span class="badge badge-opt">Opcional</span></label>
+          <input type="text" id="f-aria" placeholder="Dejar vacío = ARIA"/>
+          <div class="hint">Ej. Sofía, Valeria, ARIA...</div>
+        </div>
+        <div class="field">
+          <label class="label">Sistema de agenda actual <span class="badge badge-req">Obligatorio</span></label>
+          <div class="options" id="opts-agenda" style="gap:5px">
+            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">A</span>Doctoralia</div>
+            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">B</span>Google Calendar</div>
+            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">C</span>WhatsApp / teléfono manual</div>
+            <div class="opt" style="padding:7px 12px;font-size:13px" onclick="pick(this,'agenda')"><span class="opt-key">D</span>Sistema propio / Otro</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">¿Qué razones dan los pacientes para no agendar? <span class="badge badge-req">Obligatorio</span></label>
+        <textarea id="f-objeciones" rows="3" placeholder="Ej: El precio, miedo al procedimiento, distancia, quieren pensarlo..."></textarea>
+        <div class="hint-boost">Cuantas más objeciones nos dé, mejor preparado estará su asistente.</div>
+      </div>
+      <div class="field">
+        <label class="label">Información reservada para el doctor <span class="badge badge-opt">Opcional</span></label>
+        <textarea id="f-reservado" rows="2" placeholder="Ej: Precios exactos de cirugías, procedimientos de riesgo..."></textarea>
+        <div class="hint">Su asistente redirigirá estos temas directamente al doctor.</div>
+      </div>
+      <div class="field">
+        <label class="label">Algo más que su asistente deba saber <span class="badge badge-opt">Opcional</span></label>
+        <textarea id="f-extra" rows="3" placeholder="Ej: Solo atendemos con cita previa, tenemos estacionamiento, no atendemos embarazadas..."></textarea>
+        <div class="hint-boost">Cada detalle se traduce directamente en mejores respuestas para sus pacientes.</div>
+      </div>
+      <div class="field">
+        <label class="label">Su nombre y WhatsApp <span class="badge badge-opt">Opcional</span></label>
+        <div class="grid2">
+          <input type="text" id="f-cn" placeholder="Nombre de quien llena"/>
+          <input type="text" id="f-cwa" placeholder="WhatsApp con lada"/>
+        </div>
+        <div class="hint">Para contactarle si necesitamos confirmar algo antes de activar.</div>
+      </div>
+
+      <div id="err-3" class="err-msg" style="display:none"></div>
+      <div id="submit-loading" style="display:none" class="loading-wrap"><div class="spinner"></div>Guardando su información...</div>
+      <div id="submit-wrap">
+        <div class="nav-row">
+          <button class="btn-back" onclick="showStep(2)">← Anterior</button>
+          <button class="btn-next" onclick="submitForm()">Enviar ↗</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: SUCCESS -->
+    <div id="step-4" class="view">
+      <div class="success-page">
+        <div class="success-ring"><div class="success-check">✓</div></div>
+        <div class="success-title">¡Listo! Su información fue recibida.</div>
+        <p class="success-sub">El equipo de LEADOC configurará su asistente en las próximas horas.<br>Le contactaremos por WhatsApp para confirmar la activación.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ PANEL LEADOC ══════════ -->
+  <div id="tab-panel" class="view">
+    <div class="panel-header">
+      <div class="panel-title">Clientes en onboarding</div>
+      <button class="btn-refresh" onclick="loadPanel()">↻ Actualizar</button>
+    </div>
+    <div id="panel-content"><div class="loading-wrap"><div class="spinner"></div>Cargando...</div></div>
+  </div>
+
+</div>
+
+<script>
+const API = '/.netlify/functions/onboarding';
+const S = {fin:'',alcance:'',tono:'',agenda:''};
+const uploadedFiles = [];
+let extracted = {};
+
+// ── TABS ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.view[id^="tab-"]').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='panel') loadPanel();
+}
+
+// ── STEPS ──
+function showStep(n) {
+  [1,2,3,4].forEach(i=>{
+    const el = document.getElementById('step-'+i);
+    if(el) el.classList.toggle('active', i===n);
+    const ps = document.getElementById('ps-'+i);
+    if(ps) ps.classList.toggle('active', i===n);
+  });
+  document.getElementById('prog').style.width = (n/4*100)+'%';
+}
+
+// ── FILES ──
+function dragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag')}
+function dragLeave(){document.getElementById('drop-zone').classList.remove('drag')}
+function dropFiles(e){e.preventDefault();dragLeave();addFiles(e.dataTransfer.files)}
+
+function addFiles(files) {
+  for(const f of files){
+    if(f.size > 10*1024*1024){alert('Archivo demasiado grande (máx 10MB): '+f.name);continue}
+    if(!uploadedFiles.find(x=>x.name===f.name && x.size===f.size)) uploadedFiles.push(f);
+  }
+  renderFiles();
+}
+
+function renderFiles() {
+  const list = document.getElementById('file-list');
+  list.innerHTML = uploadedFiles.map((f,i)=>`
+    <div class="file-item">
+      <span class="file-item-name"><span class="file-item-icon">${fileIcon(f.type)}</span>${f.name}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="file-badge">${(f.size/1024).toFixed(0)}KB</span>
+        <button class="file-remove" onclick="removeFile(${i})">×</button>
+      </div>
+    </div>`).join('');
+}
+
+function removeFile(i){uploadedFiles.splice(i,1);renderFiles()}
+
+function fileIcon(type){
+  if(type.startsWith('image/')) return '🖼';
+  if(type==='application/pdf') return '📄';
+  if(type.includes('sheet')||type.includes('excel')) return '📊';
+  if(type.includes('word')) return '📝';
+  return '📁';
+}
+
+async function fileToBase64(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result.split(',')[1]);
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function fileToText(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.onerror=rej;
+    r.readAsText(file);
+  });
+}
+
+// ── STEP 1 → 2 ──
+async function goStep2() {
+  const errEl = document.getElementById('extract-err');
+  errEl.style.display='none';
+
+  if(uploadedFiles.length === 0){
+    showStep(2);
+    return;
+  }
+
+  document.getElementById('extract-loading').style.display='flex';
+  document.querySelector('#step-1 .btn-next').disabled=true;
+
+  try {
+    const files = [];
+    for(const f of uploadedFiles){
+      const entry = {name:f.name, type:f.type};
+      if(f.type.startsWith('image/') || f.type==='application/pdf'){
+        entry.data = await fileToBase64(f);
+      } else {
+        try { entry.textContent = await fileToText(f); } catch(e){}
+      }
+      files.push(entry);
+    }
+
+    const res = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'extract', files})
+    });
+    const data = await res.json();
+    extracted = data.encontrado || {};
+    prefillForm(extracted);
+    renderExtractedSummary(data);
+  } catch(e){
+    errEl.textContent = 'No se pudieron analizar los archivos. Continue llenando el formulario manualmente.';
+    errEl.style.display='block';
+  }
+
+  document.getElementById('extract-loading').style.display='none';
+  document.querySelector('#step-1 .btn-next').disabled=false;
+  showStep(2);
+}
+
+function prefillForm(d) {
+  const fields = {
+    'f-nombre':'nombre','f-ciudad':'ciudad','f-horario':'horario',
+    'f-servicios':'servicios','f-precios':'precios','f-promo':'promo',
+    'f-top':'top_servicios','f-diferencia':'diferencia','f-certs':'certs',
+    'f-extra':'extra'
+  };
+  for(const [id, key] of Object.entries(fields)){
+    const el = document.getElementById(id);
+    if(el && d[key]){ el.value=d[key]; el.classList.add('prefilled'); }
+  }
+  if(d.tipo){
+    const sel = document.getElementById('f-tipo');
+    for(const opt of sel.options){ if(opt.value.toLowerCase().includes(d.tipo.toLowerCase())||d.tipo.toLowerCase().includes(opt.value.toLowerCase())){ sel.value=opt.value; break; } }
+  }
+}
+
+function renderExtractedSummary(data) {
+  const found = Object.values(data.encontrado||{}).filter(Boolean).length;
+  const total = Object.keys(data.encontrado||{}).length;
+  if(!found) return;
+  document.getElementById('extracted-summary').innerHTML = `
+    <div class="extracted-card">
+      <div class="extracted-header">
+        <div class="extracted-dot"></div>
+        <span class="extracted-title">Extrajimos información de sus archivos</span>
+        <span class="extracted-sub">${found}/${total} campos encontrados</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-dim)">${data.resumen||''} — Los campos en verde fueron llenados automáticamente. Revise y corrija si algo no es exacto.</div>
+    </div>`;
+}
+
+// ── STEP 2 → 3 ──
+function goStep3() {
+  const errs = [];
+  const req = (id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('error');errs.push(msg);}else el?.classList.remove('error');};
+  req('f-nombre','Nombre del negocio');
+  req('f-tipo','Tipo de negocio');
+  req('f-ciudad','Ciudad y colonia');
+  req('f-horario','Horarios de atención');
+  req('f-servicios','Servicios');
+  req('f-precios','Precios');
+  req('f-top','Procedimientos más solicitados');
+  if(!S.fin){document.getElementById('opts-fin').classList.add('err');errs.push('Opción de financiamiento');}
+  const errEl=document.getElementById('err-2');
+  if(errs.length){errEl.textContent='Campos requeridos: '+errs.join(', ')+'.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  showStep(3);
+}
+
+// ── SUBMIT ──
+async function submitForm() {
+  const errs=[];
+  const req=(id,msg)=>{const el=document.getElementById(id);if(!el?.value?.trim()){el?.classList.add('error');errs.push(msg);}else el?.classList.remove('error');};
+  req('f-diferencia','Diferenciadores');req('f-certs','Certificaciones');
+  req('f-objeciones','Objeciones');
+  if(!S.alcance){document.getElementById('opts-alcance').classList.add('err');errs.push('Alcance de pacientes');}
+  if(!S.tono){document.getElementById('opts-tono').classList.add('err');errs.push('Tono del asistente');}
+  if(!S.agenda){document.getElementById('opts-agenda').classList.add('err');errs.push('Sistema de agenda');}
+  const errEl=document.getElementById('err-3');
+  if(errs.length){errEl.textContent='Campos requeridos: '+errs.join(', ')+'.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+
+  const btn=document.querySelector('#step-3 .btn-next');
+  btn.disabled=true;
+  document.getElementById('submit-loading').style.display='flex';
+  document.getElementById('submit-wrap').style.display='none';
+
+  const d = {
+    nombre:v('f-nombre'),tipo:v('f-tipo'),ciudad:v('f-ciudad'),horario:v('f-horario'),
+    direccion:v('f-direccion'),servicios:v('f-servicios'),precios:v('f-precios'),
+    promo:v('f-promo'),top_servicios:v('f-top'),impulsar:v('f-impulsar'),
+    financiamiento:S.fin,diferencia:v('f-diferencia'),certs:v('f-certs'),
+    alcance:S.alcance,testimonios:v('f-testimonios'),tono:S.tono,
+    aria_nombre:v('f-aria')||'ARIA',objeciones:v('f-objeciones'),
+    reservado:v('f-reservado'),agenda:S.agenda,extra:v('f-extra'),
+    contacto_nombre:v('f-cn'),contacto_wa:v('f-cwa'),
+    fecha:new Date().toLocaleDateString('es-MX'),status:'pendiente',manual:''
+  };
+
+  try {
+    const key='cli:'+d.nombre.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').substring(0,30)+':'+Date.now();
+    await window.storage.set(key, JSON.stringify(d));
+    document.getElementById('submit-loading').style.display='none';
+    showStep(4);
+  } catch(e) {
+    document.getElementById('submit-loading').style.display='none';
+    document.getElementById('submit-wrap').style.display='block';
+    errEl.textContent='Error al guardar: '+e.message;
+    errEl.style.display='block';
+    btn.disabled=false;
+  }
+}
+
+// ── HELPERS ──
+function v(id){return document.getElementById(id)?.value?.trim()||'';}
+function pick(el, group) {
+  document.querySelectorAll('#opts-'+group+' .opt').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected'); S[group]=el.textContent.trim();
+  document.getElementById('opts-'+group).classList.remove('err');
+}
+
+// ── PANEL ──
+async function loadPanel() {
+  const cont=document.getElementById('panel-content');
+  cont.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Cargando clientes...</div>';
+  try {
+    const res=await window.storage.list('cli:');
+    const keys=res?.keys||[];
+    if(!keys.length){cont.innerHTML='<div class="empty-state">No hay clientes registrados aún.<br>Aparecerán aquí cuando completen el formulario.</div>';return;}
+    let html='';
+    for(const key of keys){
+      try{
+        const r=await window.storage.get(key);
+        if(!r) continue;
+        const d=JSON.parse(r.value);
+        const sk=btoa(key).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+        const bc=d.status==='listo'?'s-ready':d.status==='subido'?'s-done':d.status==='gen'?'s-gen':'s-pending';
+        const bl=d.status==='listo'?'Manual listo':d.status==='subido'?'Subido a GHL':d.status==='gen'?'Generando...':'Pendiente';
+        html+=`<div class="client-card" id="cc-${sk}">
+          <div class="client-top">
+            <div><div class="client-name">${esc(d.nombre)}</div><div class="client-meta">${esc(d.tipo)} · ${esc(d.ciudad)} · ${esc(d.fecha)}${d.contacto_wa?' · '+esc(d.contacto_wa):''}</div></div>
+            <span class="status-pill ${bc}" id="sp-${sk}">${bl}</span>
+          </div>
+          <div class="actions" id="ac-${sk}">
+            ${(!d.manual)?`<button class="btn-action primary" onclick="genManual('${sk}','${key}')">Generar Manual ARIA</button>`:''}
+            ${d.manual?`<button class="btn-action" onclick="toggleManual('${sk}')">Ver manual</button><button class="btn-action" onclick="copyManual('${sk}')">Copiar para GHL</button>`:''}
+            ${d.status==='listo'?`<button class="btn-action" onclick="markDone('${sk}','${key}')">Marcar subido ✓</button>`:''}
+          </div>
+          <div id="gl-${sk}" style="display:none" class="loading-wrap"><div class="spinner"></div>Generando Manual de Ventas con IA...</div>
+          <div id="ge-${sk}" class="err-msg" style="display:none"></div>
+          ${d.manual?`<div class="manual-box" id="mb-${sk}">${esc(d.manual)}</div>`:''}
+        </div>`;
+      }catch(e){}
+    }
+    cont.innerHTML=html||'<div class="empty-state">Sin clientes aún.</div>';
+  }catch(e){cont.innerHTML='<div class="empty-state">Error: '+esc(e.message)+'</div>';}
+}
+
+async function genManual(sk, key) {
+  document.getElementById('gl-'+sk).style.display='flex';
+  document.querySelector(`#ac-${sk} .btn-action`)&&(document.querySelector(`#ac-${sk} .btn-action`).disabled=true);
+  document.getElementById('sp-'+sk).textContent='Generando...';
+  document.getElementById('sp-'+sk).className='status-pill s-gen';
+  try{
+    const r=await window.storage.get(key);
+    const d=JSON.parse(r.value);
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',data:d})});
+    const result=await res.json();
+    if(!result.manual) throw new Error('Manual vacío');
+    d.manual=result.manual; d.status='listo';
+    await window.storage.set(key, JSON.stringify(d));
+    document.getElementById('gl-'+sk).style.display='none';
+    loadPanel();
+  }catch(e){
+    document.getElementById('gl-'+sk).style.display='none';
+    document.getElementById('ge-'+sk).textContent='Error: '+e.message;
+    document.getElementById('ge-'+sk).style.display='block';
+    document.getElementById('sp-'+sk).textContent='Pendiente';
+    document.getElementById('sp-'+sk).className='status-pill s-pending';
+  }
+}
+
+function toggleManual(sk){const el=document.getElementById('mb-'+sk);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+function copyManual(sk){
+  const el=document.getElementById('mb-'+sk);
+  if(!el)return;el.style.display='block';
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    const btns=document.querySelectorAll(`#ac-${sk} .btn-action`);
+    btns.forEach(b=>{if(b.textContent.includes('Copiar')){b.textContent='Copiado ✓';setTimeout(()=>b.textContent='Copiar para GHL',2000);}});
+  });
+}
+async function markDone(sk,key){
+  try{const r=await window.storage.get(key);const d=JSON.parse(r.value);d.status='subido';await window.storage.set(key,JSON.stringify(d));loadPanel();}catch(e){}
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>
