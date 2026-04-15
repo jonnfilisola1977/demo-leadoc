@@ -32,10 +32,38 @@ h1{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:600;color:var(--te
 .view{display:none}.view.on{display:block}
 .step{display:none}.step.on{display:block}
 
+/* ── STEPPER FIXED ── */
 .pgwrap{margin-bottom:1.5rem}
-.pgsteps{display:flex;justify-content:space-between;margin-bottom:7px}
-.pgs{font-size:12px;color:var(--dim);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.pgsteps{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:7px;
+  gap:2px;
+}
+.pgs{
+  font-size:11px;
+  color:var(--dim);
+  font-weight:500;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  flex:1;
+  text-align:center;
+  padding:0 2px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pgs:first-child{text-align:left;}
+.pgs:last-child{text-align:right;}
 .pgs.on{color:var(--gold)}
+@media(max-width:480px){
+  .pgs{
+    font-size:9px;
+    letter-spacing:.03em;
+  }
+}
+/* ── END STEPPER FIX ── */
+
 .pgtrack{height:2px;background:var(--dark4);border-radius:2px;overflow:hidden}
 .pgfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:2px;transition:width .4s ease}
 
@@ -171,7 +199,7 @@ select option{background:var(--dark2);font-size:15px}
       <span class="pgs on" id="ps1">Archivos</span>
       <span class="pgs" id="ps2">Negocio</span>
       <span class="pgs" id="ps3">Servicios</span>
-      <span class="pgs" id="ps4">Configuración</span>
+      <span class="pgs" id="ps4">Config.</span>
       <span class="pgs" id="ps5">Listo</span>
     </div>
     <div class="pgtrack"><div class="pgfill" id="pgf" style="width:20%"></div></div>
