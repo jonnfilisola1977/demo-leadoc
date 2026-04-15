@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Panel LEADOC — Interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-l:#E8C87A;--dark:#0A0A0A;--dark2:#141414;
+  --dark3:#1E1E1E;--dark4:#2A2A2A;--text:#F0EDE8;--muted:#9A9590;
+  --dim:#6A6560;--brd:rgba(201,168,76,0.18);--brdh:rgba(201,168,76,0.4);
+  --ok:#4A9B6F;--err:#C05050;--r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;font-size:16px;line-height:1.6}
+.page{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem}
+
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.lbox{background:var(--dark2);border:.5px solid var(--brd);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
+.llogo{height:70px;width:auto;margin:0 auto 1.25rem;display:block}
+.ltxt{font-family:'Syne',sans-serif;font-size:2rem;font-weight:600;color:var(--gold);letter-spacing:.12em;display:none;margin-bottom:1.25rem}
+.ltit{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:600;margin-bottom:.4rem}
+.lsub{font-size:14px;color:var(--muted);margin-bottom:1.5rem}
+.linp{width:100%;padding:12px 15px;font-size:16px;background:var(--dark3);color:var(--text);border:.5px solid var(--dark4);border-radius:var(--r);font-family:'Inter',sans-serif;outline:none;text-align:center;letter-spacing:.15em;margin-bottom:1rem;transition:border-color .2s}
+.linp:focus{border-color:rgba(201,168,76,.45)}
+.lbtn{width:100%;padding:12px;background:var(--gold);color:var(--dark);border:none;border-radius:var(--r);font-size:16px;font-weight:500;font-family:'Syne',sans-serif;cursor:pointer;letter-spacing:.04em;transition:all .15s}
+.lbtn:hover{background:var(--gold-l)}
+.lerr{font-size:13px;color:#E07070;margin-top:8px;display:none}
+
+/* PANEL */
+#panel{display:none}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0 1.25rem;border-bottom:.5px solid var(--brd);margin-bottom:1.75rem;flex-wrap:gap}
+.hlogo{height:52px;width:auto}
+.hlogtxt{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:600;color:var(--gold);letter-spacing:.1em;display:none}
+.htit{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:600;color:var(--muted)}
+.hacts{display:flex;gap:8px;align-items:center}
+.bsm{background:transparent;border:.5px solid var(--dark4);color:var(--muted);padding:7px 13px;border-radius:var(--r);cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+.bsm:hover{border-color:var(--brdh);color:var(--text)}
+.bsmd{border-color:rgba(192,80,80,.35);color:#E07070}
+.bsmd:hover{background:rgba(192,80,80,.07)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.75rem}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--dark2);border:.5px solid var(--dark4);border-radius:var(--r);padding:1rem;text-align:center}
+.stn{font-size:1.8rem;font-weight:600;font-family:'Syne',sans-serif;color:var(--gold)}
+.stl{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+.fb{background:var(--dark2);border:.5px solid var(--dark4);color:var(--muted);padding:7px 14px;border-radius:20px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+.fb:hover{border-color:var(--brdh);color:var(--text)}
+.fb.on{background:rgba(201,168,76,.1);border-color:var(--gold);color:var(--gold)}
+
+/* CLIENT CARDS */
+.cc{background:var(--dark2);border:.5px solid var(--dark4);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:10px;transition:border-color .15s}
+.cc:hover{border-color:var(--brd)}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px}
+.cn{font-family:'Syne',sans-serif;font-size:17px;font-weight:600;color:var(--text)}
+.cm{font-size:13px;color:var(--dim);margin-bottom:11px}
+.pill{font-size:11px;padding:3px 11px;border-radius:20px;font-weight:500;letter-spacing:.04em;flex-shrink:0}
+.pp{background:rgba(201,168,76,.1);color:var(--gold);border:.5px solid rgba(201,168,76,.3)}
+.pr{background:rgba(74,155,111,.1);color:#6BC990;border:.5px solid rgba(74,155,111,.3)}
+.pd{background:var(--dark3);color:var(--dim);border:.5px solid var(--dark4)}
+.pg{background:rgba(100,130,200,.1);color:#8AAAEE;border:.5px solid rgba(100,130,200,.3)}
+.acts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.ba{background:transparent;border:.5px solid var(--dark4);color:var(--muted);padding:7px 13px;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all .15s}
+.ba:hover{border-color:var(--brdh);color:var(--text)}
+.bap{border-color:rgba(201,168,76,.38);color:var(--gold)}
+.bap:hover{background:rgba(201,168,76,.07)}
+.bad{border-color:rgba(192,80,80,.3);color:#E07070}
+.bad:hover{background:rgba(192,80,80,.06)}
+.ba:disabled{opacity:.4;cursor:not-allowed}
+.mbox{background:var(--dark3);border-radius:8px;padding:1.1rem;font-size:13px;line-height:1.85;color:var(--muted);white-space:pre-wrap;font-family:monospace;max-height:400px;overflow-y:auto;margin-top:9px;display:none;border:.5px solid var(--dark4)}
+.ld{display:flex;align-items:center;gap:11px;padding:.6rem 0;color:var(--muted);font-size:14px}
+.sp{width:17px;height:17px;border:2px solid var(--dark4);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.emsg{font-size:13px;color:#E07070;margin-top:6px}
+.empty{text-align:center;padding:3rem;color:var(--dim);font-size:16px;line-height:1.7}
+
+/* CONFIRM MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-bg.on{display:flex}
+.modal{background:var(--dark2);border:.5px solid var(--brd);border-radius:14px;padding:2rem;max-width:360px;width:90%;text-align:center}
+.modal h3{font-family:'Syne',sans-serif;font-size:1.1rem;margin-bottom:.6rem}
+.modal p{font-size:14px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.modal-acts{display:flex;gap:10px;justify-content:center}
+.mbtn{padding:10px 24px;border-radius:var(--r);cursor:pointer;font-size:15px;font-family:'Inter',sans-serif;border:none;transition:all .15s}
+.mbtn-c{background:var(--dark3);color:var(--muted)}
+.mbtn-c:hover{color:var(--text)}
+.mbtn-d{background:var(--err);color:#fff}
+.mbtn-d:hover{background:#D06060}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lbox">
+    <img class="llogo" src="https://leadoc.io/img/leadoclogo.png" alt="LEADOC"
+      onerror="this.style.display='none';document.getElementById('ltxt').style.display='block'"/>
+    <div id="ltxt" class="ltxt">LEADOC</div>
+    <div class="ltit">Panel Interno</div>
+    <div class="lsub">Solo acceso autorizado</div>
+    <input type="password" class="linp" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"/>
+    <button class="lbtn" onclick="login()">Entrar</button>
+    <div class="lerr" id="lerr">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="panel">
+<div class="page">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:12px">
+      <img class="hlogo" src="https://leadoc.io/img/leadoclogo.png" alt="LEADOC"
+        onerror="this.style.display='none';document.getElementById('hlogtxt').style.display='block'"/>
+      <div id="hlogtxt" class="hlogtxt">LEADOC</div>
+      <div class="htit">Panel de Onboarding</div>
+    </div>
+    <div class="hacts">
+      <button class="bsm" onclick="loadPanel()">↻ Actualizar</button>
+      <button class="bsm" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stn" id="st-total">—</div><div class="stl">Total</div></div>
+    <div class="stat"><div class="stn" id="st-pend">—</div><div class="stl">Pendientes</div></div>
+    <div class="stat"><div class="stn" id="st-listo">—</div><div class="stl">Con manual</div></div>
+    <div class="stat"><div class="stn" id="st-sub">—</div><div class="stl">En GHL</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="fb on" onclick="setFilter('todos',this)">Todos</button>
+    <button class="fb" onclick="setFilter('pendiente',this)">Pendientes</button>
+    <button class="fb" onclick="setFilter('listo',this)">Manual listo</button>
+    <button class="fb" onclick="setFilter('subido',this)">En GHL</button>
+  </div>
+
+  <div id="pc"><div class="ld"><div class="sp"></div>Cargando clientes...</div></div>
+</div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-bg" id="modb">
+  <div class="modal">
+    <h3>¿Eliminar cliente?</h3>
+    <p id="modn">Esta acción no se puede deshacer.</p>
+    <div class="modal-acts">
+      <button class="mbtn mbtn-c" onclick="closeModal()">Cancelar</button>
+      <button class="mbtn mbtn-d" onclick="confirmDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/.netlify/functions/onboarding';
+const PASS = 'leadoc2026';
+let allClients = [];
+let currentFilter = 'todos';
+let deleteTarget = null;
+
+function login(){
+  const val = document.getElementById('pwd').value;
+  if(val === PASS){
+    document.getElementById('login').style.display='none';
+    document.getElementById('panel').style.display='block';
+    localStorage.setItem('lp','1');
+    loadPanel();
+  } else {
+    document.getElementById('lerr').style.display='block';
+    document.getElementById('pwd').value='';
+    document.getElementById('pwd').focus();
+  }
+}
+function logout(){
+  localStorage.removeItem('lp');
+  document.getElementById('panel').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.getElementById('pwd').value='';
+}
+// Auto-login if session active
+if(localStorage.getItem('lp')==='1'){
+  document.getElementById('login').style.display='none';
+  document.getElementById('panel').style.display='block';
+  loadPanel();
+}
+
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderClients();
+}
+
+async function loadPanel(){
+  const c=document.getElementById('pc');
+  c.innerHTML='<div class="ld"><div class="sp"></div>Cargando clientes...</div>';
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list'})});
+    const {keys=[]}=await res.json();
+    allClients=[];
+    if(!keys.length){
+      updateStats([]);
+      c.innerHTML='<div class="empty">No hay clientes registrados aún.<br>Cuando completen el formulario aparecerán aquí.</div>';
+      return;
+    }
+    for(const key of keys){
+      try{
+        const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
+        const d=await r.json();
+        allClients.push({key,data:d});
+      }catch(_){}
+    }
+    updateStats(allClients);
+    renderClients();
+  }catch(e){
+    c.innerHTML='<div class="empty">Error al cargar: '+esc(e.message)+'</div>';
+  }
+}
+
+function updateStats(clients){
+  document.getElementById('st-total').textContent=clients.length;
+  document.getElementById('st-pend').textContent=clients.filter(c=>c.data.status==='pendiente').length;
+  document.getElementById('st-listo').textContent=clients.filter(c=>c.data.status==='listo').length;
+  document.getElementById('st-sub').textContent=clients.filter(c=>c.data.status==='subido').length;
+}
+
+function renderClients(){
+  const c=document.getElementById('pc');
+  let filtered=allClients;
+  if(currentFilter!=='todos') filtered=allClients.filter(c=>c.data.status===currentFilter);
+  if(!filtered.length){c.innerHTML='<div class="empty">No hay clientes en esta categoría.</div>';return;}
+  let html='';
+  for(const {key,data:d} of filtered){
+    const sk=key.replace(/[^a-zA-Z0-9]/g,'_').substring(0,25);
+    const bc=d.status==='listo'?'pr':d.status==='subido'?'pd':d.status==='gen'?'pg':'pp';
+    const bl=d.status==='listo'?'Manual listo':d.status==='subido'?'En GHL':d.status==='gen'?'Generando...':'Pendiente';
+    html+=`<div class="cc" id="cc${sk}">
+      <div class="ctop">
+        <div>
+          <div class="cn">${esc(d.nombre||'Sin nombre')}</div>
+          <div class="cm">${esc(d.tipo||'')}${d.ciudad?' · '+esc(d.ciudad):''}${d.fecha?' · '+esc(d.fecha):''}${d.contacto_wa?' · '+esc(d.contacto_wa):''}</div>
+        </div>
+        <span class="pill ${bc}" id="sp${sk}">${bl}</span>
+      </div>
+      <div class="acts" id="ac${sk}">
+        ${!d.manual?`<button class="ba bap" onclick="genM('${sk}','${key}')">⚡ Generar Manual ARIA</button>`:''}
+        ${d.manual?`<button class="ba" onclick="togM('${sk}')">Ver manual</button><button class="ba bap" onclick="cpM('${sk}')">Copiar para GHL</button>`:''}
+        ${d.status==='listo'?`<button class="ba" onclick="markGHL('${sk}','${key}')">Marcar en GHL ✓</button>`:''}
+        ${d.manual?`<button class="ba" onclick="regenM('${sk}','${key}')">Regenerar</button>`:''}
+        <button class="ba bad" onclick="askDelete('${sk}','${key}','${esc(d.nombre||'este cliente')}')">Eliminar</button>
+      </div>
+      <div id="gl${sk}" style="display:none" class="ld"><div class="sp"></div>Generando Manual de Ventas con IA...</div>
+      <div id="ge${sk}" class="emsg" style="display:none"></div>
+      ${d.manual?`<div class="mbox" id="mb${sk}">${esc(d.manual)}</div>`:''}
+    </div>`;
+  }
+  c.innerHTML=html||'<div class="empty">Sin clientes.</div>';
+}
+
+async function genM(sk,key){
+  document.getElementById('gl'+sk).style.display='flex';
+  document.querySelectorAll('#ac'+sk+' .ba').forEach(b=>b.disabled=true);
+  const sp=document.getElementById('sp'+sk);sp.textContent='Generando...';sp.className='pill pg';
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
+    const d=await r.json();
+    const gr=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',data:d})});
+    const {manual}=await gr.json();
+    if(!manual) throw new Error('Manual vacío');
+    d.manual=manual;d.status='listo';
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
+    document.getElementById('gl'+sk).style.display='none';
+    await loadPanel();
+  }catch(e){
+    document.getElementById('gl'+sk).style.display='none';
+    document.getElementById('ge'+sk).textContent='Error: '+e.message;
+    document.getElementById('ge'+sk).style.display='block';
+    sp.textContent='Pendiente';sp.className='pill pp';
+    document.querySelectorAll('#ac'+sk+' .ba').forEach(b=>b.disabled=false);
+  }
+}
+
+async function regenM(sk,key){ await genM(sk,key); }
+
+function togM(sk){const el=document.getElementById('mb'+sk);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+
+function cpM(sk){
+  const el=document.getElementById('mb'+sk);if(!el)return;
+  el.style.display='block';
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    document.querySelectorAll('#ac'+sk+' .ba').forEach(b=>{
+      if(b.textContent.includes('Copiar')){b.textContent='¡Copiado! ✓';setTimeout(()=>b.textContent='Copiar para GHL',2500);}
+    });
+  });
+}
+
+async function markGHL(sk,key){
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
+    const d=await r.json();
+    d.status='subido';
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
+    await loadPanel();
+  }catch(e){}
+}
+
+function askDelete(sk,key,nombre){
+  deleteTarget={sk,key,nombre};
+  document.getElementById('modn').textContent='Se eliminará "'+nombre+'" y su manual. Esta acción no se puede deshacer.';
+  document.getElementById('modb').classList.add('on');
+}
+function closeModal(){document.getElementById('modb').classList.remove('on');deleteTarget=null;}
+async function confirmDelete(){
+  if(!deleteTarget)return;
+  const {key}=deleteTarget;
+  closeModal();
+  try{
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',key})});
+    await loadPanel();
+  }catch(e){alert('Error al eliminar: '+e.message);}
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
