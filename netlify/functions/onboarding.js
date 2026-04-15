@@ -21,7 +21,6 @@ exports.handler = async (event) => {
     const j = await r.json();
     return j.record || {};
   }
-
   async function saveAll(rec) {
     await fetch(BASE, {
       method: 'PUT',
@@ -69,11 +68,30 @@ exports.handler = async (event) => {
           else if (f.textContent) blocks.push({ type: 'text', text: 'Archivo "' + f.name + '":\n' + f.textContent });
         }
       }
-      blocks.push({ type: 'text', text: 'Eres un experto en OCR y extraccion de datos. Lee CON DETALLE ABSOLUTO todos los textos visibles en estas imagenes de una clinica o spa en Mexico. Lee CADA PALABRA en la imagen incluyendo textos pequenos, hashtags, pies de foto, datos de contacto, direcciones, numeros de telefono, listas de servicios, precios, descuentos y promociones. NO inventes datos. Si ves un texto en la imagen, extraelo exactamente como aparece.\n\nDevuelve SOLO JSON valido sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}' });
+      blocks.push({ type: 'text', text: `Eres un experto en OCR y extraccion de datos de imagenes de redes sociales de negocios de belleza, salud y bienestar en Mexico.
+
+Lee CON DETALLE ABSOLUTO todos los textos visibles en estas imagenes. Lee CADA PALABRA incluyendo:
+- Nombre del negocio (busca en logos, encabezados, perfiles)
+- Direccion completa (calle, numero, colonia, ciudad, estado)
+- Todos los numeros de telefono que aparezcan
+- Redes sociales (@usuario de Instagram, Facebook, etc)
+- Sitio web
+- Horarios de atencion exactos
+- Lista COMPLETA de servicios mencionados
+- Precios EXACTOS si aparecen en numeros (si no hay precio exacto en la imagen, pon null — NUNCA inventes precios)
+- Promociones y descuentos exactos como aparecen (20% OFF, 15% OFF, etc)
+- Diferenciadores o especialidades mencionadas
+- Certificaciones o reconocimientos
+
+REGLA CRITICA: Si un dato NO aparece explicitamente en la imagen, pon null. NUNCA inventes datos. NUNCA asumas precios.
+
+Devuelve SOLO JSON valido sin markdown:
+{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"direccion":null,"telefono":null,"redes_sociales":null,"web":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}` });
+
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{ role: 'user', content: blocks }] })
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: blocks }] })
       });
       const res = await r.json();
       const txt = res.content?.find(b => b.type === 'text')?.text || '{}';
@@ -82,7 +100,88 @@ exports.handler = async (event) => {
 
     if (action === 'generate') {
       const d = data;
-      const prompt = 'Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ' + (d.aria_nombre||'ARIA') + ' en GoHighLevel.\n\nARIA: agente WhatsApp responde leads menos de 3 min 24/7. NUNCA menciona IA bot tecnologia. Actua como asistente humano. Espanol mexicano natural.\n\nDATOS:\nNegocio: ' + d.nombre + ' | Tipo: ' + d.tipo + ' | Ciudad: ' + d.ciudad + ' | Horario: ' + d.horario + '\nServicios: ' + d.servicios + ' | Precios: ' + d.precios + ' | Promo: ' + (d.promo||'Ninguna') + '\nMas solicitados: ' + (d.top_servicios||'N/A') + ' | Financiamiento: ' + d.financiamiento + '\nDiferenciadores: ' + d.diferencia + ' | Certs: ' + d.certs + ' | Alcance: ' + d.alcance + '\nTono: ' + d.tono + ' | Objeciones: ' + d.objeciones + ' | Agenda: ' + d.agenda + '\nExtra: ' + (d.extra||'N/A') + '\n\n# MANUAL DE VENTAS — ' + d.nombre.toUpperCase() + '\n## Agente: ' + (d.aria_nombre||'ARIA') + '\n\n### IDENTIDAD\n### MISION\n### SERVICIOS Y PRECIOS\n### PROCESO DE CALIFICACION\n### MANEJO DE OBJECIONES\n### COMO AGENDAR\n### INFORMACION RESERVADA\n### HORARIOS\n### DIFERENCIADORES\n### PROHIBICIONES\n### CIERRE\n\nInstrucciones directas con ejemplos de mensajes reales. NUNCA mencionar GHL LEADOC IA bot.';
+      const precios_txt = d.precios && d.precios !== 'null' ? d.precios : 'No especificados — ARIA debe decir "con gusto le informamos los precios por WhatsApp" y NO inventar cifras';
+      const prompt = `Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ${d.aria_nombre||'ARIA'} en GoHighLevel.
+
+ARIA es un agente de WhatsApp que responde leads en menos de 3 minutos, 24/7. NUNCA menciona IA, bot, tecnologia, automatizacion, GoHighLevel ni LEADOC. Actua como asistente humano real del negocio. Espanol mexicano natural. Su unico objetivo es calificar leads y agendar citas confirmadas.
+
+DATOS DEL NEGOCIO:
+Nombre: ${d.nombre}
+Tipo: ${d.tipo}
+Ciudad: ${d.ciudad}
+Direccion: ${d.direccion||'No especificada'}
+Horario: ${d.horario}
+Telefono: ${d.extra||''}
+Servicios: ${d.servicios}
+Precios: ${precios_txt}
+Promociones: ${d.promo||'Ninguna'}
+Mas solicitados: ${d.top_servicios||'N/A'}
+Servicios a impulsar: ${d.impulsar||'N/A'}
+Financiamiento: ${d.financiamiento}
+Diferenciadores: ${d.diferencia}
+Certificaciones: ${d.certs}
+Alcance de pacientes: ${d.alcance}
+Testimonios: ${d.testimonios||'N/A'}
+Tono: ${d.tono}
+Nombre del agente: ${d.aria_nombre||'ARIA'}
+Objeciones comunes: ${d.objeciones}
+Info reservada para el doctor/dueno: ${d.reservado||'N/A'}
+Sistema de agenda: ${d.agenda}
+Info adicional: ${d.extra||'N/A'}
+
+Genera el Manual con estas secciones. Cada seccion debe tener instrucciones directas con ejemplos de mensajes REALES en espanol mexicano:
+
+# MANUAL DE VENTAS — ${d.nombre.toUpperCase()}
+## Agente: ${d.aria_nombre||'ARIA'}
+
+### IDENTIDAD
+Quien es ${d.aria_nombre||'ARIA'}, a quien representa, personalidad y tono (${d.tono}).
+
+### MISION
+Objetivo en cada conversacion — 2-3 frases concretas orientadas a citas agendadas.
+
+### SERVICIOS Y PRECIOS
+Lista completa. Si hay precios exactos incluirlos. Si no hay precios, ${d.aria_nombre||'ARIA'} debe invitar a preguntar sin inventar cifras.
+
+### PROCESO DE CALIFICACION
+Preguntas exactas en orden para calificar: servicio de interes, experiencia previa, presupuesto, disponibilidad. Con ejemplos de mensajes reales.
+
+### MANEJO DE OBJECIONES
+Para cada objecion comun (${d.objeciones}), la respuesta exacta que debe dar ${d.aria_nombre||'ARIA'}. Incluir tecnicas de cierre como urgencia, prueba social, beneficio emocional.
+
+### COMO AGENDAR — FLUJO DE CIERRE COMPLETO
+Paso a paso de como ${d.aria_nombre||'ARIA'} cierra la cita:
+1. Cuando ofrecer la cita (despues de calificar)
+2. Como presentar la oferta de agendar
+3. Como manejar dudas de ultimo momento
+4. Como confirmar la cita (dia, hora, nombre)
+5. Mensaje de confirmacion final
+
+### CUANDO ESCALAR A VENDEDORA HUMANA
+Triggers exactos para etiquetar el contacto y notificar al equipo humano:
+- Lead calificado que no cierra despues de 2 intentos
+- Lead con presupuesto alto o procedimiento complejo
+- Lead que pide hablar con alguien
+- Lead muy interesado listo para cerrar en el momento
+Mensaje exacto que usa ${d.aria_nombre||'ARIA'} para hacer la transicion al humano sin que el lead note el cambio.
+
+### INFORMACION RESERVADA PARA EL DUENO/DOCTOR
+Temas que ${d.aria_nombre||'ARIA'} NO menciona y como redirige: ${d.reservado||'N/A'}
+
+### HORARIOS Y FUERA DE HORARIO
+Que dice dentro y fuera de horario (${d.horario}). Mensaje exacto para cuando el negocio esta cerrado.
+
+### DIFERENCIADORES Y CREDIBILIDAD
+Argumentos de venta basados en: ${d.diferencia} y ${d.certs}. Como usarlos naturalmente en conversacion.
+
+### PROHIBICIONES ABSOLUTAS
+Lista de lo que ${d.aria_nombre||'ARIA'} NUNCA dice ni hace. Incluir: GHL, LEADOC, IA, bot, sistema, automatizacion, inventar precios, prometer resultados sin consulta.
+
+### CIERRE DE CONVERSACION
+Como cerrar: con cita agendada, sin cita (lead frio), lead que necesita mas tiempo. Mensajes exactos para cada caso.
+
+REGLAS DE ESCRITURA: Espanol mexicano natural. Instrucciones directas. Ejemplos de mensajes reales entre comillas. Orientado 100% a citas agendadas. NUNCA mencionar GHL, LEADOC, IA, bot, sistema, automatizacion.`;
+
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01' },
