@@ -159,9 +159,9 @@ select option{background:var(--dark2);font-size:15px}
   <p class="sub">Esta información nos permite configurar su asistente exactamente para su negocio. <strong style="color:var(--gold-l)">Cuanta más información nos dé, mejores serán los resultados.</strong></p>
 </div>
 
-<div class="tabs">
+<div class="tabs" style="display:none">
   <button class="tab on" onclick="swTab('cliente',this)">Formulario Cliente</button>
-  <button class="tab" onclick="swTab('panel',this)">Panel LEADOC</button>
+  
 </div>
 
 <!-- ═══ FORMULARIO ═══ -->
@@ -388,15 +388,6 @@ select option{background:var(--dark2);font-size:15px}
   </div>
 </div>
 
-<!-- ═══ PANEL ═══ -->
-<div id="tv-panel" class="view">
-  <div class="phdr">
-    <div class="ptit">Clientes en onboarding</div>
-    <button class="brf" onclick="loadPanel()">↻ Actualizar</button>
-  </div>
-  <div id="pc"><div class="ld"><div class="sp"></div>Cargando...</div></div>
-</div>
-
 </div>
 
 <script>
@@ -405,14 +396,6 @@ const SEL = {fin:'', tono:'', ag:''};
 const SELM = {alc:[]};
 const files = [];
 let extracted = {};
-
-function swTab(id,btn){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  document.getElementById('tv-'+id).classList.add('on');
-  btn.classList.add('on');
-  if(id==='panel') loadPanel();
-}
 
 function goS(n){
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));
@@ -635,84 +618,6 @@ async function enviar(){
     errEl.textContent='Error: '+e.message;errEl.style.display='block';
     btn.disabled=false;
   }
-}
-
-// PANEL
-async function loadPanel(){
-  const c=document.getElementById('pc');
-  c.innerHTML='<div class="ld"><div class="sp"></div>Cargando clientes...</div>';
-  try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list'})});
-    const {keys=[]}=await res.json();
-    if(!keys.length){c.innerHTML='<div class="empty">No hay clientes registrados aún.<br>Aparecerán aquí cuando completen el formulario.</div>';return;}
-    let html='';
-    for(const key of keys){
-      try{
-        const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
-        const d=await r.json();
-        const sk=key.replace(/[^a-zA-Z0-9]/g,'_').substring(0,25);
-        const bc=d.status==='listo'?'pr':d.status==='subido'?'pd':d.status==='gen'?'pg':'pp';
-        const bl=d.status==='listo'?'Manual listo':d.status==='subido'?'Subido a GHL':d.status==='gen'?'Generando...':'Pendiente';
-        html+=`<div class="cc" id="cc${sk}">
-          <div class="ctop">
-            <div>
-              <div class="cn">${esc(d.nombre)}</div>
-              <div class="cm">${esc(d.tipo)} · ${esc(d.ciudad)} · ${esc(d.fecha)}${d.contacto_wa?' · '+esc(d.contacto_wa):''}</div>
-            </div>
-            <span class="pill ${bc}" id="sp${sk}">${bl}</span>
-          </div>
-          <div class="acts" id="ac${sk}">
-            ${!d.manual?`<button class="ba bap" onclick="genM('${sk}','${key}')">Generar Manual ARIA</button>`:''}
-            ${d.manual?`<button class="ba" onclick="togM('${sk}')">Ver manual</button><button class="ba" onclick="cpM('${sk}')">Copiar para GHL</button>`:''}
-            ${d.status==='listo'?`<button class="ba" onclick="mkD('${sk}','${key}',${JSON.stringify(d).replace(/'/g,"&#39;")})">Marcar subido ✓</button>`:''}
-          </div>
-          <div id="gl${sk}" style="display:none" class="ld"><div class="sp"></div>Generando Manual de Ventas con IA...</div>
-          <div id="ge${sk}" class="emsg" style="display:none"></div>
-          ${d.manual?`<div class="mbox" id="mb${sk}">${esc(d.manual)}</div>`:''}
-        </div>`;
-      }catch(_){}
-    }
-    c.innerHTML=html||'<div class="empty">Sin clientes aún.</div>';
-  }catch(e){c.innerHTML='<div class="empty">Error al cargar: '+esc(e.message)+'</div>';}
-}
-
-async function genM(sk,key){
-  document.getElementById('gl'+sk).style.display='flex';
-  const btns=document.querySelectorAll(`#ac${sk} .ba`);btns.forEach(b=>b.disabled=true);
-  const sp=document.getElementById('sp'+sk);sp.textContent='Generando...';sp.className='pill pg';
-  try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',key})});
-    const d=await r.json();
-    const genRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate',data:d})});
-    const {manual}=await genRes.json();
-    if(!manual) throw new Error('Manual vacío');
-    d.manual=manual;d.status='listo';
-    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
-    document.getElementById('gl'+sk).style.display='none';
-    loadPanel();
-  }catch(e){
-    document.getElementById('gl'+sk).style.display='none';
-    document.getElementById('ge'+sk).textContent='Error: '+e.message;
-    document.getElementById('ge'+sk).style.display='block';
-    sp.textContent='Pendiente';sp.className='pill pp';
-    btns.forEach(b=>b.disabled=false);
-  }
-}
-
-function togM(sk){const el=document.getElementById('mb'+sk);if(el)el.style.display=el.style.display==='none'?'block':'none';}
-function cpM(sk){
-  const el=document.getElementById('mb'+sk);if(!el)return;el.style.display='block';
-  navigator.clipboard.writeText(el.innerText).then(()=>{
-    const btns=document.querySelectorAll(`#ac${sk} .ba`);
-    btns.forEach(b=>{if(b.textContent.includes('Copiar')){b.textContent='Copiado ✓';setTimeout(()=>b.textContent='Copiar para GHL',2500);}});
-  });
-}
-async function mkD(sk,key,d){
-  try{
-    d.status='subido';
-    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',key,data:d})});
-    loadPanel();
-  }catch(e){}
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
