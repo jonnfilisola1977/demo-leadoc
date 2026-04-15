@@ -69,7 +69,7 @@ exports.handler = async (event) => {
           else if (f.textContent) blocks.push({ type: 'text', text: 'Archivo "' + f.name + '":\n' + f.textContent });
         }
       }
-      blocks.push({ type: 'text', text: 'Extrae TODA la informacion posible de estos archivos de una clinica o gimnasio en Mexico. Si hay precios extrae todos. Si hay servicios extrae todos.\n\nDevuelve SOLO JSON valido sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}' });
+      blocks.push({ type: 'text', text: 'Eres un experto en OCR y extraccion de datos. Lee CON DETALLE ABSOLUTO todos los textos visibles en estas imagenes de una clinica o spa en Mexico. Lee CADA PALABRA en la imagen incluyendo textos pequenos, hashtags, pies de foto, datos de contacto, direcciones, numeros de telefono, listas de servicios, precios, descuentos y promociones. NO inventes datos. Si ves un texto en la imagen, extraelo exactamente como aparece.\n\nDevuelve SOLO JSON valido sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}' });
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01' },
