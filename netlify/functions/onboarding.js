@@ -1,151 +1,79 @@
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
-
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json'
   };
 
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: 'Method Not Allowed' };
 
   try {
     const body = JSON.parse(event.body);
-    const { action, data, files } = body;
+    const { action, data, files, key } = body;
 
-    // ACTION: extract — lee archivos y extrae info estructurada
-    if (action === 'extract') {
-      const contentBlocks = [];
+    const { getStore } = require('@netlify/blobs');
+    const store = getStore({ name: 'clientes', consistency: 'strong' });
 
-      // Agregar archivos (imágenes, PDFs)
-      if (files && files.length > 0) {
-        for (const f of files) {
-          if (f.type.startsWith('image/')) {
-            contentBlocks.push({
-              type: 'image',
-              source: { type: 'base64', media_type: f.type, data: f.data }
-            });
-          } else if (f.type === 'application/pdf') {
-            contentBlocks.push({
-              type: 'document',
-              source: { type: 'base64', media_type: 'application/pdf', data: f.data }
-            });
-          }
-          // Excel/Word: se envían como texto extraído desde el frontend
-          else if (f.textContent) {
-            contentBlocks.push({
-              type: 'text',
-              text: `Contenido del archivo "${f.name}":\n${f.textContent}`
-            });
-          }
-        }
-      }
-
-      contentBlocks.push({
-        type: 'text',
-        text: `Eres un extractor de información para LEADOC TECHNOLOGIES. Analiza los archivos adjuntos (pueden ser fotos de menús, listas de precios, diplomas, documentos de servicios, Excel de precios, etc.) y extrae toda la información relevante para configurar un agente de ventas WhatsApp para una clínica o gimnasio en México.
-
-Devuelve ÚNICAMENTE un JSON válido sin markdown ni backticks con esta estructura exacta:
-{
-  "encontrado": {
-    "nombre": "nombre del negocio o null",
-    "ciudad": "ciudad y colonia o null",
-    "tipo": "tipo de negocio o null",
-    "horario": "horarios de atención o null",
-    "servicios": "lista de servicios o null",
-    "precios": "lista de servicios con precios o null",
-    "promo": "promociones activas o null",
-    "top_servicios": "servicios más mencionados o destacados o null",
-    "diferencia": "diferenciadores o especialidades mencionadas o null",
-    "certs": "certificaciones, reconocimientos, doctores mencionados o null",
-    "medico": "nombre del médico o responsable o null",
-    "extra": "cualquier info operativa relevante (solo acepta citas, estacionamiento, etc.) o null"
-  },
-  "faltante": ["lista de campos que NO se pudieron extraer de los archivos"],
-  "confianza": "alta | media | baja",
-  "resumen": "1 oración describiendo qué encontraste en los archivos"
-}`
-      });
-
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: contentBlocks }]
-        })
-      });
-
-      const result = await response.json();
-      const text = result.content?.find(b => b.type === 'text')?.text || '{}';
-      const clean = text.replace(/```json|```/g, '').trim();
-      return { statusCode: 200, headers, body: clean };
+    if (action === 'save') {
+      const k = 'cli_' + (data.nombre||'sin-nombre').toLowerCase()
+        .replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').substring(0,30)
+        + '_' + Date.now();
+      await store.set(k, JSON.stringify(data));
+      return { statusCode: 200, headers, body: JSON.stringify({ ok: true, key: k }) };
     }
 
-    // ACTION: generate — genera el Manual de Ventas ARIA completo
+    if (action === 'list') {
+      const { blobs } = await store.list();
+      return { statusCode: 200, headers, body: JSON.stringify({ keys: blobs.map(b => b.key) }) };
+    }
+
+    if (action === 'get') {
+      const val = await store.get(key);
+      if (!val) return { statusCode: 404, headers, body: JSON.stringify({ error: 'Not found' }) };
+      return { statusCode: 200, headers, body: val };
+    }
+
+    if (action === 'update') {
+      await store.set(key, JSON.stringify(data));
+      return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+    }
+
+    if (action === 'extract') {
+      const blocks = [];
+      if (files?.length) {
+        for (const f of files) {
+          if (f.type.startsWith('image/')) blocks.push({ type: 'image', source: { type: 'base64', media_type: f.type, data: f.data } });
+          else if (f.type === 'application/pdf') blocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.data } });
+          else if (f.textContent) blocks.push({ type: 'text', text: `Archivo "${f.name}":\n${f.textContent}` });
+        }
+      }
+      blocks.push({ type: 'text', text: `Extrae TODA la informacion posible de estos archivos de una clinica o gimnasio en Mexico. Devuelve SOLO JSON sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}` });
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{ role: 'user', content: blocks }] })
+      });
+      const res = await r.json();
+      const txt = res.content?.find(b => b.type === 'text')?.text || '{}';
+      return { statusCode: 200, headers, body: txt.replace(/```json|```/g,'').trim() };
+    }
+
     if (action === 'generate') {
       const d = data;
-      const prompt = `Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ${d.aria_nombre || 'ARIA'} en GoHighLevel.
-
-ARIA es un agente WhatsApp que responde leads en menos de 3 minutos 24/7, precalifica por procedimiento y presupuesto, agenda citas confirmadas. NUNCA menciona IA, bot, tecnología ni automatización. Actúa como asistente humano del negocio. Habla en español mexicano natural.
-
-DATOS DEL CLIENTE:
-Negocio: ${d.nombre} | Tipo: ${d.tipo} | Ciudad: ${d.ciudad}
-Dirección: ${d.direccion || 'No especificada'} | Horario: ${d.horario}
-Servicios: ${d.servicios} | Precios: ${d.precios}
-Promociones: ${d.promo || 'Ninguna'} | Más solicitados: ${d.top_servicios || 'No especificado'}
-Impulsar: ${d.impulsar || 'No especificado'} | Financiamiento: ${d.financiamiento}
-Diferenciadores: ${d.diferencia} | Certificaciones: ${d.certs}
-Alcance: ${d.alcance} | Testimonios: ${d.testimonios || 'No especificados'}
-Tono: ${d.tono} | Nombre agente: ${d.aria_nombre || 'ARIA'}
-Objeciones: ${d.objeciones} | Info reservada: ${d.reservado || 'Ninguna'}
-Sistema agenda: ${d.agenda} | Extra: ${d.extra || 'Ninguna'}
-
-Genera el Manual con estas secciones:
-
-# MANUAL DE VENTAS — ${d.nombre.toUpperCase()}
-## Agente: ${d.aria_nombre || 'ARIA'}
-
-### IDENTIDAD
-### MISIÓN
-### SERVICIOS Y PRECIOS
-### PROCESO DE CALIFICACIÓN
-### MANEJO DE OBJECIONES
-### CÓMO AGENDAR
-### INFORMACIÓN RESERVADA PARA EL DOCTOR
-### HORARIOS Y FUERA DE HORARIO
-### DIFERENCIADORES Y CREDIBILIDAD
-### PROHIBICIONES ABSOLUTAS
-### CIERRE DE CONVERSACIÓN
-
-Reglas: español mexicano natural, instrucciones directas para ${d.aria_nombre || 'ARIA'}, ejemplos de mensajes reales, orientado a citas agendadas. NUNCA mencionar GHL, LEADOC, IA, bot, sistema, automatización.`;
-
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const prompt = `Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ${d.aria_nombre||'ARIA'} en GoHighLevel.\n\nARIA: agente WhatsApp responde leads menos de 3 min 24/7. NUNCA menciona IA bot tecnologia. Actua como asistente humano. Espanol mexicano natural. Objetivo: calificar y agendar citas.\n\nDATOS:\nNegocio: ${d.nombre} | Tipo: ${d.tipo} | Ciudad: ${d.ciudad} | Horario: ${d.horario}\nServicios: ${d.servicios} | Precios: ${d.precios} | Promo: ${d.promo||'Ninguna'}\nMas solicitados: ${d.top_servicios||'N/A'} | Impulsar: ${d.impulsar||'N/A'} | Financiamiento: ${d.financiamiento}\nDiferenciadores: ${d.diferencia} | Certs: ${d.certs} | Alcance: ${d.alcance}\nTestimonios: ${d.testimonios||'N/A'} | Tono: ${d.tono} | Agente: ${d.aria_nombre||'ARIA'}\nObjeciones: ${d.objeciones} | Info reservada: ${d.reservado||'N/A'} | Agenda: ${d.agenda}\nExtra: ${d.extra||'N/A'}\n\n# MANUAL DE VENTAS — ${d.nombre.toUpperCase()}\n## Agente: ${d.aria_nombre||'ARIA'}\n\n### IDENTIDAD\n### MISION\n### SERVICIOS Y PRECIOS\n### PROCESO DE CALIFICACION\n### MANEJO DE OBJECIONES\n### COMO AGENDAR\n### INFORMACION RESERVADA PARA EL DOCTOR\n### HORARIOS Y FUERA DE HORARIO\n### DIFERENCIADORES Y CREDIBILIDAD\n### PROHIBICIONES ABSOLUTAS\n### CIERRE DE CONVERSACION\n\nInstrucciones directas para ${d.aria_nombre||'ARIA'}, ejemplos de mensajes reales. NUNCA mencionar GHL LEADOC IA bot sistema automatizacion.`;
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
       });
-
-      const result = await response.json();
-      const manual = result.content?.find(b => b.type === 'text')?.text || '';
+      const res = await r.json();
+      const manual = res.content?.find(b => b.type === 'text')?.text || '';
       return { statusCode: 200, headers, body: JSON.stringify({ manual }) };
     }
 
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Acción no reconocida' }) };
-
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Accion no reconocida' }) };
   } catch (err) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
