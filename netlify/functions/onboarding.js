@@ -59,6 +59,16 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
     }
 
+
+    if (action === 'delete') {
+      const all = await getAll();
+      if (all[key]) {
+        delete all[key];
+        await saveAll(all);
+      }
+      return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+    }
+
     if (action === 'extract') {
       const blocks = [];
       if (files && files.length > 0) {
