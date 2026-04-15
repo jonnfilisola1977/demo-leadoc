@@ -8,9 +8,12 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: 'Method Not Allowed' };
 
-  const JKEY = process.env.JSONBIN_KEY || '$2a$10$nLYFF0nhyLXkN85/jA84u.gwLGGDul.z3h1mkqW9rAyzUievwUHYy';
-  const JBIN = process.env.JSONBIN_BIN || '69dfd642856a68218939f27c';
+  const JKEY = process.env.JSONBIN_API_KEY;
+  const JBIN = process.env.JSONBIN_BIN_ID;
   const AKEY = process.env.ANTHROPIC_API_KEY;
+
+  if (!JKEY || !JBIN) return { statusCode: 500, headers, body: JSON.stringify({ error: 'Storage not configured' }) };
+
   const BASE = 'https://api.jsonbin.io/v3/b/' + JBIN;
 
   async function getAll() {
@@ -66,7 +69,7 @@ exports.handler = async (event) => {
           else if (f.textContent) blocks.push({ type: 'text', text: 'Archivo "' + f.name + '":\n' + f.textContent });
         }
       }
-      blocks.push({ type: 'text', text: 'Extrae TODA la informacion posible de estos archivos de una clinica o gimnasio en Mexico. Si hay precios extrae todos. Si hay servicios extrae todos. Si hay certificaciones extrae todas.\n\nDevuelve SOLO JSON valido sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}' });
+      blocks.push({ type: 'text', text: 'Extrae TODA la informacion posible de estos archivos de una clinica o gimnasio en Mexico. Si hay precios extrae todos. Si hay servicios extrae todos.\n\nDevuelve SOLO JSON valido sin markdown:\n{"encontrado":{"nombre":null,"ciudad":null,"tipo":null,"horario":null,"servicios":null,"precios":null,"promo":null,"top_servicios":null,"diferencia":null,"certs":null,"testimonios":null,"extra":null},"faltante":[],"resumen":"1 oracion"}' });
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01' },
@@ -79,7 +82,7 @@ exports.handler = async (event) => {
 
     if (action === 'generate') {
       const d = data;
-      const prompt = 'Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ' + (d.aria_nombre||'ARIA') + ' en GoHighLevel.\n\nARIA: agente WhatsApp responde leads menos de 3 min 24/7. NUNCA menciona IA bot tecnologia. Actua como asistente humano. Espanol mexicano natural. Objetivo: calificar y agendar citas.\n\nDATOS:\nNegocio: ' + d.nombre + ' | Tipo: ' + d.tipo + ' | Ciudad: ' + d.ciudad + ' | Horario: ' + d.horario + '\nServicios: ' + d.servicios + ' | Precios: ' + d.precios + ' | Promo: ' + (d.promo||'Ninguna') + '\nMas solicitados: ' + (d.top_servicios||'N/A') + ' | Financiamiento: ' + d.financiamiento + '\nDiferenciadores: ' + d.diferencia + ' | Certs: ' + d.certs + ' | Alcance: ' + d.alcance + '\nTono: ' + d.tono + ' | Objeciones: ' + d.objeciones + ' | Agenda: ' + d.agenda + '\nExtra: ' + (d.extra||'N/A') + '\n\n# MANUAL DE VENTAS — ' + d.nombre.toUpperCase() + '\n## Agente: ' + (d.aria_nombre||'ARIA') + '\n\n### IDENTIDAD\n### MISION\n### SERVICIOS Y PRECIOS\n### PROCESO DE CALIFICACION\n### MANEJO DE OBJECIONES\n### COMO AGENDAR\n### INFORMACION RESERVADA\n### HORARIOS\n### DIFERENCIADORES\n### PROHIBICIONES\n### CIERRE\n\nInstrucciones directas con ejemplos de mensajes reales. NUNCA mencionar GHL LEADOC IA bot.';
+      const prompt = 'Eres el arquitecto de prompts de LEADOC TECHNOLOGIES. Genera el Manual de Ventas completo para el agente ' + (d.aria_nombre||'ARIA') + ' en GoHighLevel.\n\nARIA: agente WhatsApp responde leads menos de 3 min 24/7. NUNCA menciona IA bot tecnologia. Actua como asistente humano. Espanol mexicano natural.\n\nDATOS:\nNegocio: ' + d.nombre + ' | Tipo: ' + d.tipo + ' | Ciudad: ' + d.ciudad + ' | Horario: ' + d.horario + '\nServicios: ' + d.servicios + ' | Precios: ' + d.precios + ' | Promo: ' + (d.promo||'Ninguna') + '\nMas solicitados: ' + (d.top_servicios||'N/A') + ' | Financiamiento: ' + d.financiamiento + '\nDiferenciadores: ' + d.diferencia + ' | Certs: ' + d.certs + ' | Alcance: ' + d.alcance + '\nTono: ' + d.tono + ' | Objeciones: ' + d.objeciones + ' | Agenda: ' + d.agenda + '\nExtra: ' + (d.extra||'N/A') + '\n\n# MANUAL DE VENTAS — ' + d.nombre.toUpperCase() + '\n## Agente: ' + (d.aria_nombre||'ARIA') + '\n\n### IDENTIDAD\n### MISION\n### SERVICIOS Y PRECIOS\n### PROCESO DE CALIFICACION\n### MANEJO DE OBJECIONES\n### COMO AGENDAR\n### INFORMACION RESERVADA\n### HORARIOS\n### DIFERENCIADORES\n### PROHIBICIONES\n### CIERRE\n\nInstrucciones directas con ejemplos de mensajes reales. NUNCA mencionar GHL LEADOC IA bot.';
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01' },
