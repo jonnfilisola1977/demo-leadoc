@@ -552,7 +552,7 @@ function prefill(d){
   const map={'fn':'nombre','fc':'ciudad','fh':'horario','fd':'direccion','fsv':'servicios','fpr':'precios','fpro':'promo','ftop':'top_servicios','fdif':'diferencia','fcrt':'certs','ftes':'testimonios','fext':'extra'};
   for(const[id,k]of Object.entries(map)){
     const el=document.getElementById(id);
-    if(el&&d[k]){el.value=d[k];el.classList.add('pf');}
+    if(el&&d[k]){el.value=typeof d[k]==='object'?JSON.stringify(d[k]):String(d[k]);el.classList.add('pf');}
   }
   if(d.tipo){
     const sel=document.getElementById('ft');
