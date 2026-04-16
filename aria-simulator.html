@@ -386,7 +386,7 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
 
       <div class="stat-card" id="sc1">
         <div class="stat-num gold" id="st-resp">0</div>
-        <div class="stat-lbl">Leads respondidos<br>en menos de 3 min</div>
+        <div class="stat-lbl">Leads atendidos<br>en esta demo</div>
         <div class="stat-flash" id="fl1">↑ Nuevo lead capturado</div>
       </div>
 
@@ -551,15 +551,15 @@ let cfg = {
 
 // ── ESPECIALIDADES ──
 const SPECS = [
-  {name:'Medicina Estética',    price:'$4.5K+',  svcs:'Botox, rellenos dérmicos, HIFU facial, rinomodelación, plasma rico en plaquetas', prices:'$3,500 – $18,000 MXN'},
-  {name:'Cirugía Plástica',     price:'$35K+',   svcs:'Liposucción, abdominoplastia, aumento de busto, rinoplastia, blefaroplastia',      prices:'$35,000 – $120,000 MXN'},
-  {name:'Injerto Capilar',      price:'$40K+',   svcs:'Trasplante capilar FUE, PRP capilar, micropigmentación, tratamiento alopecia',     prices:'$40,000 – $80,000 MXN'},
-  {name:'Cirugía Bariátrica',   price:'$55K+',   svcs:'Manga gástrica, bypass gástrico, balón intragástrico, seguimiento nutricional',    prices:'$55,000 – $110,000 MXN'},
-  {name:'Implantes Dentales',   price:'$25K+',   svcs:'Implantes dentales, carillas, ortodoncia invisible, blanqueamiento, All-on-4',     prices:'$25,000 – $90,000 MXN'},
-  {name:'Oftalmología / Láser', price:'$28K+',   svcs:'Cirugía LASIK, cataratas, corrección de miopía, astigmatismo, pterigión',          prices:'$28,000 – $60,000 MXN'},
-  {name:'Rinoplastia',          price:'$45K+',   svcs:'Rinoplastia estética, rinoplastia funcional, revisión de rinoplastia, septoplastia',prices:'$45,000 – $95,000 MXN'},
-  {name:'Spa Médico',           price:'$3.5K/mes',svcs:'Faciales médicos, mesoterapia, drenaje linfático, masajes terapéuticos, peeling', prices:'$3,500 – $15,000 MXN'},
-  {name:'Gimnasio Boutique',    price:'Membresía',svcs:'Clases de box, funcional, CrossFit, spinning, yoga, entrenamiento personalizado',  prices:'$1,200 – $3,500 MXN/mes'},
+  {name:'Medicina Estética',    ico:'💉', svcs:'Botox, rellenos dérmicos, HIFU facial, rinomodelación, plasma rico en plaquetas', prices:'$3,500 – $18,000 MXN'},
+  {name:'Cirugía Plástica',     ico:'🏥', svcs:'Liposucción, abdominoplastia, aumento de busto, rinoplastia, blefaroplastia',      prices:'$35,000 – $120,000 MXN'},
+  {name:'Injerto Capilar',      ico:'💆', svcs:'Trasplante capilar FUE, PRP capilar, micropigmentación, tratamiento alopecia',     prices:'$40,000 – $80,000 MXN'},
+  {name:'Cirugía Bariátrica',   ico:'⚕️', svcs:'Manga gástrica, bypass gástrico, balón intragástrico, seguimiento nutricional',    prices:'$55,000 – $110,000 MXN'},
+  {name:'Implantes Dentales',   ico:'🦷', svcs:'Implantes dentales, carillas, ortodoncia invisible, blanqueamiento, All-on-4',     prices:'$25,000 – $90,000 MXN'},
+  {name:'Oftalmología / Láser', ico:'👁️', svcs:'Cirugía LASIK, cataratas, corrección de miopía, astigmatismo, pterigión',          prices:'$28,000 – $60,000 MXN'},
+  {name:'Rinoplastia',          ico:'✨', svcs:'Rinoplastia estética, rinoplastia funcional, revisión de rinoplastia, septoplastia',prices:'$45,000 – $95,000 MXN'},
+  {name:'Spa Médico',           ico:'🌿', svcs:'Faciales médicos, mesoterapia, drenaje linfático, masajes terapéuticos, peeling', prices:'$3,500 – $15,000 MXN'},
+  {name:'Gimnasio Boutique',    ico:'🥊', svcs:'Clases de box, funcional, CrossFit, spinning, yoga, entrenamiento personalizado',  prices:'$1,200 – $3,500 MXN/mes'},
 ];
 
 let activeSpec = 0;
@@ -568,23 +568,24 @@ function buildSpecs() {
   const grid = document.getElementById('spec-grid');
   grid.innerHTML = SPECS.map((s, i) =>
     `<div class="spec-btn${i===0?' active':''}" onclick="selectSpec(${i})">
-      <span class="spec-name">${s.name}</span>
-      <span class="spec-price">${s.price}</span>
+      <span class="spec-name">${s.ico} ${s.name}</span>
+      <span class="spec-check" style="font-size:12px;color:var(--gold);opacity:${i===0?1:0};transition:opacity .2s" id="sck-${i}">✓</span>
     </div>`
   ).join('');
 }
 
 function selectSpec(i) {
   if (i === activeSpec) return;
+  document.getElementById('sck-'+activeSpec).style.opacity='0';
   activeSpec = i;
   document.querySelectorAll('.spec-btn').forEach((b,j) =>
     b.classList.toggle('active', j === i)
   );
+  document.getElementById('sck-'+i).style.opacity='1';
   const s = SPECS[i];
   cfg.type   = s.name;
   cfg.svcs   = s.svcs;
   cfg.prices = s.prices;
-  // reset chat with new specialty
   resetChat();
 }
 
@@ -717,13 +718,13 @@ async function send(){
   if(busy)return;
   const inp=document.getElementById('inp');
   const text=inp.value.trim(); if(!text)return;
-  inp.value=''; inp.style.height='auto';
+  inp.value=''; inp.style.height='38px';
   busy=true; document.getElementById('send-btn').disabled=true;
   const p=document.getElementById('persona-sel').value;
   const flag=FLAGS[p]||'🌎';
   addBubble('u', text, flag);
   history.push({role:'user', content:text});
-  stats.resp++; flashStat('sc1','fl1'); updateStats();
+  if(history.filter(m=>m.role==='user').length===1) { stats.resp++; flashStat('sc1','fl1'); updateStats(); }
   addTyping();
 
   const sys=`You are ${cfg.agent}, a human sales assistant at ${cfg.name} (${cfg.type}) in ${cfg.city}, Mexico.
