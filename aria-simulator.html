@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARIA · Demo en Vivo — LEADOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-l:#F0D070;--gold-d:#A8832A;
+  --gold-dim:rgba(201,168,76,0.13);
+  --white:#FFFFFF;--off:#F6F4EF;--paper:#FAFAF7;
+  --dark:#0A0A08;--dark2:#141412;--dark3:#1E1E1A;--dark4:#2A2A26;
+  --text:#1A1916;--muted:#5A5754;--dim:#9A9794;
+  --green:#28855A;--green-l:#33A86E;
+  --green-dim:rgba(40,133,90,0.12);
+  --brd:rgba(201,168,76,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;overflow:hidden}
+
+/* ══ TICKER ══ */
+.ticker-wrap{
+  background:var(--dark);height:46px;
+  display:flex;align-items:center;overflow:hidden;
+  border-bottom:2px solid var(--gold);flex-shrink:0;
+}
+.ticker-track{display:flex;animation:scroll 130s linear infinite;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick{display:inline-flex;align-items:center;gap:10px;padding:0 44px;font-size:13.5px;color:rgba(255,255,255,0.65)}
+.tick b{color:var(--gold);font-weight:700;font-family:'Syne',sans-serif;font-size:14px}
+.tick-dot{color:var(--gold);opacity:.5;font-size:20px;line-height:1;padding:0 4px}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  background:var(--white);height:56px;
+  display:flex;align-items:center;padding:0 22px;gap:14px;
+  border-bottom:1px solid rgba(0,0,0,0.09);
+  box-shadow:0 1px 8px rgba(0,0,0,0.06);flex-shrink:0;
+}
+.logo-wrap{display:flex;align-items:center;gap:9px}
+.logo-wrap img{height:32px;width:auto}
+.logo-txt{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold);letter-spacing:.1em}
+.top-sep{width:1px;height:20px;background:#E5E2DC}
+.top-sub{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.live-badge{
+  display:flex;align-items:center;gap:6px;
+  background:var(--green-dim);border:1px solid rgba(40,133,90,0.28);
+  border-radius:999px;padding:5px 14px;
+  font-size:12px;font-weight:700;color:var(--green);
+  letter-spacing:.04em;font-family:'Syne',sans-serif;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green-l);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(51,168,110,.5)}60%{opacity:.5;box-shadow:0 0 0 5px rgba(51,168,110,0)}}
+.btn-cfg{
+  background:var(--dark);color:var(--gold);border:none;
+  border-radius:8px;padding:8px 18px;
+  font-size:12px;font-weight:700;font-family:'Syne',sans-serif;
+  letter-spacing:.06em;cursor:pointer;transition:all .15s;
+}
+.btn-cfg:hover{background:var(--gold);color:var(--dark)}
+
+/* ══ SHELL ══ */
+.shell{
+  display:grid;
+  grid-template-columns:220px 1fr 250px;
+  height:calc(100vh - 102px);
+}
+
+/* ══ LEFT ══ */
+.left{
+  background:var(--dark2);
+  padding:0;display:flex;flex-direction:column;
+  overflow-y:auto;border-right:1px solid rgba(255,255,255,0.06);
+}
+.left::-webkit-scrollbar{width:3px}
+.left::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1)}
+
+/* ESPECIALIDADES — TOP, CLICKEABLES */
+.spec-section{padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.spec-title{
+  font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.45);
+  margin-bottom:10px;
+}
+.spec-grid{display:flex;flex-direction:column;gap:3px}
+.spec-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 10px;border-radius:8px;cursor:pointer;
+  border:1px solid transparent;transition:all .15s;
+  background:rgba(255,255,255,0.04);
+}
+.spec-btn:hover{background:rgba(201,168,76,0.10);border-color:rgba(201,168,76,0.2)}
+.spec-btn.active{
+  background:rgba(201,168,76,0.14);
+  border-color:rgba(201,168,76,0.4);
+}
+.spec-btn.active .spec-name{color:var(--gold-l)}
+.spec-btn.active .spec-price{color:var(--gold)}
+.spec-name{font-size:12px;font-weight:500;color:rgba(255,255,255,0.80)}
+.spec-price{font-size:11px;font-weight:700;color:rgba(255,255,255,0.40);font-family:'Syne',sans-serif}
+.spec-btn.active .spec-price{color:var(--gold)}
+
+/* STATS */
+.stats-section{padding:14px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{
+  font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.40);
+  margin-bottom:2px;
+}
+
+.stat-card{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:10px;padding:12px 14px;
+  transition:border-color .3s,background .3s;
+}
+.stat-card.lit{
+  border-color:var(--gold)!important;
+  background:rgba(201,168,76,0.10)!important;
+}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:40px;font-weight:800;line-height:1;
+  color:var(--white);
+  transition:transform .2s;
+}
+.stat-num.gold{color:var(--gold)}
+.stat-num.green{color:#48D490}
+.stat-num.bump{transform:scale(1.18)}
+.stat-lbl{
+  font-size:12px;font-weight:500;
+  color:rgba(255,255,255,0.70);
+  margin-top:5px;line-height:1.4;
+}
+.stat-flash{
+  font-size:11px;font-weight:600;color:var(--gold-l);
+  margin-top:5px;height:15px;opacity:0;transition:opacity .3s;
+}
+.stat-flash.show{opacity:1}
+
+.divider{height:1px;background:rgba(255,255,255,0.07);margin:0 14px}
+
+.mini-section{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600}
+.tag.lang{background:rgba(72,212,144,0.15);color:#48D490;border:1px solid rgba(72,212,144,0.25)}
+.tag.proc{background:rgba(201,168,76,0.15);color:var(--gold-l);border:1px solid rgba(201,168,76,0.25)}
+.tag.empty{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.10);font-size:11px}
+
+/* ══ CENTER ══ */
+.center{display:flex;flex-direction:column;background:var(--off)}
+
+.chat-hdr{
+  background:var(--white);padding:12px 20px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  box-shadow:0 1px 8px rgba(0,0,0,0.05);flex-shrink:0;
+}
+.av{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--dark);
+  box-shadow:0 3px 16px rgba(201,168,76,0.38);position:relative;
+}
+.av::after{
+  content:'';position:absolute;bottom:1px;right:1px;
+  width:11px;height:11px;border-radius:50%;
+  background:var(--green-l);border:2.5px solid var(--white);
+}
+.hdr-info .cname{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.hdr-info .cstatus{font-size:11px;color:var(--green);font-weight:600;margin-top:2px}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:8px}
+.persona-sel{
+  font-size:13px;border:1px solid #E0DDD6;border-radius:8px;
+  padding:7px 10px;background:var(--white);color:var(--text);
+  font-family:'Inter',sans-serif;cursor:pointer;outline:none;font-weight:500;
+}
+.persona-sel:focus{border-color:var(--brd)}
+.btn-reset{
+  font-size:12px;font-weight:600;color:var(--muted);
+  background:none;border:1px solid #E0DDD6;border-radius:7px;
+  padding:7px 13px;cursor:pointer;transition:all .15s;
+  font-family:'Inter',sans-serif;
+}
+.btn-reset:hover{border-color:var(--brd);color:var(--gold-d)}
+
+.msgs{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:8px}
+.msgs::-webkit-scrollbar{width:4px}
+.msgs::-webkit-scrollbar-thumb{background:#DDD9D0;border-radius:2px}
+
+.bwrap{display:flex;flex-direction:column;gap:3px}
+.bwrap.u{align-items:flex-end}
+.bub{max-width:76%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6;word-wrap:break-word}
+.bub.a{
+  background:var(--white);color:var(--text);
+  border-bottom-left-radius:4px;
+  box-shadow:0 1px 10px rgba(0,0,0,0.07);
+  border:1px solid rgba(0,0,0,0.06);
+}
+.bub.u{
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  color:var(--dark);border-bottom-right-radius:4px;font-weight:500;
+  box-shadow:0 3px 18px rgba(201,168,76,0.32);
+}
+.bub.typing{
+  background:transparent;border:none;box-shadow:none;
+  color:var(--muted);font-style:italic;font-size:13px;padding:0;
+}
+.bts{font-size:11px;color:var(--dim);padding:0 4px}
+
+.quick-area{
+  padding:10px 20px;background:var(--white);
+  border-top:1px solid rgba(0,0,0,0.06);
+  display:flex;gap:7px;flex-wrap:wrap;flex-shrink:0;
+}
+.qb{
+  font-size:12px;padding:6px 14px;border-radius:999px;
+  background:var(--off);border:1px solid #E0DDD6;color:var(--muted);
+  cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;white-space:nowrap;
+}
+.qb:hover{background:var(--gold-dim);border-color:var(--brd);color:var(--gold-d);font-weight:500}
+
+.input-row{
+  padding:14px 20px;background:var(--white);
+  border-top:1px solid rgba(0,0,0,0.07);
+  display:flex;gap:10px;align-items:flex-end;flex-shrink:0;
+}
+.input-row textarea{
+  flex:1;background:var(--off);border:1.5px solid #E0DDD6;border-radius:24px;
+  padding:11px 18px;font-size:14px;color:var(--text);
+  font-family:'Inter',sans-serif;outline:none;resize:none;
+  line-height:1.4;max-height:80px;transition:border-color .2s;
+}
+.input-row textarea:focus{border-color:var(--brd);background:var(--white)}
+.input-row textarea::placeholder{color:var(--dim)}
+.btn-send{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  border:none;cursor:pointer;color:var(--dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;
+  box-shadow:0 3px 18px rgba(201,168,76,0.42);
+  transition:all .2s;
+}
+.btn-send:hover{transform:scale(1.08);box-shadow:0 4px 24px rgba(201,168,76,0.58)}
+.btn-send:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+
+/* ══ RIGHT CRM ══ */
+.right{
+  background:var(--white);border-left:1px solid rgba(0,0,0,0.07);
+  padding:18px 16px;display:flex;flex-direction:column;gap:10px;
+  overflow-y:auto;
+}
+.right::-webkit-scrollbar{width:3px}
+.right::-webkit-scrollbar-thumb{background:#E0DDD6;border-radius:2px}
+.crm-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.crm-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text)}
+.crm-cnt{
+  font-size:11px;font-weight:700;color:var(--gold-d);
+  background:var(--gold-dim);border:1px solid rgba(201,168,76,0.22);
+  border-radius:999px;padding:2px 9px;display:none;
+}
+.crm-empty{
+  text-align:center;padding:28px 10px;color:var(--dim);
+  font-size:12px;line-height:1.9;
+  border:1.5px dashed #DAD7D0;border-radius:12px;
+}
+.crm-empty .eico{font-size:26px;display:block;margin-bottom:10px;opacity:.3}
+
+.lcard{
+  background:var(--paper);border:1px solid #ECEAE4;
+  border-radius:12px;padding:12px 14px;
+  animation:fadeUp .35s ease;
+  border-left:3px solid #E0DDD6;
+}
+.lcard.new-l{border-left-color:var(--gold)}
+.lcard.hot-l{border-left-color:var(--green-l);background:rgba(40,133,90,0.03)}
+.lcard.cita-l{border-left-color:var(--green);background:rgba(40,133,90,0.06)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.lcard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px}
+.lcard-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text)}
+.lbadge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.06em;flex-shrink:0}
+.lb-new{background:var(--gold-dim);color:var(--gold-d);border:1px solid rgba(201,168,76,0.25)}
+.lb-hot{background:var(--green-dim);color:var(--green);border:1px solid rgba(40,133,90,0.25)}
+.lb-cita{background:rgba(40,133,90,0.14);color:var(--green);border:1px solid rgba(40,133,90,0.3)}
+.lrow{font-size:12px;color:var(--muted);margin-bottom:3px;display:flex;align-items:baseline;gap:5px}
+.lrow strong{color:var(--text);font-weight:600}
+.lprog{height:3px;background:#ECEAE4;border-radius:2px;margin-top:8px;overflow:hidden}
+.lprog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:2px;transition:width .7s ease}
+.ltime{font-size:10px;color:var(--dim);margin-top:6px}
+
+/* ══ MODAL ══ */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);
+  z-index:200;align-items:center;justify-content:center;padding:20px;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--white);border-radius:20px;padding:32px;
+  max-width:520px;width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,0.22);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-h{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5}
+.mfield{margin-bottom:14px}
+.mfield label{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.mfield input,.mfield select,.mfield textarea{
+  width:100%;padding:11px 14px;font-size:14px;
+  border:1.5px solid #E0DDD6;border-radius:10px;
+  background:var(--off);color:var(--text);
+  font-family:'Inter',sans-serif;outline:none;resize:none;transition:border-color .2s;
+}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--brd);background:var(--white)}
+.mfield textarea{height:64px}
+.mg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mactions{display:flex;gap:10px;margin-top:22px}
+.btn-primary{flex:1;padding:13px;font-size:14px;font-weight:800;background:var(--gold);color:var(--dark);border:none;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.05em;transition:all .15s}
+.btn-primary:hover{background:var(--gold-l)}
+.btn-sec{padding:13px 20px;font-size:13px;background:none;border:1.5px solid #E0DDD6;border-radius:10px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-sec:hover{border-color:var(--brd);color:var(--text)}
+.link-res{margin-top:18px;display:none}
+.link-box{background:var(--off);border:1px solid #E0DDD6;border-radius:10px;padding:12px 14px;font-size:11px;color:var(--muted);word-break:break-all;font-family:monospace;line-height:1.7}
+.btn-copy{width:100%;margin-top:8px;padding:11px;font-size:13px;font-weight:700;background:var(--dark);color:var(--gold);border:none;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.06em;transition:all .15s}
+.btn-copy:hover{background:var(--dark2)}
+.copy-ok{font-size:12px;color:var(--green);font-weight:600;text-align:center;margin-top:7px;display:none}
+.pwd-wrap{padding:8px 0 16px;text-align:center}
+.pwd-hint{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.pwd-in{width:100%;padding:12px;font-size:16px;text-align:center;letter-spacing:.15em;border:1.5px solid #E0DDD6;border-radius:10px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.pwd-in:focus{border-color:var(--brd)}
+.pwd-err{font-size:12px;color:#C04848;font-weight:600;margin-top:7px;display:none}
+
+/* ══ MOBILE ══ */
+@media(max-width:800px){
+  .shell{grid-template-columns:1fr}
+  .left,.right{display:none}
+  html,body{overflow:auto}
+  .shell{height:auto}
+  .msgs{min-height:300px}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-wrap">
+    <img src="https://leadoc.io/img/leadoclogo.png" alt="LEADOC"
+      onerror="this.style.display='none';document.getElementById('ltxt').style.display='block'"/>
+    <span id="ltxt" class="logo-txt" style="display:none">LEADOC</span>
+  </div>
+  <div class="top-sep"></div>
+  <span class="top-sub">ARIA · Demo en Vivo</span>
+  <div class="topbar-right">
+    <div class="live-badge"><div class="live-dot"></div>Sistema activo · 24/7 · 365</div>
+    <button class="btn-cfg" onclick="openModal()">⚙ Personalizar demo</button>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- ── LEFT ── -->
+  <div class="left">
+
+    <!-- ESPECIALIDADES CLICKEABLES ARRIBA -->
+    <div class="spec-section">
+      <div class="spec-title">Selecciona especialidad → ARIA se adapta</div>
+      <div class="spec-grid" id="spec-grid"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-section">
+      <div class="sec-lbl">Rendimiento en vivo</div>
+
+      <div class="stat-card" id="sc1">
+        <div class="stat-num gold" id="st-resp">0</div>
+        <div class="stat-lbl">Leads respondidos<br>en menos de 3 min</div>
+        <div class="stat-flash" id="fl1">↑ Nuevo lead capturado</div>
+      </div>
+
+      <div class="stat-card" id="sc2">
+        <div class="stat-num green" id="st-cal">0</div>
+        <div class="stat-lbl">Citas agendadas<br>esta sesión</div>
+        <div class="stat-flash" id="fl2">✓ ¡Cita confirmada!</div>
+      </div>
+
+      <div class="stat-card" id="sc3">
+        <div class="stat-num" id="st-conv" style="color:rgba(255,255,255,0.45);font-size:36px">—</div>
+        <div class="stat-lbl">Tasa de conversión</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="mini-section">
+      <div class="sec-lbl">Idiomas detectados</div>
+      <div class="tag-row" id="lang-tags">
+        <span class="tag empty">Esperando...</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="mini-section">
+      <div class="sec-lbl">Procedimientos activos</div>
+      <div class="tag-row" id="proc-tags">
+        <span class="tag empty">Sin datos aún</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── CENTER ── -->
+  <div class="center">
+    <div class="chat-hdr">
+      <div class="av" id="av-ltr">S</div>
+      <div class="hdr-info">
+        <div class="cname" id="hdr-name">Sofía · Clínica Estética Premium</div>
+        <div class="cstatus">● En línea · &lt;3 min · 24/7 · 365 días · Todo el mundo</div>
+      </div>
+      <div class="hdr-r">
+        <select class="persona-sel" id="persona-sel" onchange="changePersona()">
+          <option value="es_mx">🇲🇽 Paciente México</option>
+          <option value="en_us">🇺🇸 Patient USA</option>
+          <option value="en_ca">🇨🇦 Patient Canada</option>
+          <option value="pt_br">🇧🇷 Paciente Brasil</option>
+          <option value="fr_fr">🇫🇷 Patient France</option>
+          <option value="es_co">🇨🇴 Paciente Colombia</option>
+          <option value="de_de">🇩🇪 Patient Deutschland</option>
+          <option value="ar_sa">🇸🇦 مريض السعودية</option>
+          <option value="zh_cn">🇨🇳 中国患者</option>
+          <option value="ja_jp">🇯🇵 日本の患者</option>
+        </select>
+        <button class="btn-reset" onclick="resetChat()">↺ Nueva demo</button>
+      </div>
+    </div>
+
+    <div class="msgs" id="msgs"></div>
+    <div class="quick-area" id="quick-area"></div>
+
+    <div class="input-row">
+      <textarea id="inp" rows="1"
+        placeholder="Escribe como si fueras el paciente — en cualquier idioma…"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+      <button class="btn-send" id="send-btn" onclick="send()">▶</button>
+    </div>
+  </div>
+
+  <!-- ── RIGHT CRM ── -->
+  <div class="right">
+    <div class="crm-hdr">
+      <div class="crm-title">CRM · Leads capturados</div>
+      <span class="crm-cnt" id="crm-cnt"></span>
+    </div>
+    <div id="crm-list">
+      <div class="crm-empty">
+        <span class="eico">📋</span>
+        ARIA califica cada lead<br>
+        en tiempo real.<br>
+        Las tarjetas aparecen<br>
+        aquí automáticamente.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div id="pwd-gate">
+      <div class="pwd-wrap">
+        <div class="modal-h" style="margin-bottom:8px">Acceso al generador</div>
+        <div class="pwd-hint">Ingresa la contraseña de LEADOC<br>para personalizar demos</div>
+        <input class="pwd-in" type="password" id="pwd-in" placeholder="••••••••••"
+          onkeydown="if(event.key==='Enter')checkPwd()"/>
+        <div class="pwd-err" id="pwd-err">Contraseña incorrecta</div>
+        <div class="mactions" style="margin-top:16px">
+          <button class="btn-primary" onclick="checkPwd()">Entrar →</button>
+          <button class="btn-sec" onclick="closeModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <div id="gen-form" style="display:none">
+      <div class="modal-h">Generador de demo personalizada</div>
+      <div class="modal-sub">Llena los datos del prospecto → genera el link → mándalo por WhatsApp. El médico lo abre y ya ve su clínica precargada.</div>
+      <div class="mg2">
+        <div class="mfield"><label>Nombre de la clínica</label><input id="g-name" placeholder="Clínica Dra. García"/></div>
+        <div class="mfield"><label>Ciudad</label><input id="g-city" placeholder="Guadalajara"/></div>
+      </div>
+      <div class="mfield"><label>Servicios (separados por coma)</label>
+        <textarea id="g-svcs" placeholder="Botox, HIFU, Rellenos, Rinomodelación"></textarea>
+      </div>
+      <div class="mg2">
+        <div class="mfield"><label>Rango de precios</label><input id="g-prices" placeholder="$3,500 – $18,000 MXN"/></div>
+        <div class="mfield"><label>Nombre del agente</label><input id="g-agent" placeholder="Sofía"/></div>
+      </div>
+      <div class="mfield"><label>Especialidad</label>
+        <select id="g-type">
+          <option>Medicina estética</option>
+          <option>Cirugía plástica</option>
+          <option>Cirugía bariátrica</option>
+          <option>Injerto capilar</option>
+          <option>Implantes dentales</option>
+          <option>Oftalmología / Láser</option>
+          <option>Rinoplastia</option>
+          <option>Spa médico & bienestar</option>
+          <option>Fisioterapia</option>
+          <option>Gimnasio boutique</option>
+          <option>Gimnasio de box</option>
+          <option>CrossFit / Funcional</option>
+        </select>
+      </div>
+      <div class="mactions">
+        <button class="btn-primary" onclick="generateLink()">Generar link →</button>
+        <button class="btn-sec" onclick="closeModal()">Cancelar</button>
+      </div>
+      <div class="link-res" id="link-res">
+        <div class="link-box" id="link-box"></div>
+        <button class="btn-copy" onclick="copyLink()">📋 Copiar link para WhatsApp</button>
+        <div class="copy-ok" id="copy-ok">✓ ¡Copiado! Listo para mandar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── URL PARAMS ──
+const P = new URLSearchParams(location.search);
+let cfg = {
+  name:   P.get('n') || 'Clínica Estética Premium',
+  city:   P.get('c') || 'México',
+  svcs:   P.get('s') || 'Botox, rellenos dérmicos, HIFU facial y corporal, rinomodelación, plasma rico en plaquetas',
+  prices: P.get('p') || '$3,500 – $18,000 MXN',
+  agent:  P.get('a') || 'Sofía',
+  type:   P.get('t') || 'Medicina estética'
+};
+
+// ── ESPECIALIDADES ──
+const SPECS = [
+  {name:'Medicina Estética',    price:'$4.5K+',  svcs:'Botox, rellenos dérmicos, HIFU facial, rinomodelación, plasma rico en plaquetas', prices:'$3,500 – $18,000 MXN'},
+  {name:'Cirugía Plástica',     price:'$35K+',   svcs:'Liposucción, abdominoplastia, aumento de busto, rinoplastia, blefaroplastia',      prices:'$35,000 – $120,000 MXN'},
+  {name:'Injerto Capilar',      price:'$40K+',   svcs:'Trasplante capilar FUE, PRP capilar, micropigmentación, tratamiento alopecia',     prices:'$40,000 – $80,000 MXN'},
+  {name:'Cirugía Bariátrica',   price:'$55K+',   svcs:'Manga gástrica, bypass gástrico, balón intragástrico, seguimiento nutricional',    prices:'$55,000 – $110,000 MXN'},
+  {name:'Implantes Dentales',   price:'$25K+',   svcs:'Implantes dentales, carillas, ortodoncia invisible, blanqueamiento, All-on-4',     prices:'$25,000 – $90,000 MXN'},
+  {name:'Oftalmología / Láser', price:'$28K+',   svcs:'Cirugía LASIK, cataratas, corrección de miopía, astigmatismo, pterigión',          prices:'$28,000 – $60,000 MXN'},
+  {name:'Rinoplastia',          price:'$45K+',   svcs:'Rinoplastia estética, rinoplastia funcional, revisión de rinoplastia, septoplastia',prices:'$45,000 – $95,000 MXN'},
+  {name:'Spa Médico',           price:'$3.5K/mes',svcs:'Faciales médicos, mesoterapia, drenaje linfático, masajes terapéuticos, peeling', prices:'$3,500 – $15,000 MXN'},
+  {name:'Gimnasio Boutique',    price:'Membresía',svcs:'Clases de box, funcional, CrossFit, spinning, yoga, entrenamiento personalizado',  prices:'$1,200 – $3,500 MXN/mes'},
+];
+
+let activeSpec = 0;
+
+function buildSpecs() {
+  const grid = document.getElementById('spec-grid');
+  grid.innerHTML = SPECS.map((s, i) =>
+    `<div class="spec-btn${i===0?' active':''}" onclick="selectSpec(${i})">
+      <span class="spec-name">${s.name}</span>
+      <span class="spec-price">${s.price}</span>
+    </div>`
+  ).join('');
+}
+
+function selectSpec(i) {
+  if (i === activeSpec) return;
+  activeSpec = i;
+  document.querySelectorAll('.spec-btn').forEach((b,j) =>
+    b.classList.toggle('active', j === i)
+  );
+  const s = SPECS[i];
+  cfg.type   = s.name;
+  cfg.svcs   = s.svcs;
+  cfg.prices = s.prices;
+  // reset chat with new specialty
+  resetChat();
+}
+
+// ── TICKER ──
+const TICKS = [
+  ['⚡','Respuesta en menos de 3 minutos','siempre — a las 3am del sábado también'],
+  ['🕐','24/7 · 365 días sin descanso','nunca se enferma, nunca falta, nunca llega tarde'],
+  ['🌎','Turismo médico mundial','atiende pacientes de cualquier país en su propio idioma'],
+  ['💬','Multiidioma automático','inglés, francés, portugués, alemán, árabe, chino, japonés y más'],
+  ['💰','Sin IMSS · Sin INFONAVIT · Sin nómina','sin cargas fiscales — solo resultados puros'],
+  ['🚫','Cero leads perdidos','cada lead sin respuesta en 5 min se va a la competencia — ARIA no deja ir ninguno'],
+  ['🎯','Solo agenda pacientes con presupuesto real','filtra por procedimiento y presupuesto antes de confirmar'],
+  ['📈','Tu clínica cierra mientras duermes','genera citas a las 2am, domingos, días festivos — siempre activa'],
+  ['👤','Mejor cerrador del mundo','mejora con cada conversación — ninguna secretaria puede hacer eso'],
+  ['✅','Garantía mes 1','si ARIA no agenda ni una valoración calificada — ese mes no cobra'],
+  ['🏥','9 especialidades cubiertas','plástica · bariatría · capilar · dental · estética · oftalmología · rinoplastia · spa · fitness'],
+  ['🔒','Sin contratos anuales','sin letra chica · sin condiciones ocultas · apostamos con usted'],
+];
+(function(){
+  let h = '';
+  [...TICKS,...TICKS].forEach(([ico,bold,txt]) => {
+    h += `<span class="tick"><span style="font-size:15px">${ico}</span> <b>${bold}</b> — ${txt}</span><span class="tick-dot">◆</span>`;
+  });
+  document.getElementById('ticker').innerHTML = h;
+})();
+
+// ── QUICK BUTTONS ──
+const QUICK = {
+  es_mx: ['Quiero botox','¿Cuánto cuesta el HIFU?','¿Tienen citas esta semana?','¿Hacen rinomodelación?','Primera consulta, ¿cómo funciona?'],
+  en_us: ['I want botox','How much is HIFU?','Do you offer medical tourism?','Flying from Houston','What\'s included?'],
+  en_ca: ['Interested in rhinoplasty','Do you speak English?','Coming from Toronto','Is financing available?','Medical tourism packages?'],
+  pt_br: ['Quero botox','Quanto custa HIFU?','Atendem brasileiros?','Turismo médico?','Como funciona a consulta?'],
+  fr_fr: ['Je veux du botox','Combien coûte HIFU?','Vous parlez français?','Je viens de Paris','Tourisme médical?'],
+  es_co: ['Quiero botox','¿Atienden colombianos?','¿Turismo médico?','¿Cuánto cuesta la cirugía?','¿Incluye hospedaje?'],
+  de_de: ['Ich will Botox','Wie viel kostet HIFU?','Sprechen Sie Deutsch?','Ich komme aus Berlin','Medizintourismus?'],
+  ar_sa: ['أريد البوتوكس','كم يكلف HIFU؟','هل تتحدثون العربية؟','أنا من الرياض','سياحة طبية؟'],
+  zh_cn: ['我想要肉毒杆菌','HIFU多少钱？','你们接待中国患者吗？','我从上海来','有医疗旅游套餐吗？'],
+  ja_jp: ['ボトックスに興味があります','HIFUの費用は？','日本語対応できますか？','東京から来ます','医療ツーリズムは？'],
+};
+const FLAGS = {es_mx:'🇲🇽',en_us:'🇺🇸',en_ca:'🇨🇦',pt_br:'🇧🇷',fr_fr:'🇫🇷',es_co:'🇨🇴',de_de:'🇩🇪',ar_sa:'🇸🇦',zh_cn:'🇨🇳',ja_jp:'🇯🇵'};
+
+// ── STATE ──
+let history=[], stats={resp:0,cal:0}, leads=[], langs=new Set(), procs=new Set(), busy=false, unlocked=false;
+
+function tnow(){return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}
+
+function addBubble(role, text, flag){
+  const msgs = document.getElementById('msgs');
+  const w = document.createElement('div'); w.className='bwrap'+(role==='u'?' u':'');
+  const b = document.createElement('div'); b.className='bub '+role; b.textContent=text;
+  const ts = document.createElement('div'); ts.className='bts'; ts.textContent=tnow()+(flag?' '+flag:'');
+  w.appendChild(b); w.appendChild(ts); msgs.appendChild(w); msgs.scrollTop=msgs.scrollHeight;
+}
+function addTyping(){
+  const msgs=document.getElementById('msgs');
+  const d=document.createElement('div'); d.className='bub typing'; d.id='typ';
+  d.textContent=cfg.agent+' está escribiendo…'; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+function rmTyping(){const t=document.getElementById('typ');if(t)t.remove();}
+
+function flashStat(sc,fl){
+  const c=document.getElementById(sc), f=document.getElementById(fl);
+  c.classList.add('lit'); f.classList.add('show');
+  const n=c.querySelector('.stat-num'); if(n){n.classList.add('bump');}
+  setTimeout(()=>{c.classList.remove('lit');f.classList.remove('show');if(n)n.classList.remove('bump');},2500);
+}
+function updateStats(){
+  document.getElementById('st-resp').textContent=stats.resp;
+  document.getElementById('st-cal').textContent=stats.cal;
+  const el=document.getElementById('st-conv');
+  if(stats.resp>0){
+    el.textContent=Math.round((stats.cal/stats.resp)*100)+'%';
+    el.style.color=stats.cal>0?'#48D490':'rgba(255,255,255,0.6)';
+    el.style.fontSize='40px';
+  }
+}
+function updateTags(){
+  const lt=document.getElementById('lang-tags');
+  lt.innerHTML=langs.size?[...langs].map(l=>`<span class="tag lang">${l}</span>`).join(''):'<span class="tag empty">Esperando...</span>';
+  const pt=document.getElementById('proc-tags');
+  pt.innerHTML=procs.size?[...procs].slice(0,5).map(p=>`<span class="tag proc">${p}</span>`).join(''):'<span class="tag empty">Sin datos aún</span>';
+}
+function addLead(data){
+  leads.unshift(data);
+  const cnt=document.getElementById('crm-cnt'); cnt.textContent=leads.length; cnt.style.display='block';
+  const list=document.getElementById('crm-list');
+  const empty=list.querySelector('.crm-empty'); if(empty)empty.remove();
+  const card=document.createElement('div');
+  const cls=data.status==='cita'?'cita-l':data.hot?'hot-l':'new-l';
+  const pct=data.status==='cita'?100:data.status==='calificado'?65:30;
+  const [bc,bl]=data.status==='cita'?['lb-cita','CITA ✓']:data.hot?['lb-hot','CALIFICADO']:['lb-new','NUEVO'];
+  card.className='lcard '+cls;
+  card.innerHTML=`
+    <div class="lcard-top"><span class="lcard-name">${data.name||'Lead #'+leads.length}</span><span class="lbadge ${bc}">${bl}</span></div>
+    ${data.proc?`<div class="lrow">📋 <strong>${data.proc}</strong></div>`:''}
+    ${data.budget?`<div class="lrow">💰 <strong>${data.budget}</strong></div>`:''}
+    ${data.lang?`<div class="lrow">🌎 <strong>${data.lang}</strong></div>`:''}
+    <div class="ltime">⏱ Capturado ${tnow()}</div>
+    <div class="lprog"><div class="lprog-fill" style="width:${pct}%"></div></div>`;
+  list.insertBefore(card, list.firstChild);
+  if(data.status==='cita'){stats.cal++;flashStat('sc2','fl2');updateStats();}
+}
+
+function changePersona(){renderQuick(document.getElementById('persona-sel').value);}
+function renderQuick(p){
+  document.getElementById('quick-area').innerHTML=(QUICK[p]||QUICK.es_mx).map(t=>
+    `<span class="qb" onclick="sendQ(this)">${t}</span>`).join('');
+}
+function resetChat(){
+  history=[]; stats={resp:0,cal:0}; leads=[]; langs=new Set(); procs=new Set();
+  document.getElementById('msgs').innerHTML='';
+  document.getElementById('crm-list').innerHTML='<div class="crm-empty"><span class="eico">📋</span>ARIA califica cada lead<br>en tiempo real.<br>Las tarjetas aparecen<br>aquí automáticamente.</div>';
+  document.getElementById('crm-cnt').style.display='none';
+  updateStats(); updateTags();
+  const spec = SPECS[activeSpec];
+  const g=`¡Hola! Soy ${cfg.agent} de ${cfg.name} 😊 ¿En qué te puedo ayudar hoy?`;
+  addBubble('a', g, '');
+  history.push({role:'assistant', content:g});
+}
+function init(){
+  buildSpecs();
+  document.getElementById('hdr-name').textContent=cfg.agent+' · '+cfg.name;
+  document.getElementById('av-ltr').textContent=cfg.agent.charAt(0).toUpperCase();
+  renderQuick('es_mx');
+  resetChat();
+}
+function sendQ(el){document.getElementById('inp').value=el.textContent; send();}
+
+async function send(){
+  if(busy)return;
+  const inp=document.getElementById('inp');
+  const text=inp.value.trim(); if(!text)return;
+  inp.value=''; inp.style.height='auto';
+  busy=true; document.getElementById('send-btn').disabled=true;
+  const p=document.getElementById('persona-sel').value;
+  const flag=FLAGS[p]||'🌎';
+  addBubble('u', text, flag);
+  history.push({role:'user', content:text});
+  stats.resp++; flashStat('sc1','fl1'); updateStats();
+  addTyping();
+
+  const sys=`You are ${cfg.agent}, a human sales assistant at ${cfg.name} (${cfg.type}) in ${cfg.city}, Mexico.
+Services: ${cfg.svcs}
+Prices: ${cfg.prices}
+
+ABSOLUTE RULES:
+1. Detect patient language and respond ALWAYS in that EXACT language. Never switch.
+2. You are human. Never mention AI, bot, automation or technology.
+3. Max 2-3 sentences. Warm, natural, professional.
+4. Goal: qualify (procedure? budget?) then schedule appointment.
+5. Use name if mentioned. Price range + free consult if asked.
+6. If ready to book: ask name, phone, preferred day/time.
+7. For international patients: mention medical tourism packages, bilingual team, airport transfer, all-inclusive.
+
+End reply with (new line, hidden):
+LEADDATA:{"name":"name or empty","proc":"procedure or empty","budget":"budget or estimate","status":"nuevo|calificado|cita","lang":"language in Spanish e.g. Inglés","hot":true or false}`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:history})
+    });
+    const d=await res.json();
+    rmTyping();
+    let reply=d.content?.[0]?.text||'…';
+    const m=reply.match(/LEADDATA:(\{.*?\})/s);
+    if(m){
+      try{
+        const ld=JSON.parse(m[1]);
+        if(ld.name||ld.proc||ld.budget) addLead(ld);
+        if(ld.proc) procs.add(ld.proc);
+        if(ld.lang) langs.add(ld.lang);
+        updateTags();
+      }catch(_){}
+      reply=reply.replace(/\nLEADDATA:.*$/s,'').trim();
+    }
+    addBubble('a', reply, '');
+    history.push({role:'assistant', content:reply});
+  }catch(e){
+    rmTyping();
+    addBubble('a','Un momento, déjame revisar eso contigo…','');
+  }
+  busy=false; document.getElementById('send-btn').disabled=false;
+}
+
+// ── MODAL ──
+function openModal(){
+  document.getElementById('modal-bg').classList.add('open');
+  document.getElementById('pwd-gate').style.display=unlocked?'none':'block';
+  document.getElementById('gen-form').style.display=unlocked?'block':'none';
+  document.getElementById('pwd-in').value='';
+  document.getElementById('pwd-err').style.display='none';
+  if(!unlocked) setTimeout(()=>document.getElementById('pwd-in').focus(),100);
+}
+function closeModal(){
+  document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('link-res').style.display='none';
+}
+function checkPwd(){
+  if(document.getElementById('pwd-in').value==='leadoc2026'){
+    unlocked=true;
+    document.getElementById('pwd-gate').style.display='none';
+    document.getElementById('gen-form').style.display='block';
+  }else{
+    document.getElementById('pwd-err').style.display='block';
+    document.getElementById('pwd-in').value='';
+    document.getElementById('pwd-in').focus();
+  }
+}
+function generateLink(){
+  const n=document.getElementById('g-name').value.trim()||'Clínica Demo';
+  const c=document.getElementById('g-city').value.trim()||'México';
+  const s=document.getElementById('g-svcs').value.trim()||'Botox, HIFU';
+  const p=document.getElementById('g-prices').value.trim()||'$3,500-$18,000 MXN';
+  const a=document.getElementById('g-agent').value.trim()||'Sofía';
+  const tp=document.getElementById('g-type').value;
+  const base=location.origin+location.pathname;
+  document.getElementById('link-box').textContent=`${base}?n=${encodeURIComponent(n)}&c=${encodeURIComponent(c)}&s=${encodeURIComponent(s)}&p=${encodeURIComponent(p)}&a=${encodeURIComponent(a)}&t=${encodeURIComponent(tp)}`;
+  document.getElementById('link-res').style.display='block';
+  document.getElementById('copy-ok').style.display='none';
+}
+function copyLink(){
+  navigator.clipboard.writeText(document.getElementById('link-box').textContent).then(()=>{
+    document.getElementById('copy-ok').style.display='block';
+    setTimeout(()=>document.getElementById('copy-ok').style.display='none',3000);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
