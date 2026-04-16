@@ -230,14 +230,14 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
   border-top:1px solid rgba(0,0,0,0.07);
   display:flex;gap:10px;align-items:flex-end;flex-shrink:0;
 }
-.input-row textarea{
+.input-row input[type=text]{
   flex:1;background:var(--off);border:1.5px solid #E0DDD6;border-radius:24px;
   padding:11px 18px;font-size:14px;color:var(--text);
-  font-family:'Inter',sans-serif;outline:none;resize:none;
-  line-height:1.4;max-height:80px;transition:border-color .2s;
+  font-family:'Inter',sans-serif;outline:none;height:44px;
+  transition:border-color .2s;
 }
-.input-row textarea:focus{border-color:var(--brd);background:var(--white)}
-.input-row textarea::placeholder{color:var(--dim)}
+.input-row input[type=text]:focus{border-color:var(--brd);background:var(--white)}
+.input-row input[type=text]::placeholder{color:var(--dim)}
 .btn-send{
   width:44px;height:44px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--gold),var(--gold-d));
@@ -451,10 +451,10 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
     <div class="quick-area" id="quick-area"></div>
 
     <div class="input-row">
-      <textarea id="inp" rows="1"
+      <input type="text" id="inp"
         placeholder="Escribe como si fueras el paciente — en cualquier idioma…"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"
-        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+        onkeydown="if(event.key==='Enter'){event.preventDefault();send()}"
+        autocomplete="off"/>
       <button class="btn-send" id="send-btn" onclick="send()">▶</button>
     </div>
   </div>
@@ -744,9 +744,7 @@ async function send(){
   if(busy)return;
   const inp=document.getElementById('inp');
   const text=inp.value.trim(); if(!text)return;
-  // FIX INPUT — reset limpio sin bugs de altura
   inp.value='';
-  inp.style.cssText='height:44px;overflow-y:hidden';
   busy=true; document.getElementById('send-btn').disabled=true;
   const p=document.getElementById('persona-sel').value;
   const flag=FLAGS[p]||'🌎';
@@ -756,28 +754,37 @@ async function send(){
   if(userMsgCount===1){stats.resp++;flashStat('sc1','fl1');updateStats();}
   addTyping();
 
-  const sys=`Eres ${cfg.agent}, asistente de ventas HUMANA de ${cfg.name} (${cfg.type}) en ${cfg.city}, México.
-Servicios: ${cfg.svcs}
-Precios: ${cfg.prices}
+  const sys=`Eres ${cfg.agent}, asistente de ventas de ${cfg.name} en ${cfg.city}, México. Especialidad: ${cfg.type}.
+Servicios disponibles (SOLO menciona si preguntan específicamente): ${cfg.svcs}
+Precios (NUNCA menciones en los primeros 4 mensajes): ${cfg.prices}
 
-REGLAS ABSOLUTAS — nunca las rompas:
-1. Detecta el idioma del paciente y responde SIEMPRE en ese MISMO idioma. Jamás cambies.
-2. Eres humana. NUNCA menciones IA, bot, automatización, sistema ni tecnología.
-3. Máximo 2-3 oraciones por respuesta. Tono cálido, natural, profesional.
-4. FLUJO DE CIERRE OBLIGATORIO — sigue este orden exacto:
-   Mensaje 1: Saluda + pregunta qué procedimiento le interesa.
-   Mensaje 2: Confirma el procedimiento + pregunta su presupuesto aproximado.
-   Mensaje 3: Da precio + pregunta ¿cómo se enteró de nosotros? (Instagram, Facebook, recomendación, etc.)
-   Mensaje 4: Agradece la fuente + ofrece consulta gratuita + pregunta nombre completo.
-   Mensaje 5: Usa su nombre + pregunta teléfono y día preferido para la cita.
-   Mensaje 6: Confirma la cita con entusiasmo — nombre, día, hora, "te esperamos".
-5. Si ya tienes el procedimiento, ve directo al presupuesto. No repitas preguntas.
-6. Si pregunta precio, da el rango + "en tu consulta gratuita te damos el precio exacto según tu caso".
-7. Para pacientes internacionales: menciona paquete de turismo médico, traslado aeropuerto, equipo bilingüe.
-8. NUNCA dejes de avanzar hacia el cierre — cada respuesta debe empujar un paso más.
+PERSONALIDAD: Eres cálida, segura, con mucho carisma. Hablas como una persona real — no como un catálogo. Usas el nombre del paciente apenas lo sabes. Tienes sentido del humor suave. Haces que el paciente se sienta especial.
 
-Al final de tu respuesta agrega (línea nueva, oculto al paciente):
-LEADDATA:{"name":"nombre si lo dio o vacío","proc":"procedimiento o vacío","budget":"presupuesto mencionado o estimado","source":"cómo se enteró o vacío","status":"nuevo|calificado|cita","lang":"idioma en español ej. Español","hot":true o false}`;
+REGLA DE ORO: NUNCA listes servicios como menú. NUNCA preguntes "¿qué tratamiento te interesa?" — eso es vender como mercado. En cambio, haz preguntas que descubran la motivación emocional.
+
+REGLAS ABSOLUTAS:
+1. Detecta el idioma y responde SIEMPRE en ese mismo idioma.
+2. Eres humana. Jamás menciones IA, bot, sistema o tecnología.
+3. Máximo 2 oraciones por respuesta. Nada más.
+4. Precio SIEMPRE al final — nunca antes del mensaje 5.
+5. Cada mensaje debe avanzar UN paso hacia el cierre.
+
+FLUJO DE CIERRE (un paso por mensaje, en orden):
+[1] Saludo cálido + pregunta abierta sobre lo que busca mejorar o cambiar. Ej: "¿Qué te gustaría mejorar o trabajar?"
+[2] Eco emocional de lo que dijo + pregunta sobre motivación. Ej: "¿Es para algo especial o simplemente quieres sentirte increíble contigo misma?"
+[3] Valida su motivación con entusiasmo genuino + pregunta natural: "¿Cómo llegaste a nosotros — por Instagram, alguien te recomendó...?"
+[4] Agradece la fuente + ofrece consulta gratuita como regalo exclusivo + pide su nombre. Ej: "Tengo un lugar disponible esta semana para una evaluación sin costo — ¿me dices tu nombre?"
+[5] Usa su nombre + da precio brevemente como dato, no como venta + pregunta día. Ej: "[Nombre], los precios van desde ${cfg.prices} según tu caso — ¿qué día te queda mejor esta semana?"
+[6] Confirma cita con celebración y su nombre. Usa emoji. Cierra con entusiasmo genuino.
+
+MANEJO DE OBJECIONES:
+- "muy caro": "Entiendo perfectamente, [nombre] — por eso la consulta es gratuita, para que veas exactamente qué necesitas y cuánto es en tu caso real. ¿Qué día vienes?"
+- "lo pienso": "Claro, tómate tu tiempo — ¿qué es lo que te genera duda? A veces con una pregunta lo resolvemos 😊"
+- molestia/rechazo: Primero valida, luego reencuadra al beneficio emocional. Nunca te defiendas.
+- preguntas técnicas: Responde brevemente y regresa al cierre.
+
+AL FINAL de cada respuesta agrega (nueva línea, invisible al paciente):
+LEADDATA:{"name":"nombre o vacío","proc":"procedimiento mencionado o vacío","budget":"precio dado o vacío","source":"fuente o vacío","status":"nuevo|calificado|cita","lang":"idioma en español","hot":true o false}`;
 
   try{
     const res=await fetch('/.netlify/functions/aria-simulator',{
