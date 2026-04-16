@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Entrenador de Cierres LEADOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-l:#F0D070;--gold-d:#A8832A;--gold-dim:rgba(201,168,76,0.12);
+  --white:#FFFFFF;--off:#F5F3EE;--paper:#FAFAF7;
+  --dark:#0A0A08;--dark2:#1A1A16;--dark3:#2A2A24;
+  --text:#18160E;--muted:#5A5750;--dim:#9A9790;
+  --green:#1E7A4A;--green-l:#28A064;--green-dim:rgba(30,122,74,0.10);
+  --red:#B83030;--red-dim:rgba(184,48,48,0.10);
+  --amber:#C07818;--amber-dim:rgba(192,120,24,0.10);
+  --blue:#1848A0;--blue-dim:rgba(24,72,160,0.10);
+  --brd:rgba(201,168,76,0.25);
+  --shadow:0 2px 16px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter',sans-serif;font-size:15px}
+
+/* TOPBAR */
+.topbar{
+  background:var(--dark);height:58px;
+  display:flex;align-items:center;padding:0 24px;gap:14px;
+  border-bottom:2px solid var(--gold);flex-shrink:0;
+}
+.logo-wrap{display:flex;align-items:center;gap:9px}
+.logo-wrap img{height:30px;width:auto}
+.logo-txt{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold);letter-spacing:.1em}
+.top-sep{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.top-sub{font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:.1em;text-transform:uppercase}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:20px}
+.score-block{text-align:center}
+.score-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);line-height:1}
+.score-lbl{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.progress-pill{background:rgba(255,255,255,0.08);border-radius:20px;padding:6px 14px;display:flex;align-items:center;gap:8px}
+.prog-bar-mini{width:80px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
+.prog-fill-mini{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:3px;transition:width .5s ease}
+.prog-lbl-mini{font-size:11px;color:rgba(255,255,255,0.45);white-space:nowrap}
+
+/* MAIN LAYOUT */
+.main{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 58px);overflow:hidden}
+
+/* LEFT PANEL */
+.left{
+  background:var(--white);border-right:1px solid rgba(0,0,0,0.08);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.left-hdr{
+  padding:18px 18px 14px;border-bottom:1px solid rgba(0,0,0,0.07);
+  background:var(--paper);
+}
+.left-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin-bottom:4px}
+.left-sub{font-size:12px;color:var(--muted);line-height:1.5}
+.cat-tabs{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid rgba(0,0,0,0.06);flex-wrap:wrap}
+.cat-tab{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid rgba(0,0,0,0.1);color:var(--muted);background:transparent;transition:all .15s;font-family:'Inter',sans-serif}
+.cat-tab.active{background:var(--dark);color:var(--gold);border-color:var(--dark)}
+.obj-scroll{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.obj-scroll::-webkit-scrollbar{width:3px}
+.obj-scroll::-webkit-scrollbar-thumb{background:#E0DDD6;border-radius:2px}
+
+.obj-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 12px;border-radius:10px;cursor:pointer;
+  border:1px solid transparent;transition:all .15s;
+  background:var(--off);
+}
+.obj-item:hover{background:var(--gold-dim);border-color:rgba(201,168,76,0.2)}
+.obj-item.active{background:var(--gold-dim);border-color:var(--gold);border-left:3px solid var(--gold)}
+.obj-item.done{border-color:rgba(30,122,74,0.25);background:var(--green-dim)}
+.obj-item.done.active{border-color:var(--gold);background:var(--gold-dim);border-left:3px solid var(--gold)}
+.obj-ico-wrap{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(0,0,0,0.05)}
+.obj-body{flex:1;min-width:0}
+.obj-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:2px}
+.obj-item.active .obj-name{color:var(--gold-d)}
+.obj-meta{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.obj-cat{font-size:10px;color:var(--dim);font-weight:500}
+.obj-score-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.osb-done{background:var(--green-dim);color:var(--green);border:1px solid rgba(30,122,74,0.2)}
+.osb-pending{background:rgba(0,0,0,0.05);color:var(--dim);border:1px solid rgba(0,0,0,0.08)}
+
+/* RIGHT ARENA */
+.arena{display:flex;flex-direction:column;background:var(--off);overflow:hidden}
+
+/* DOCTOR BAR */
+.doc-bar{
+  background:var(--white);padding:14px 24px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid rgba(0,0,0,0.08);
+  box-shadow:var(--shadow);flex-shrink:0;
+}
+.doc-av{
+  width:46px;height:46px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#E8E4DC,#D4CFC4);
+  border:2px solid rgba(0,0,0,0.08);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.doc-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.doc-role{font-size:12px;color:var(--muted);margin-top:1px}
+.doc-mood-wrap{margin-left:auto;display:flex;align-items:center;gap:8px}
+.mood-indicator{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.mood-indicator.escep{background:var(--red-dim);color:var(--red);border:1px solid rgba(184,48,48,0.2)}
+.mood-indicator.comp{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(192,120,24,0.2)}
+.mood-indicator.inter{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(24,72,160,0.2)}
+.mood-indicator.conv{background:var(--green-dim);color:var(--green);border:1px solid rgba(30,122,74,0.2)}
+.mood-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.difficulty-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.04em}
+.diff-hard{background:var(--red-dim);color:var(--red);border:1px solid rgba(184,48,48,0.15)}
+.diff-mid{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(192,120,24,0.15)}
+.diff-easy{background:var(--green-dim);color:var(--green);border:1px solid rgba(30,122,74,0.15)}
+
+/* CHAT */
+.chat-wrap{flex:1;min-height:0;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:14px}
+.chat-wrap::-webkit-scrollbar{width:4px}
+.chat-wrap::-webkit-scrollbar-thumb{background:#D4D0C8;border-radius:2px}
+
+/* EMPTY STATE */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:16px}
+.empty-ico{font-size:52px;opacity:.2}
+.empty-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--muted)}
+.empty-sub{font-size:14px;color:var(--dim);max-width:340px;line-height:1.7}
+
+/* BUBBLES */
+.bwrap{display:flex;flex-direction:column;gap:4px}
+.bwrap.u{align-items:flex-end}
+.bubble-label{font-size:11px;font-weight:600;color:var(--dim);padding:0 4px;letter-spacing:.04em}
+.bub{max-width:76%;padding:13px 17px;border-radius:16px;font-size:15px;line-height:1.65;word-wrap:break-word}
+.bub.doc{background:var(--white);color:var(--text);border-bottom-left-radius:4px;box-shadow:0 1px 10px rgba(0,0,0,0.07);border:1px solid rgba(0,0,0,0.07)}
+.bub.u{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--dark);border-bottom-right-radius:4px;font-weight:500;box-shadow:0 3px 16px rgba(201,168,76,0.25)}
+.bub.sys{background:transparent;border:none;box-shadow:none;color:var(--dim);font-size:12px;font-style:italic;padding:0;max-width:100%;text-align:center}
+.bts{font-size:11px;color:var(--dim);padding:0 4px}
+
+/* TYPING */
+.typing-row{display:flex;align-items:center;gap:8px;padding:8px 0;color:var(--muted);font-size:13px;font-style:italic}
+.typing-dots{display:flex;gap:3px}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.4;animation:tdot 1.2s ease infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* EVALUATION CARD */
+.eval-card{
+  background:var(--white);border:1px solid rgba(0,0,0,0.08);
+  border-radius:16px;padding:22px 24px;
+  box-shadow:var(--shadow);animation:fadeUp .35s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.eval-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.eval-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.eval-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.score-circle{width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:3px solid}
+.score-circle.high{border-color:var(--green);background:var(--green-dim)}
+.score-circle.mid{border-color:var(--gold);background:var(--gold-dim)}
+.score-circle.low{border-color:var(--red);background:var(--red-dim)}
+.score-circle .sn{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;line-height:1}
+.score-circle.high .sn{color:var(--green)}
+.score-circle.mid .sn{color:var(--gold-d)}
+.score-circle.low .sn{color:var(--red)}
+.score-circle .sl{font-size:10px;font-weight:600;color:var(--dim)}
+.eval-meter{height:6px;background:rgba(0,0,0,0.07);border-radius:3px;overflow:hidden;margin-bottom:18px}
+.eval-meter-fill{height:100%;border-radius:3px;transition:width .9s ease}
+
+.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.eval-block{padding:14px 16px;border-radius:12px}
+.eval-block.green{background:var(--green-dim);border:1px solid rgba(30,122,74,0.15)}
+.eval-block.red{background:var(--red-dim);border:1px solid rgba(184,48,48,0.15)}
+.eval-block-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.eval-block.green .eval-block-title{color:var(--green)}
+.eval-block.red .eval-block-title{color:var(--red)}
+.eval-block-text{font-size:13px;color:var(--text);line-height:1.6}
+
+.ideal-section{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.ideal-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-d);margin-bottom:8px}
+.ideal-text{font-size:14px;color:var(--text);line-height:1.7;font-style:italic}
+
+.doc-reaction{background:var(--paper);border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.doc-reaction-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.doc-reaction-content{}
+.doc-reaction-lbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.doc-reaction-text{font-size:14px;color:var(--text);line-height:1.6}
+
+.eval-actions{display:flex;gap:10px}
+.btn-retry{flex:1;padding:12px;font-size:13px;font-weight:700;background:var(--off);color:var(--muted);border:1.5px solid rgba(0,0,0,0.12);border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.04em;transition:all .15s}
+.btn-retry:hover{background:rgba(0,0,0,0.06);color:var(--text)}
+.btn-next{flex:2;padding:12px;font-size:13px;font-weight:700;background:var(--dark);color:var(--gold);border:none;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.04em;transition:all .15s}
+.btn-next:hover{background:var(--gold);color:var(--dark)}
+
+/* INPUT */
+.input-zone{
+  padding:14px 24px;background:var(--white);
+  border-top:1px solid rgba(0,0,0,0.07);
+  flex-shrink:0;
+}
+.input-context{font-size:12px;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.input-context b{color:var(--text);font-weight:600}
+.input-row{display:flex;gap:10px;align-items:center}
+#resp-inp{
+  flex:1;background:var(--off);
+  border:1.5px solid #E0DDD6;border-radius:24px;
+  padding:0 20px;font-size:15px;color:var(--text);
+  font-family:'Inter',sans-serif;outline:none;
+  height:48px;line-height:48px;
+  transition:border-color .2s;
+  -webkit-appearance:none;
+}
+#resp-inp:focus{border-color:var(--brd);background:var(--white)}
+#resp-inp::placeholder{color:var(--dim)}
+#resp-inp:disabled{opacity:.5;cursor:not-allowed}
+.btn-send{
+  width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  border:none;cursor:pointer;color:var(--dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;
+  box-shadow:0 3px 16px rgba(201,168,76,0.35);
+  transition:all .2s;
+}
+.btn-send:hover{transform:scale(1.07);box-shadow:0 4px 22px rgba(201,168,76,0.5)}
+.btn-send:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-wrap">
+    <img src="https://leadoc.io/img/leadoclogo.png" alt="LEADOC" onerror="this.style.display='none';document.getElementById('ltxt').style.display='block'"/>
+    <span id="ltxt" class="logo-txt" style="display:none">LEADOC</span>
+  </div>
+  <div class="top-sep"></div>
+  <span class="top-sub">Entrenador de Cierres · Modo Abogado del Diablo</span>
+  <div class="top-right">
+    <div class="score-block">
+      <div class="score-num" id="avg-score">—</div>
+      <div class="score-lbl">Promedio</div>
+    </div>
+    <div class="progress-pill">
+      <div class="prog-bar-mini"><div class="prog-fill-mini" id="prog-fill" style="width:0%"></div></div>
+      <span class="prog-lbl-mini" id="prog-lbl">0 / 16 practicadas</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-hdr">
+      <div class="left-title">16 Objeciones Reales de Campo</div>
+      <div class="left-sub">El doctor más difícil que vayas a encontrar. Practica hasta que no haya objeción que te detenga.</div>
+    </div>
+    <div class="cat-tabs" id="cat-tabs">
+      <button class="cat-tab active" onclick="filterCat('all',this)">Todas</button>
+      <button class="cat-tab" onclick="filterCat('precio',this)">Precio</button>
+      <button class="cat-tab" onclick="filterCat('competencia',this)">Competencia</button>
+      <button class="cat-tab" onclick="filterCat('confianza',this)">Confianza</button>
+      <button class="cat-tab" onclick="filterCat('control',this)">Control</button>
+      <button class="cat-tab" onclick="filterCat('timing',this)">Timing</button>
+    </div>
+    <div class="obj-scroll" id="obj-list"></div>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena" id="arena">
+
+    <div class="doc-bar">
+      <div class="doc-av" id="doc-av">👨‍⚕️</div>
+      <div>
+        <div class="doc-name" id="doc-name">Selecciona una objeción</div>
+        <div class="doc-role" id="doc-role">El doctor aparecerá aquí</div>
+      </div>
+      <div class="doc-mood-wrap">
+        <span class="difficulty-badge diff-hard" id="diff-badge" style="display:none"></span>
+        <div class="mood-indicator escep" id="mood-ind" style="display:none">
+          <div class="mood-dot" id="mood-dot" style="background:var(--red)"></div>
+          <span id="mood-txt">Escéptico</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-container" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-ico">🥊</div>
+        <div class="empty-title">Arena de entrenamiento</div>
+        <div class="empty-sub">Selecciona cualquier objeción de la lista. El doctor la lanza con toda la actitud. Tú cierras. El sistema evalúa sin piedad.</div>
+      </div>
+      <div class="chat-wrap" id="chat-wrap" style="display:none"></div>
+    </div>
+
+    <div class="input-zone" id="input-zone" style="display:none">
+      <div class="input-context" id="input-context">
+        <span>💬</span> Responde como en una llamada real — <b>sin preparación, sin guion</b>
+      </div>
+      <div class="input-row">
+        <input type="text" id="resp-inp" placeholder="Tu respuesta de cierre…" autocomplete="off"/>
+        <button class="btn-send" id="send-btn" onclick="sendResp()">▶</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const OBJS = [
+  // COMPETENCIA
+  {id:0,cat:'competencia',ico:'🤖',diff:'hard',
+   name:'Ya tengo un bot de WhatsApp',
+   tag:'Competencia directa',
+   doctor:'Dr. Ramírez Vega',rol:'Medicina estética · CDMX · 12 años',av:'👨‍⚕️',
+   mood:'Desafiante',
+   lanzamiento:'Ya tengo un chatbot de WhatsApp que me cuesta 400 pesos al mes y contesta automático. Funciona bien. ¿Para qué pagaría 3,000 más?',
+   contexto:'Tiene un bot básico de respuestas automáticas — responde "sí atendemos", "el horario es X". No califica, no cierra, no hace seguimiento. Es una respuesta automática, no un agente de ventas.'},
+  {id:1,cat:'competencia',ico:'📱',diff:'hard',
+   name:'Uso Respond.io / Kommo con operador',
+   tag:'Ya tiene CRM con humano',
+   doctor:'Dra. Castillo Mora',rol:'Cirugía plástica · GDL · 8 años',av:'👩‍⚕️',
+   mood:'Comparando',
+   lanzamiento:'Ya tengo Respond.io con una chica que atiende los chats. Me cuesta como $8,000 al mes entre el software y su sueldo, pero funciona. ¿Por qué cambiaría a algo automático?',
+   contexto:'Respond.io + operador humano cuesta $10K-$14K/mes. La operadora trabaja 8 horas, no responde de noche ni fines de semana. La tasa de cierre depende del humor del día de esa persona.'},
+  {id:2,cat:'competencia',ico:'🏥',diff:'mid',
+   name:'Doctoralia ya me manda pacientes',
+   tag:'Plataforma de leads',
+   doctor:'Dr. Mendoza Torres',rol:'Bariatría · MTY · 5 años',av:'👨‍⚕️',
+   mood:'Comparando',
+   lanzamiento:'Ya estoy en Doctoralia y me manda consultas. Tengo buenas reseñas. No necesito más herramientas.',
+   contexto:'Doctoralia manda leads pero no los trabaja después. El doctor asume que el paciente va a ir solo. El 60% de esos leads nunca convierte porque nadie los sigue.'},
+  // PRECIO
+  {id:3,cat:'precio',ico:'💸',diff:'hard',
+   name:'Es muy caro — $3,000 de setup más mensual',
+   tag:'Objeción de precio directa',
+   doctor:'Dr. Vargas Ríos',rol:'Implantes dentales · CDMX · 15 años',av:'👨‍⚕️',
+   mood:'Resistente',
+   lanzamiento:'Mira, $3,000 de setup más $3,000 al mes es mucho dinero para una tecnología que no conozco y no sé si va a funcionar. No me convence.',
+   contexto:'Un implante dental en su clínica cuesta mínimo $25,000. Un paciente perdido = $25K mínimo. Si ARIA evita que pierda un solo paciente al mes, el ROI es 8x en el mes 1.'},
+  {id:4,cat:'precio',ico:'🎯',diff:'mid',
+   name:'Dame un periodo de prueba gratis',
+   tag:'Quiere probar sin pagar',
+   doctor:'Dra. Herrera Leal',rol:'Medicina estética · QRO · 6 años',av:'👩‍⚕️',
+   mood:'Negociando',
+   lanzamiento:'No me voy a comprometer a pagar sin ver resultados primero. Dame un mes gratis para probar y si funciona te pago.',
+   contexto:'La garantía del mes 1 ya es su protección — si no agenda ni una valoración calificada, ese mes no cobra. No es necesario dar el setup gratis porque hay trabajo real de configuración.'},
+  {id:5,cat:'precio',ico:'📉',diff:'mid',
+   name:'Hazme un descuento',
+   tag:'Negociación de precio',
+   doctor:'Dr. Solis Vera',rol:'Spa médico · CDMX · 3 años',av:'👨‍⚕️',
+   mood:'Negociando',
+   lanzamiento:'Mira, si me das 2,000 de setup y 2,500 al mes, hoy mismo firmamos. Tengo el dinero ahorita.',
+   contexto:'Los precios están bloqueados. La propuesta de valor debe defender el precio, no bajarlo. Los primeros 20 clientes tienen Founder Pricing — ese es el descuento real que ya está incorporado.'},
+  // CONFIANZA
+  {id:6,cat:'confianza',ico:'🤥',diff:'hard',
+   name:'Mientes — dices que arriesgas pero ya te pago',
+   tag:'Cuestionando el modelo',
+   doctor:'Dr. Fuentes Alba',rol:'Oftalmología · CDMX · 20 años',av:'👨‍⚕️',
+   mood:'Confrontacional',
+   lanzamiento:'Me dices que inviertes conmigo y que ganas solo cuando yo gano. Pero me estás cobrando mensualidad. Si ya me cobras fijo, el riesgo lo corro yo, no tú. ¿En qué arriesgas tú?',
+   contexto:'La comisión del 8% sobre cierres ES el skin in the game. Si ARIA no cierra, LEADOC no cobra comisión — que es donde está el grueso del negocio a largo plazo. El fijo cubre la operación, la comisión es la ganancia real.'},
+  {id:7,cat:'confianza',ico:'😬',diff:'hard',
+   name:'¿Cómo sé que ARIA no va a dañar mi reputación?',
+   tag:'Miedo a errores',
+   doctor:'Dra. Romero Paz',rol:'Dermatología · GDL · 10 años',av:'👩‍⚕️',
+   mood:'Desconfiada',
+   lanzamiento:'Me preocupa que la IA diga algo médicamente incorrecto a un paciente y me haga un problema legal o de reputación. No puedo arriesgar eso.',
+   contexto:'ARIA nunca da diagnósticos ni información médica. Solo califica (¿qué busca? ¿tiene presupuesto?), agenda y hace seguimiento. Cualquier pregunta médica la redirige al doctor. Hay un control total del tono y respuestas permitidas.'},
+  {id:8,cat:'confianza',ico:'🆕',diff:'mid',
+   name:'Son nuevos — no tienen trayectoria',
+   tag:'Falta de casos de éxito',
+   doctor:'Dr. Peña Gutiérrez',rol:'Rinoplastia · CDMX · 18 años',av:'👨‍⚕️',
+   mood:'Escéptico',
+   lanzamiento:'No conozco LEADOC. Son nuevos, no tienen referencias, no hay casos comprobados. ¿Por qué confiaría en una empresa que nadie conoce?',
+   contexto:'El modelo de Founder Pricing y la garantía mes 1 son exactamente para esto — LEADOC asume el riesgo de ser nuevo. Los primeros 20 clientes entran a precio especial y con garantía porque LEADOC también está construyendo su track record.'},
+  {id:9,cat:'confianza',ico:'📜',diff:'mid',
+   name:'¿Qué pasa si cierran o desaparecen?',
+   tag:'Riesgo de continuidad',
+   doctor:'Dra. Varela Noriega',rol:'Cirugía bariátrica · GDL · 12 años',av:'👩‍⚕️',
+   mood:'Precavida',
+   lanzamiento:'¿Y qué pasa con mis pacientes si en 6 meses LEADOC cierra? ¿Pierdo todo? No quiero depender de una empresa que no sé si va a existir.',
+   contexto:'El contrato es mes a mes, sin permanencia. Los datos del cliente son del cliente siempre. Si LEADOC cerrara (que no va a pasar), el médico puede portar su número de WhatsApp y sus contactos sin problema.'},
+  // CONTROL
+  {id:10,cat:'control',ico:'🎮',diff:'mid',
+   name:'¿Cómo controlo lo que dice ARIA?',
+   tag:'Miedo a perder el control',
+   doctor:'Dra. Castro Ibáñez',rol:'Medicina estética · MTY · 7 años',av:'👩‍⚕️',
+   mood:'Preocupada',
+   lanzamiento:'No me queda claro cómo funciona. Si ARIA responde a mis pacientes, ¿yo puedo ver las conversaciones? ¿Puedo intervenir si dice algo mal?',
+   contexto:'El médico tiene acceso a todas las conversaciones en tiempo real desde el panel. Puede intervenir en cualquier momento tomando el control manual. ARIA tiene configuradas las respuestas permitidas y las que redirige al doctor.'},
+  {id:11,cat:'control',ico:'👩‍💼',diff:'easy',
+   name:'Mi recepcionista ya hace eso',
+   tag:'Comparación con humano',
+   doctor:'Dr. Morales Espinoza',rol:'Implantes dentales · MTY · 9 años',av:'👨‍⚕️',
+   mood:'Tranquilo',
+   lanzamiento:'Tengo una recepcionista de toda la confianza que atiende los WhatsApp. No veo para qué pagar más si ya tengo a alguien.',
+   contexto:'La recepcionista trabaja 8 horas, no los fines de semana, se enferma, tiene días malos, y cuesta mínimo $8,000/mes con IMSS. ARIA trabaja 24/7/365 y el 73% de los leads llegan fuera del horario laboral.'},
+  // TIMING
+  {id:12,cat:'timing',ico:'🕐',diff:'easy',
+   name:'Ahorita no es buen momento',
+   tag:'Postergación',
+   doctor:'Dr. Reyes Domínguez',rol:'Oftalmología · CDMX · 8 años',av:'👨‍⚕️',
+   mood:'Evasivo',
+   lanzamiento:'Me interesa pero ahorita estoy en una época complicada. Llámame en 3 meses cuando pase la temporada baja.',
+   contexto:'En 3 meses habrán entrado otros médicos de la zona. Los primeros 20 clientes tienen Founder Pricing. Una temporada baja es el mejor momento para activar ARIA porque es cuando más leads se pierden.'},
+  {id:13,cat:'timing',ico:'👥',diff:'mid',
+   name:'Lo tengo que consultar con mi socio/esposa',
+   tag:'Decisión compartida',
+   doctor:'Dra. Montoya Ríos',rol:'Spa médico · GDL · 4 años',av:'👩‍⚕️',
+   mood:'Indecisa',
+   lanzamiento:'Me parece bien pero tengo que hablarlo con mi socia. Ella también tiene que estar de acuerdo para invertir.',
+   contexto:'Esto es una objeción de salida disfrazada. Hay que calificar si la socia puede estar en la siguiente llamada, o si hay una objeción real detrás que no se está diciendo.'},
+  {id:14,cat:'timing',ico:'📊',diff:'mid',
+   name:'No tengo suficientes leads para justificarlo',
+   tag:'Volumen insuficiente',
+   doctor:'Dr. Blanco Acosta',rol:'Medicina general · QRO · 2 años',av:'👨‍⚕️',
+   mood:'Sincero',
+   lanzamiento:'Apenas tengo como 15 consultas al mes. No creo que tenga el volumen para justificar el costo.',
+   contexto:'El requisito mínimo son 20+ consultas/mes con publicidad activa. Si tiene 15, o está cerca del umbral o no es el cliente correcto. Hay que ser honesto: si no cumple el perfil, no es cliente de LEADOC todavía.'},
+  // HARD CLOSE
+  {id:15,cat:'confianza',ico:'💣',diff:'hard',
+   name:'Ya lo pensé y no me interesa — no me llames',
+   tag:'Rechazo definitivo',
+   doctor:'Dr. Guerrero Palma',rol:'Cirugía plástica · CDMX · 22 años',av:'👨‍⚕️',
+   mood:'Cerrado',
+   lanzamiento:'Mira, ya lo pensé bien y no es para mí. No me convence, no quiero más llamadas de LEADOC. Gracias.',
+   contexto:'El cierre definitivo. La única salida es encontrar la objeción real detrás del "no" — porque nadie rechaza dinero, rechazan incertidumbre. Hay que descubrir qué es lo que realmente le preocupa antes de soltar al prospecto.'},
+];
+
+const MOODCLASS = {
+  'Desafiante':'escep','Comparando':'comp','Resistente':'escep','Negociando':'comp',
+  'Confrontacional':'escep','Desconfiada':'escep','Escéptico':'escep','Precavida':'comp',
+  'Preocupada':'comp','Tranquilo':'comp','Evasivo':'comp','Indecisa':'comp',
+  'Sincero':'inter','Cerrado':'escep','Convencido':'conv','Interesado':'inter',
+  'Pensativo':'inter','Aún resistente':'escep'
+};
+const MOODCOLOR = {
+  'escep':'var(--red)','comp':'var(--amber)','inter':'var(--blue)','conv':'var(--green)'
+};
+
+let scores = new Array(16).fill(null);
+let curId = null;
+let busy = false;
+let currentCat = 'all';
+
+function buildList(cat){
+  const list = document.getElementById('obj-list');
+  const filtered = cat==='all'?OBJS:OBJS.filter(o=>o.cat===cat);
+  list.innerHTML = filtered.map(o=>{
+    const done = scores[o.id]!==null;
+    const sc = done?scores[o.id]:null;
+    const diffClass = o.diff==='hard'?'diff-hard':o.diff==='mid'?'diff-mid':'diff-easy';
+    const diffTxt = o.diff==='hard'?'DIFÍCIL':o.diff==='mid'?'MEDIA':'FÁCIL';
+    return `<div class="obj-item${curId===o.id?' active':''}${done?' done':''}" onclick="selectObj(${o.id})" id="oi-${o.id}">
+      <div class="obj-ico-wrap">${o.ico}</div>
+      <div class="obj-body">
+        <div class="obj-name">${o.name}</div>
+        <div class="obj-meta">
+          <span class="obj-cat">${o.tag}</span>
+          <span class="obj-score-badge ${done?'osb-done':'osb-pending'}">${done?sc+'/10':'·  ·  ·'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  buildList(cat);
+}
+
+function updateProgress(){
+  const done = scores.filter(s=>s!==null).length;
+  const pct = (done/16)*100;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-lbl').textContent=done+' / 16 practicadas';
+  const validScores = scores.filter(s=>s!==null);
+  if(validScores.length>0){
+    const avg = Math.round(validScores.reduce((a,b)=>a+b,0)/validScores.length);
+    document.getElementById('avg-score').textContent=avg+'/10';
+  }
+}
+
+function setMood(mood){
+  const mc = MOODCLASS[mood]||'escep';
+  const el = document.getElementById('mood-ind');
+  el.className = 'mood-indicator '+mc;
+  el.style.display='flex';
+  document.getElementById('mood-dot').style.background=MOODCOLOR[mc];
+  document.getElementById('mood-txt').textContent=mood;
+}
+
+function addBubble(role,text,label){
+  const wrap = document.getElementById('chat-wrap');
+  const w = document.createElement('div');
+  w.className='bwrap'+(role==='u'?' u':'');
+  if(label){const l=document.createElement('div');l.className='bubble-label';l.textContent=label;w.appendChild(l);}
+  const b=document.createElement('div');b.className='bub '+role;b.textContent=text;
+  const ts=document.createElement('div');ts.className='bts';
+  ts.textContent=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  w.appendChild(b);w.appendChild(ts);wrap.appendChild(w);
+  wrap.scrollTop=wrap.scrollHeight;
+}
+function addSys(text){
+  const wrap=document.getElementById('chat-wrap');
+  const b=document.createElement('div');b.className='bub sys';b.textContent=text;
+  wrap.appendChild(b);wrap.scrollTop=wrap.scrollHeight;
+}
+function addTyping(name){
+  const wrap=document.getElementById('chat-wrap');
+  const row=document.createElement('div');row.className='typing-row';row.id='typing-row';
+  row.innerHTML=`<div class="typing-dots"><span></span><span></span><span></span></div><span>${name} está respondiendo…</span>`;
+  wrap.appendChild(row);wrap.scrollTop=wrap.scrollHeight;
+}
+function rmTyping(){const t=document.getElementById('typing-row');if(t)t.remove();}
+
+function selectObj(id){
+  curId=id;
+  const o=OBJS[id];
+  document.getElementById('chat-wrap').innerHTML='';
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('chat-wrap').style.display='flex';
+  document.getElementById('input-zone').style.display='none';
+  document.getElementById('doc-av').textContent=o.avatar;
+  document.getElementById('doc-name').textContent=o.doctor;
+  document.getElementById('doc-role').textContent=o.rol;
+  setMood(o.mood);
+  const db=document.getElementById('diff-badge');
+  db.style.display='block';
+  db.className='difficulty-badge diff-'+o.diff;
+  db.textContent=o.diff==='hard'?'DIFÍCIL':o.diff==='mid'?'MEDIA':'FÁCIL';
+  buildList(currentCat);
+  addTyping(o.doctor);
+  setTimeout(()=>{
+    rmTyping();
+    addBubble('doc',o.lanzamiento,o.doctor);
+    document.getElementById('input-zone').style.display='block';
+    document.getElementById('resp-inp').focus();
+  },1000);
+}
+
+async function sendResp(){
+  if(busy||curId===null)return;
+  const inp=document.getElementById('resp-inp');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';inp.focus();
+  busy=true;
+  document.getElementById('send-btn').disabled=true;
+  inp.disabled=true;
+  const o=OBJS[curId];
+  addBubble('u',text,'Tú (Jonnatan)');
+  document.getElementById('input-zone').style.display='none';
+  addTyping('Evaluando...');
+
+  const sys=`Eres un entrenador de ventas de élite B2B. Entrenas a Jonnatan Filisola, CEO de LEADOC TECHNOLOGIES, a cerrar médicos difíciles.
+
+LEADOC TECHNOLOGIES — contexto completo:
+• ARIA: agente de ventas WhatsApp que responde leads en <3 min, 24/7/365, en cualquier idioma, califica por procedimiento y presupuesto, agenda citas confirmadas. ARIA actúa como recepcionista humana — nunca se presenta como IA.
+• Precios: Clínica Esencial: $3,000 setup + $3,000/mes meses 1-3 + $4,000/mes mes 4+ + 8% comisión sobre cierres. Clínica Premium: $5,000 + $4,500 + $6,000 + 6% comisión.
+• Garantía mes 1: si ARIA no agenda ni una valoración calificada, ese mes no cobra. Sin letra chica.
+• Primeros 20 clientes: Founder Pricing congelado permanentemente.
+• Respond.io/Kommo con operador humano: $10,000-$14,000/mes. ARIA cuesta menos y trabaja más.
+• El 73% de leads llegan fuera de horario. Una recepcionista trabaja 8 hrs, se enferma, tiene días malos.
+• Modelo de comisión: LEADOC gana solo cuando el cliente cierra pacientes. Eso ES arriesgar juntos.
+• ARIA nunca da diagnósticos médicos. Redirige cualquier pregunta médica al doctor.
+• El médico ve todas las conversaciones en tiempo real y puede intervenir cuando quiera.
+• Sin contratos anuales. Mes a mes. El médico puede salir cuando quiera.
+• Los datos son siempre del médico. Portabilidad total.
+
+OBJECIÓN: ${o.name}
+CONTEXTO: ${o.contexto}
+LO QUE DIJO EL DOCTOR: "${o.lanzamiento}"
+RESPUESTA DE JONNATAN: "${text}"
+
+Evalúa como abogado del diablo — sin compasión pero con justicia. Responde ÚNICAMENTE en JSON válido, sin markdown, sin explicaciones extra:
+{"score":número 1-10,"bien":"qué hizo bien en 1-2 oraciones específicas y concretas","mejorar":"qué falló o le faltó — sé específico y duro si merece serlo","respuesta_ideal":"la respuesta perfecta de cierre — directa, con datos de LEADOC, sin clichés, máximo 4 oraciones, como la daría un cerrador B2B de alto nivel en México","reaccion_doctor":"cómo reaccionaría el doctor a la respuesta ideal, en 1 oración desde su perspectiva","nuevo_mood":"Convencido|Interesado|Pensativo|Aún resistente|Cerrado"}`;
+
+  try{
+    const res=await fetch('/.netlify/functions/aria-simulator',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system:sys,messages:[{role:'user',content:'Evalúa este cierre.'}]})
+    });
+    const d=await res.json();
+    rmTyping();
+    let raw=(d.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim();
+    const ev=JSON.parse(raw);
+    scores[curId]=ev.score;
+    updateProgress();
+    buildList(currentCat);
+    setMood(ev.nuevo_mood);
+
+    // Reacción del doctor
+    addSys('── Reacción ante la respuesta ideal ──');
+    addBubble('doc',ev.reaccion_doctor,o.doctor);
+
+    // Eval card
+    const wrap=document.getElementById('chat-wrap');
+    const sc=ev.score;
+    const scClass=sc>=8?'high':sc>=5?'mid':'low';
+    const meterColor=sc>=8?'linear-gradient(90deg,var(--green),var(--green-l))':sc>=5?'linear-gradient(90deg,var(--gold),var(--gold-l))':'linear-gradient(90deg,var(--red),#E05050)';
+    const card=document.createElement('div');
+    card.className='eval-card';
+    card.innerHTML=`
+      <div class="eval-top">
+        <div>
+          <div class="eval-title">Evaluación de tu cierre</div>
+          <div class="eval-subtitle">${o.name}</div>
+        </div>
+        <div class="score-circle ${scClass}">
+          <div class="sn">${sc}</div>
+          <div class="sl">/10</div>
+        </div>
+      </div>
+      <div class="eval-meter"><div class="eval-meter-fill" style="width:${sc*10}%;background:${meterColor}"></div></div>
+      <div class="eval-grid">
+        <div class="eval-block green">
+          <div class="eval-block-title">✓ Lo que hiciste bien</div>
+          <div class="eval-block-text">${ev.bien}</div>
+        </div>
+        <div class="eval-block red">
+          <div class="eval-block-title">↑ Qué mejorar</div>
+          <div class="eval-block-text">${ev.mejorar}</div>
+        </div>
+      </div>
+      <div class="ideal-section">
+        <div class="ideal-title">★ Respuesta de cierre ideal</div>
+        <div class="ideal-text">"${ev.respuesta_ideal}"</div>
+      </div>
+      <div class="eval-actions">
+        <button class="btn-retry" onclick="selectObj(${curId})">↺ Intentar de nuevo</button>
+        <button class="btn-next" onclick="nextObj()">Siguiente objeción →</button>
+      </div>`;
+    wrap.appendChild(card);wrap.scrollTop=wrap.scrollHeight;
+  }catch(e){
+    rmTyping();
+    addSys('Error al evaluar — intenta de nuevo');
+    document.getElementById('input-zone').style.display='block';
+    inp.disabled=false;inp.focus();
+  }
+  busy=false;
+  document.getElementById('send-btn').disabled=false;
+  inp.disabled=false;
+}
+
+function nextObj(){
+  const unanswered=OBJS.filter(o=>scores[o.id]===null);
+  if(unanswered.length>0){selectObj(unanswered[0].id);}
+  else{const worst=OBJS.reduce((a,b)=>scores[a.id]<scores[b.id]?a:b);selectObj(worst.id);}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildList('all');
+  const inp=document.getElementById('resp-inp');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendResp();}});
+});
+</script>
+</body>
+</html>
