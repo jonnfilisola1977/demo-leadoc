@@ -43,7 +43,7 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
 .prog-lbl-mini{font-size:11px;color:rgba(255,255,255,0.45);white-space:nowrap}
 
 /* MAIN LAYOUT */
-.main{display:grid;grid-template-columns:260px 1fr 300px;height:calc(100vh - 58px);overflow:hidden}
+.main{display:grid;grid-template-columns:320px 1fr 360px;height:calc(100vh - 58px);overflow:hidden}
 
 /* LEFT PANEL */
 .left{
@@ -59,13 +59,13 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
 .cat-tabs{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid rgba(0,0,0,0.06);flex-wrap:wrap}
 .cat-tab{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid rgba(0,0,0,0.1);color:var(--muted);background:transparent;transition:all .15s;font-family:'Inter',sans-serif}
 .cat-tab.active{background:var(--dark);color:var(--gold);border-color:var(--dark)}
-.obj-scroll{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.obj-scroll{flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
 .obj-scroll::-webkit-scrollbar{width:3px}
 .obj-scroll::-webkit-scrollbar-thumb{background:#E0DDD6;border-radius:2px}
 
 .obj-item{
   display:flex;align-items:flex-start;gap:10px;
-  padding:10px 12px;border-radius:10px;cursor:pointer;
+  padding:8px 10px;border-radius:10px;cursor:pointer;
   border:1px solid transparent;transition:all .15s;
   background:var(--off);
 }
@@ -241,7 +241,7 @@ html,body{height:100%;background:var(--off);color:var(--text);font-family:'Inter
 .quien-row{display:flex;gap:4px;margin-bottom:10px}
 .quien-btn{flex:1;padding:6px 4px;font-size:11px;font-weight:600;border:1px solid rgba(0,0,0,0.1);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;text-align:center;font-family:'Inter',sans-serif;transition:all .15s}
 .quien-btn.active{background:var(--dark);color:var(--gold);border-color:var(--dark)}
-.obj-select-grid{display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto;margin-bottom:10px}
+.obj-select-grid{display:flex;flex-direction:column;gap:3px;max-height:240px;overflow-y:auto;margin-bottom:10px}
 .obj-select-grid::-webkit-scrollbar{width:3px}
 .obj-select-grid::-webkit-scrollbar-thumb{background:#E0DDD6}
 .obj-sel-item{padding:7px 10px;border-radius:7px;cursor:pointer;border:1px solid rgba(0,0,0,0.07);background:var(--off);font-size:12px;color:var(--text);transition:all .15s;display:flex;align-items:center;gap:7px}
