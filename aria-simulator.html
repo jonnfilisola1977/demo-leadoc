@@ -743,10 +743,10 @@ End reply with (new line, hidden):
 LEADDATA:{"name":"name or empty","proc":"procedure or empty","budget":"budget or estimate","status":"nuevo|calificado|cita","lang":"language in Spanish e.g. Inglés","hot":true or false}`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/.netlify/functions/aria-simulator',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:history})
+      body:JSON.stringify({system:sys,messages:history})
     });
     const d=await res.json();
     rmTyping();
