@@ -668,25 +668,51 @@ function updateTags(){
   const pt=document.getElementById('proc-tags');
   pt.innerHTML=procs.size?[...procs].slice(0,5).map(p=>`<span class="tag proc">${p}</span>`).join(''):'<span class="tag empty">Sin datos aún</span>';
 }
-function addLead(data){
-  leads.unshift(data);
-  const cnt=document.getElementById('crm-cnt'); cnt.textContent=leads.length; cnt.style.display='block';
-  const list=document.getElementById('crm-list');
-  const empty=list.querySelector('.crm-empty'); if(empty)empty.remove();
-  const card=document.createElement('div');
-  const cls=data.status==='cita'?'cita-l':data.hot?'hot-l':'new-l';
-  const pct=data.status==='cita'?100:data.status==='calificado'?65:30;
-  const [bc,bl]=data.status==='cita'?['lb-cita','CITA ✓']:data.hot?['lb-hot','CALIFICADO']:['lb-new','NUEVO'];
-  card.className='lcard '+cls;
-  card.innerHTML=`
-    <div class="lcard-top"><span class="lcard-name">${data.name||'Lead #'+leads.length}</span><span class="lbadge ${bc}">${bl}</span></div>
-    ${data.proc?`<div class="lrow">📋 <strong>${data.proc}</strong></div>`:''}
-    ${data.budget?`<div class="lrow">💰 <strong>${data.budget}</strong></div>`:''}
-    ${data.lang?`<div class="lrow">🌎 <strong>${data.lang}</strong></div>`:''}
-    <div class="ltime">⏱ Capturado ${tnow()}</div>
+// LEAD ÚNICO — una sola tarjeta que se actualiza en tiempo real
+let currentLead = null;
+
+function updateLead(data){
+  if(!currentLead) currentLead = {};
+  if(data.name) currentLead.name = data.name;
+  if(data.proc) currentLead.proc = data.proc;
+  if(data.budget) currentLead.budget = data.budget;
+  if(data.source) currentLead.source = data.source;
+  if(data.lang) currentLead.lang = data.lang;
+  if(data.status) currentLead.status = data.status;
+  if(data.hot) currentLead.hot = data.hot;
+
+  const list = document.getElementById('crm-list');
+  const empty = list.querySelector('.crm-empty'); if(empty) empty.remove();
+
+  const cls = currentLead.status==='cita'?'cita-l':currentLead.hot?'hot-l':'new-l';
+  const pct = currentLead.status==='cita'?100:currentLead.status==='calificado'?65:30;
+  const [bc,bl] = currentLead.status==='cita'?['lb-cita','CITA ✓']:currentLead.hot?['lb-hot','CALIFICADO']:['lb-new','NUEVO'];
+
+  let card = document.getElementById('current-lead-card');
+  if(!card){
+    card = document.createElement('div');
+    card.id = 'current-lead-card';
+    list.insertBefore(card, list.firstChild);
+    leads.push(currentLead);
+    const cnt=document.getElementById('crm-cnt'); cnt.textContent=leads.length; cnt.style.display='block';
+  }
+  card.className = 'lcard ' + cls;
+  card.innerHTML = `
+    <div class="lcard-top">
+      <span class="lcard-name">${currentLead.name||'Lead activo'}</span>
+      <span class="lbadge ${bc}">${bl}</span>
+    </div>
+    ${currentLead.proc?`<div class="lrow">📋 <strong>${currentLead.proc}</strong></div>`:''}
+    ${currentLead.budget?`<div class="lrow">💰 <strong>${currentLead.budget}</strong></div>`:''}
+    ${currentLead.source?`<div class="lrow">📣 <strong>${currentLead.source}</strong></div>`:''}
+    ${currentLead.lang?`<div class="lrow">🌎 <strong>${currentLead.lang}</strong></div>`:''}
+    <div class="ltime">⏱ Actualizado ${tnow()}</div>
     <div class="lprog"><div class="lprog-fill" style="width:${pct}%"></div></div>`;
-  list.insertBefore(card, list.firstChild);
-  if(data.status==='cita'){stats.cal++;flashStat('sc2','fl2');updateStats();}
+
+  if(currentLead.status==='cita' && !currentLead._citaCounted){
+    currentLead._citaCounted = true;
+    stats.cal++; flashStat('sc2','fl2'); updateStats();
+  }
 }
 
 function changePersona(){renderQuick(document.getElementById('persona-sel').value);}
@@ -695,7 +721,7 @@ function renderQuick(p){
     `<span class="qb" onclick="sendQ(this)">${t}</span>`).join('');
 }
 function resetChat(){
-  history=[]; stats={resp:0,cal:0}; leads=[]; langs=new Set(); procs=new Set();
+  history=[]; stats={resp:0,cal:0}; leads=[]; langs=new Set(); procs=new Set(); currentLead=null;
   document.getElementById('msgs').innerHTML='';
   document.getElementById('crm-list').innerHTML='<div class="crm-empty"><span class="eico">📋</span>ARIA califica cada lead<br>en tiempo real.<br>Las tarjetas aparecen<br>aquí automáticamente.</div>';
   document.getElementById('crm-cnt').style.display='none';
@@ -718,30 +744,40 @@ async function send(){
   if(busy)return;
   const inp=document.getElementById('inp');
   const text=inp.value.trim(); if(!text)return;
-  inp.value=''; inp.style.height='38px';
+  // FIX INPUT — reset limpio sin bugs de altura
+  inp.value='';
+  inp.style.cssText='height:44px;overflow-y:hidden';
   busy=true; document.getElementById('send-btn').disabled=true;
   const p=document.getElementById('persona-sel').value;
   const flag=FLAGS[p]||'🌎';
   addBubble('u', text, flag);
   history.push({role:'user', content:text});
-  if(history.filter(m=>m.role==='user').length===1) { stats.resp++; flashStat('sc1','fl1'); updateStats(); }
+  const userMsgCount=history.filter(m=>m.role==='user').length;
+  if(userMsgCount===1){stats.resp++;flashStat('sc1','fl1');updateStats();}
   addTyping();
 
-  const sys=`You are ${cfg.agent}, a human sales assistant at ${cfg.name} (${cfg.type}) in ${cfg.city}, Mexico.
-Services: ${cfg.svcs}
-Prices: ${cfg.prices}
+  const sys=`Eres ${cfg.agent}, asistente de ventas HUMANA de ${cfg.name} (${cfg.type}) en ${cfg.city}, México.
+Servicios: ${cfg.svcs}
+Precios: ${cfg.prices}
 
-ABSOLUTE RULES:
-1. Detect patient language and respond ALWAYS in that EXACT language. Never switch.
-2. You are human. Never mention AI, bot, automation or technology.
-3. Max 2-3 sentences. Warm, natural, professional.
-4. Goal: qualify (procedure? budget?) then schedule appointment.
-5. Use name if mentioned. Price range + free consult if asked.
-6. If ready to book: ask name, phone, preferred day/time.
-7. For international patients: mention medical tourism packages, bilingual team, airport transfer, all-inclusive.
+REGLAS ABSOLUTAS — nunca las rompas:
+1. Detecta el idioma del paciente y responde SIEMPRE en ese MISMO idioma. Jamás cambies.
+2. Eres humana. NUNCA menciones IA, bot, automatización, sistema ni tecnología.
+3. Máximo 2-3 oraciones por respuesta. Tono cálido, natural, profesional.
+4. FLUJO DE CIERRE OBLIGATORIO — sigue este orden exacto:
+   Mensaje 1: Saluda + pregunta qué procedimiento le interesa.
+   Mensaje 2: Confirma el procedimiento + pregunta su presupuesto aproximado.
+   Mensaje 3: Da precio + pregunta ¿cómo se enteró de nosotros? (Instagram, Facebook, recomendación, etc.)
+   Mensaje 4: Agradece la fuente + ofrece consulta gratuita + pregunta nombre completo.
+   Mensaje 5: Usa su nombre + pregunta teléfono y día preferido para la cita.
+   Mensaje 6: Confirma la cita con entusiasmo — nombre, día, hora, "te esperamos".
+5. Si ya tienes el procedimiento, ve directo al presupuesto. No repitas preguntas.
+6. Si pregunta precio, da el rango + "en tu consulta gratuita te damos el precio exacto según tu caso".
+7. Para pacientes internacionales: menciona paquete de turismo médico, traslado aeropuerto, equipo bilingüe.
+8. NUNCA dejes de avanzar hacia el cierre — cada respuesta debe empujar un paso más.
 
-End reply with (new line, hidden):
-LEADDATA:{"name":"name or empty","proc":"procedure or empty","budget":"budget or estimate","status":"nuevo|calificado|cita","lang":"language in Spanish e.g. Inglés","hot":true or false}`;
+Al final de tu respuesta agrega (línea nueva, oculto al paciente):
+LEADDATA:{"name":"nombre si lo dio o vacío","proc":"procedimiento o vacío","budget":"presupuesto mencionado o estimado","source":"cómo se enteró o vacío","status":"nuevo|calificado|cita","lang":"idioma en español ej. Español","hot":true o false}`;
 
   try{
     const res=await fetch('/.netlify/functions/aria-simulator',{
@@ -756,7 +792,8 @@ LEADDATA:{"name":"name or empty","proc":"procedure or empty","budget":"budget or
     if(m){
       try{
         const ld=JSON.parse(m[1]);
-        if(ld.name||ld.proc||ld.budget) addLead(ld);
+        // FIX LEAD ÚNICO — actualiza la misma tarjeta, no crea nueva
+        updateLead(ld);
         if(ld.proc) procs.add(ld.proc);
         if(ld.lang) langs.add(ld.lang);
         updateTags();
