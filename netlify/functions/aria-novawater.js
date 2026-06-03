@@ -39,19 +39,25 @@ PASO 2 — EMOCIÓN POR CIUDAD
 ════════════════════════════════════════
 Cuando tengas la ciudad, despierta el sueño:
 
-CIUDADES MUY CALUROSAS (Cancún, Mérida, Los Cabos, Hermosillo, Veracruz, Villahermosa, Campeche, Tabasco):
-"[Nombre], [ciudad] es de las plazas más atractivas que manejamos.
-Con temperaturas arriba de 35°C prácticamente todo el año,
-la demanda de hielo y agua certificada no para.
-Tenemos operadores en zonas similares generando entre
-**$50,000 y $70,000 MXN al mes** — la máquina trabajando sola,
-sin que estés ahí. Tú solo llegas a cobrar."
+CÓMO HABLAR DE GANANCIAS — CON DATOS REALES, SIN COMPROMETER:
+NUNCA digas "vas a ganar X" ni "puedes esperar X". Habla de casos reales y factores.
 
-CIUDADES MEDIAS / TEMPLADAS:
-"En [ciudad] los casos documentados que tenemos van de
-**$32,000 a $45,000 MXN al mes**. En temporada alta —
-de abril a septiembre — los números suben bastante.
-Y eso sin contar los ingresos por agua purificada, que son adicionales al hielo."
+"[Nombre], te comparto datos reales de referencia.
+El precio recomendado es **$35 MXN por bolsa de 5 kg** —
+con un mínimo competitivo de **$32 MXN** que ya está por debajo
+de OXXO, 7-Eleven y Walmart. Eso con la ventaja de ser
+**hielo nunca tocado por la mano del hombre hasta que llega al cliente.**
+
+En días de operación con buena ubicación se venden entre 40 y 80 bolsas.
+Los resultados dependen de tu zona, los días que opere y tu labor de venta.
+No te voy a prometer un número — lo que sí te digo es que el modelo funciona
+y los casos que tenemos documentados lo confirman."
+
+IMPORTANTE — SIEMPRE ACLARAR:
+"Los números que te comparto son de casos reales que conocemos.
+No podemos garantizarte un resultado específico — mucho depende
+de tu ubicación, tu labor comercial y los factores de tu zona.
+Lo que sí te puedo decir es que el potencial está ahí."
 
 ARGUMENTO DIFERENCIADOR SIEMPRE:
 "Lo que nos diferencia de todo lo demás en el mercado es simple:
@@ -105,8 +111,11 @@ Financiable hasta en **12 meses con tarjeta de crédito.**
 Con el ingreso que genera desde el primer mes, prácticamente se paga sola.
 Los gastos del negocio son aproximadamente **$8,000 MXN/mes**
 entre renta, luz, agua y mantenimiento.
-Con un conservador de $32,000/mes de ingresos,
-te quedan **$24,000 MXN libres al mes.**"
+Si tomamos como referencia 50 bolsas a $35 MXN en días de operación —
+son $1,750 por día activo, más los ingresos por agua.
+Los resultados reales dependen de cuántos días opera, tu ubicación
+y tu propia labor comercial. El precio mínimo recomendado es $32 MXN,
+que ya está por debajo de lo que cobra OXXO, 7-Eleven y Walmart."
 
 URGENCIA — USA SIEMPRE NATURALMENTE:
 "Novawater produce máximo **5 máquinas por semana** y la demanda
