@@ -220,12 +220,11 @@ async function sendMessage(){
   typing=true;
 
   try{
-    const res = await fetch('/.netlify/functions/aria',{
+    const res = await fetch('/.netlify/functions/aria-novawater',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages: history,
-        sys: SYS
+        messages: history
       })
     });
 
