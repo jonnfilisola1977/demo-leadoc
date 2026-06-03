@@ -2,244 +2,315 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ARIA · Novawater Mexico</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>ARIA · Novawater</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:#111b21}
 
-/* WALLPAPER PATTERN */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background-color:#0b141a;
-  background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23182229' fill-opacity='0.8'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+:root{
+  --green:#25d366;
+  --green2:#128c7e;
+  --dark:#0b141a;
+  --card:#1f2c34;
+  --card2:#2a3942;
+  --rx:#202c33;
+  --tx:#005c4b;
+  --text:#e9edef;
+  --muted:#8696a0;
+  --safe-b:env(safe-area-inset-bottom,0px);
 }
 
-/* LAYOUT */
-.app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:transparent}
+html{height:100%}
+body{
+  height:100dvh;
+  font-family:'Inter',sans-serif;
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
 
-/* HEADER */
-.hd{background:#202c33;display:flex;align-items:center;gap:10px;padding:10px 16px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.4)}
-.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00a884,#025144);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
-.hd-info{flex:1}
-.hd-name{font-size:16px;font-weight:600;color:#e9edef;line-height:1.2}
-.hd-status{font-size:12px;color:#8696a0;margin-top:1px}
-.hd-icons{display:flex;gap:20px}
-.hd-icons svg{width:22px;height:22px;fill:#8696a0;cursor:pointer}
+/* ─ HEADER ───────────────────────── */
+.hd{
+  flex-shrink:0;
+  background:var(--card);
+  padding:10px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.hd-top{display:flex;align-items:center;gap:10px}
+.logo-wrap{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#075e54,#25d366);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.logo-txt{font-family:'Montserrat',sans-serif;font-weight:900;font-size:11px;color:#fff;letter-spacing:-0.5px;line-height:1.1;text-align:center}
+.logo-txt small{font-size:8px;font-weight:700;opacity:.8}
+.hd-info{flex:1;min-width:0}
+.hd-name{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd-status{font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px;margin-top:1px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hd-pills{display:flex;gap:5px;margin-top:8px;overflow-x:auto;padding-bottom:2px;-ms-overflow-style:none;scrollbar-width:none}
+.hd-pills::-webkit-scrollbar{display:none}
+.pill{
+  flex-shrink:0;
+  background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.25);
+  border-radius:100px;padding:4px 10px;
+  font-size:11px;font-weight:500;color:var(--green);white-space:nowrap;
+}
 
-/* CHAT AREA */
-.msgs{flex:1;overflow-y:auto;padding:8px 4%;display:flex;flex-direction:column;gap:2px}
-.msgs::-webkit-scrollbar{width:3px}
-.msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+/* ─ CHAT ────────────────────────── */
+.chat{
+  flex:1;overflow-y:auto;
+  background:var(--dark);
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='%23182229' /%3E%3C/svg%3E");
+  padding:6px 8px;
+  display:flex;flex-direction:column;
+}
+.chat::-webkit-scrollbar{width:2px}
+.chat::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08)}
+.msgs{display:flex;flex-direction:column;gap:2px;margin-top:auto}
 
-/* DATE BUBBLE */
-.date-sep{text-align:center;margin:8px 0}
-.date-sep span{background:#182229;color:#8696a0;font-size:11.5px;padding:4px 12px;border-radius:8px}
+/* date + notif */
+.dsep{text-align:center;padding:6px 0}
+.dsep span{background:rgba(17,27,33,.95);color:var(--muted);font-size:11.5px;padding:4px 12px;border-radius:8px}
+.notif{text-align:center;margin:4px 0 8px}
+.notif span{background:rgba(17,27,33,.95);color:var(--muted);font-size:11.5px;padding:5px 12px;border-radius:8px;display:inline-block;max-width:90%;line-height:1.4}
 
-/* MESSAGE BUBBLES */
-.msg-row{display:flex;margin:1px 0}
-.msg-row.in{justify-content:flex-start}
-.msg-row.out{justify-content:flex-end}
+/* bubbles */
+.row{display:flex;margin:1px 0}
+.row.in{justify-content:flex-start}
+.row.out{justify-content:flex-end}
+.bub{max-width:80%;padding:8px 10px 4px;font-size:14.5px;line-height:1.5;color:var(--text);word-break:break-word}
+.row.in .bub{background:var(--rx);border-radius:0 8px 8px 8px}
+.row.out .bub{background:var(--tx);border-radius:8px 0 8px 8px}
+.bub strong{font-weight:600;color:#fff}
+.meta{display:flex;justify-content:flex-end;align-items:center;gap:3px;margin-top:3px}
+.ts{font-size:11px;color:var(--muted)}
+.ticks{color:#53bdeb;font-size:12px}
 
-.bubble{max-width:75%;padding:7px 10px 6px;border-radius:8px;position:relative;word-break:break-word}
-.msg-row.in .bubble{background:#202c33;border-top-left-radius:0}
-.msg-row.out .bubble{background:#005c4b;border-top-right-radius:0}
+/* typing */
+.typing-row{display:flex}
+.t-bub{background:var(--rx);border-radius:0 8px 8px 8px;padding:10px 14px;display:flex;gap:5px;align-items:center}
+.t-bub span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:td 1.2s infinite}
+.t-bub span:nth-child(2){animation-delay:.2s}
+.t-bub span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
 
-.bubble p{font-size:14.2px;line-height:1.48;color:#e9edef}
-.bubble strong{font-weight:600;color:#fff}
+/* ─ SUGS ─────────────────────────── */
+.sugs{
+  flex-shrink:0;background:var(--card);
+  padding:7px 8px;
+  display:flex;gap:6px;overflow-x:auto;
+  border-top:1px solid rgba(255,255,255,.05);
+  -ms-overflow-style:none;scrollbar-width:none;
+}
+.sugs::-webkit-scrollbar{display:none}
+.sug{
+  flex-shrink:0;
+  background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);
+  color:var(--green);font-family:'Inter',sans-serif;
+  font-size:12.5px;font-weight:500;
+  padding:7px 13px;border-radius:18px;cursor:pointer;
+  white-space:nowrap;transition:background .1s;
+}
+.sug:active{background:rgba(37,211,102,.2)}
 
-.meta{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:2px}
-.time{font-size:11px;color:#8696a0}
-.ticks{display:flex;gap:1px}
-.ticks svg{width:16px;height:11px}
-
-/* TYPING */
-.typing-row{display:flex;justify-content:flex-start;margin:2px 0}
-.typing-bubble{background:#202c33;border-radius:8px;border-top-left-radius:0;padding:10px 14px;display:flex;gap:5px;align-items:center}
-.typing-bubble span{width:8px;height:8px;border-radius:50%;background:#8696a0;animation:tdot 1s infinite}
-.typing-bubble span:nth-child(2){animation-delay:.2s}
-.typing-bubble span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
-
-/* SUGGESTIONS */
-.sugs{display:flex;flex-wrap:wrap;gap:6px;padding:6px 4%;flex-shrink:0}
-.sug{background:rgba(0,168,132,.12);border:1px solid rgba(0,168,132,.35);color:#00a884;font-size:12.5px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.sug:hover{background:rgba(0,168,132,.22)}
-
-/* INPUT */
-.inp-area{background:#202c33;display:flex;align-items:flex-end;gap:8px;padding:8px 12px;flex-shrink:0}
-.inp-wrap{flex:1;background:#2a3942;border-radius:24px;display:flex;align-items:flex-end;padding:8px 16px;gap:8px}
-.inp-wrap svg{width:22px;height:22px;fill:#8696a0;flex-shrink:0;margin-bottom:1px}
-.inp-wrap textarea{flex:1;background:transparent;border:none;outline:none;color:#e9edef;font-family:'Inter',sans-serif;font-size:14.5px;resize:none;max-height:120px;min-height:22px;line-height:1.4}
-.inp-wrap textarea::placeholder{color:#8696a0}
-.send{width:48px;height:48px;border-radius:50%;background:#00a884;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-.send:hover{background:#02b093}
-.send:disabled{background:#8696a0;cursor:not-allowed}
-.send svg{width:22px;height:22px;fill:#fff;margin-left:2px}
-
-/* NOTIFICATION STYLE */
-.notif{background:#182229;border-radius:8px;padding:8px 14px;text-align:center;font-size:12px;color:#8696a0;margin:8px auto;max-width:85%}
+/* ─ INPUT ────────────────────────── */
+.inp-bar{
+  flex-shrink:0;background:var(--card);
+  padding:7px 8px calc(7px + var(--safe-b));
+  display:flex;align-items:flex-end;gap:8px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.inp-box{
+  flex:1;background:var(--card2);border-radius:22px;
+  padding:9px 14px;
+}
+.inp-box textarea{
+  display:block;width:100%;background:transparent;
+  border:none;outline:none;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:16px;
+  resize:none;max-height:90px;min-height:22px;line-height:1.4;
+}
+.inp-box textarea::placeholder{color:var(--muted)}
+.snd-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--green);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .15s;
+  box-shadow:0 2px 10px rgba(37,211,102,.35);
+}
+.snd-btn:hover{background:#20bc5a}
+.snd-btn:disabled{background:var(--card2);box-shadow:none;cursor:not-allowed}
+.snd-btn svg{width:20px;height:20px;fill:#fff;margin-left:2px}
 </style>
 </head>
 <body>
-<div class="app">
 
-  <div class="hd">
-    <div class="av">N</div>
+<!-- HEADER -->
+<div class="hd">
+  <div class="hd-top">
+    <div class="logo-wrap">
+      <div class="logo-txt">CRYZ<br><small>EN2O</small></div>
+    </div>
     <div class="hd-info">
       <div class="hd-name">ARIA · Novawater Mexico</div>
-      <div class="hd-status" id="status">En línea</div>
-    </div>
-    <div class="hd-icons">
-      <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+      <div class="hd-status"><div class="dot"></div><span id="status">En línea ahora</span></div>
     </div>
   </div>
+  <div class="hd-pills">
+    <span class="pill">❄️ 450 kg hielo/día</span>
+    <span class="pill">💧 Agua NOM-201</span>
+    <span class="pill">💰 $32K–$45K MXN/mes</span>
+    <span class="pill">🤖 Sin empleados 24/7</span>
+    <span class="pill">📦 Entrega 15–21 días</span>
+  </div>
+</div>
 
+<!-- CHAT -->
+<div class="chat" id="chat">
   <div class="msgs" id="msgs">
-    <div class="date-sep"><span>HOY</span></div>
-    <div class="notif">Los mensajes en este chat son atendidos por ARIA, asistente de ventas de Novawater Mexico</div>
-    <div class="msg-row in">
-      <div class="bubble">
-        <p>¡Hola! 👋 Soy <strong>ARIA</strong>, asistente de ventas de <strong>Novawater Mexico</strong>.<br><br>Tenemos la máquina que genera ingresos 24/7 sin empleados — agua purificada y hielo certificado en un solo equipo.<br><br>Para mostrarte exactamente cuánto puedes ganar, dime: <strong>¿en qué ciudad y estado estás?</strong></p>
-        <div class="meta"><span class="time" id="t0"></span></div>
+    <div class="dsep"><span>HOY</span></div>
+    <div class="notif"><span>🔒 Mensajes atendidos por ARIA — agente de ventas Novawater Mexico</span></div>
+    <div class="row in">
+      <div class="bub">
+        ¡Hola! 👋 Soy <strong>ARIA</strong>, agente de ventas de <strong>Novawater Mexico</strong>.<br><br>
+        Fabricamos la máquina que genera <strong>$32,000–$45,000 MXN al mes</strong> trabajando sola — agua purificada y hielo certificado, sin empleados, 24/7.<br><br>
+        Para decirte exactamente cuánto puedes ganar: <strong>¿en qué ciudad y estado estás?</strong>
+        <div class="meta"><span class="ts" id="t0"></span></div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="sugs" id="sugs">
-    <button class="sug" onclick="tap(this)">Cancún, Quintana Roo</button>
-    <button class="sug" onclick="tap(this)">Mérida, Yucatán</button>
-    <button class="sug" onclick="tap(this)">Los Cabos, BCS</button>
-    <button class="sug" onclick="tap(this)">Hermosillo, Sonora</button>
-    <button class="sug" onclick="tap(this)">¿Cuánto cuesta la máquina?</button>
+<!-- SUGGESTIONS -->
+<div class="sugs" id="sugs">
+  <button class="sug" onclick="tap(this)">Cancún, Q. Roo</button>
+  <button class="sug" onclick="tap(this)">Mérida, Yucatán</button>
+  <button class="sug" onclick="tap(this)">Los Cabos, BCS</button>
+  <button class="sug" onclick="tap(this)">Hermosillo, Sonora</button>
+  <button class="sug" onclick="tap(this)">¿Cuánto cuesta?</button>
+  <button class="sug" onclick="tap(this)">¿Cómo funciona?</button>
+</div>
+
+<!-- INPUT -->
+<div class="inp-bar">
+  <div class="inp-box">
+    <textarea id="inp" placeholder="Escribe un mensaje…" rows="1"
+      onkeydown="onKey(event)" oninput="grow(this)"></textarea>
   </div>
-
-  <div class="inp-area">
-    <div class="inp-wrap">
-      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
-      <textarea id="inp" placeholder="Escribe un mensaje" rows="1" onkeydown="onKey(event)" oninput="grow(this)"></textarea>
-    </div>
-    <button class="send" id="sbtn" onclick="send()">
-      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
-  </div>
-
+  <button class="snd-btn" id="snd" onclick="send()">
+    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+  </button>
 </div>
 
 <script>
-// Set initial timestamp
 document.getElementById('t0').textContent = now();
-
 const history = [];
 let busy = false;
 
 function now(){
   return new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
 }
-
 function grow(el){
-  el.style.height='auto';
-  el.style.height=Math.min(el.scrollHeight,120)+'px';
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
 }
-
 function onKey(e){
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }
 }
-
-function tap(btn){
-  document.getElementById('inp').value=btn.textContent;
-  hideSugs();
-  send();
+function tap(b){
+  document.getElementById('inp').value = b.textContent;
+  hideSugs(); send();
 }
-
 function hideSugs(){
-  document.getElementById('sugs').style.display='none';
+  const s = document.getElementById('sugs');
+  if(s) s.style.display = 'none';
 }
-
 function scrollBot(){
-  const m=document.getElementById('msgs');
-  m.scrollTop=m.scrollHeight;
+  const c = document.getElementById('chat');
+  c.scrollTop = c.scrollHeight;
 }
 
 async function send(){
-  if(busy)return;
-  const inp=document.getElementById('inp');
-  const txt=inp.value.trim();
-  if(!txt)return;
+  if(busy) return;
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim();
+  if(!txt) return;
 
   hideSugs();
   addOut(txt);
-  inp.value='';
-  inp.style.height='auto';
-  history.push({role:'user',content:txt});
-  document.getElementById('sbtn').disabled=true;
-  document.getElementById('status').textContent='escribiendo...';
-  busy=true;
-
+  inp.value = '';
+  inp.style.height = 'auto';
+  history.push({role:'user', content: txt});
+  document.getElementById('snd').disabled = true;
+  document.getElementById('status').textContent = 'escribiendo...';
+  busy = true;
   showTyping();
 
-  try{
-    const r=await fetch('/.netlify/functions/aria-novawater',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:history})
+  try {
+    const r = await fetch('/.netlify/functions/aria-novawater', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({messages: history})
     });
-    const d=await r.json();
-    const reply=d.content?.[0]?.text||'Un momento...';
-    history.push({role:'assistant',content:reply});
+    const d = await r.json();
+    const reply = d.content?.[0]?.text || 'Un momento, déjame verificar eso...';
+    history.push({role:'assistant', content: reply});
     removeTyping();
     addIn(reply);
-  }catch(e){
+  } catch(e) {
     removeTyping();
-    addIn('Disculpa, tuve un problema técnico. ¿Puedes intentar de nuevo?');
+    addIn('Disculpa, problema técnico momentáneo. ¿Puedes intentar de nuevo?');
   }
 
-  busy=false;
-  document.getElementById('sbtn').disabled=false;
-  document.getElementById('status').textContent='En línea';
+  busy = false;
+  document.getElementById('snd').disabled = false;
+  document.getElementById('status').textContent = 'En línea ahora';
 }
 
-function addOut(txt){
-  const msgs=document.getElementById('msgs');
-  const row=document.createElement('div');
-  row.className='msg-row out';
-  row.innerHTML=`<div class="bubble"><p>${esc(txt)}</p><div class="meta"><span class="time">${now()}</span><div class="ticks"><svg viewBox="0 0 18 11" fill="none"><path d="M17.394.602a.5.5 0 0 0-.7.073l-7.5 8.93-3.37-4.012a.5.5 0 0 0-.758.651l3.75 4.467a.5.5 0 0 0 .754.006L17.47 1.32a.5.5 0 0 0-.076-.718z" fill="#53bdeb"/><path d="M1 5.5l4 4.5" stroke="#53bdeb" stroke-width="1.2" stroke-linecap="round"/></svg></div></div></div>`;
-  msgs.appendChild(row);
+function addOut(t){
+  const m = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'row out';
+  d.innerHTML = `<div class="bub">${esc(t)}<div class="meta"><span class="ts">${now()}</span><span class="ticks">✓✓</span></div></div>`;
+  m.appendChild(d);
   scrollBot();
 }
 
-function addIn(txt){
-  const msgs=document.getElementById('msgs');
-  const row=document.createElement('div');
-  row.className='msg-row in';
-  const formatted=txt
+function addIn(t){
+  const m = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'row in';
+  const f = t
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
     .replace(/\n/g,'<br>');
-  row.innerHTML=`<div class="bubble"><p>${formatted}</p><div class="meta"><span class="time">${now()}</span></div></div>`;
-  msgs.appendChild(row);
+  d.innerHTML = `<div class="bub">${f}<div class="meta"><span class="ts">${now()}</span></div></div>`;
+  m.appendChild(d);
   scrollBot();
 }
 
 function showTyping(){
-  const msgs=document.getElementById('msgs');
-  const t=document.createElement('div');
-  t.className='typing-row';
-  t.id='typing';
-  t.innerHTML='<div class="typing-bubble"><span></span><span></span><span></span></div>';
-  msgs.appendChild(t);
+  const m = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'typing-row';
+  d.id = 'typing';
+  d.innerHTML = '<div class="t-bub"><span></span><span></span><span></span></div>';
+  m.appendChild(d);
   scrollBot();
 }
 
 function removeTyping(){
-  const t=document.getElementById('typing');
-  if(t)t.remove();
+  const t = document.getElementById('typing');
+  if(t) t.remove();
 }
 
 function esc(s){
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  return s
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>');
 }
 </script>
 </body>
